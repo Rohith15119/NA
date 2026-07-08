@@ -93,23 +93,187 @@ function formatMathText(text) {
 function renderQuestionText(text) {
   if (!text) return null;
   const lines = text.split('\n');
-  return lines.map((line, i) => {
+  const rendered = [];
+  let i = 0;
+
+  const COLORS = ['#3b82f6', '#fb8c00', '#10b981', '#a855f7', '#ef4444', '#06b6d4'];
+
+  while (i < lines.length) {
+    const line = lines[i];
     const trimmed = line.trim();
-    const isTable = trimmed.startsWith('+') || trimmed.startsWith('|') || /^[-+|]+$/.test(trimmed);
-    return (
+
+    // 1. Check if it's the start of an ASCII Table
+    if (trimmed.startsWith('+') && i + 1 < lines.length && lines[i + 1].trim().startsWith('|')) {
+      const tableLines = [];
+      while (i < lines.length) {
+        const currentLine = lines[i];
+        const curTrimmed = currentLine.trim();
+        if (curTrimmed.startsWith('+') || curTrimmed.startsWith('|')) {
+          tableLines.push(currentLine);
+          i++;
+        } else {
+          break;
+        }
+      }
+
+      // Parse the gathered table lines
+      const rows = [];
+      tableLines.forEach(tLine => {
+        const tTrimmed = tLine.trim();
+        if (tTrimmed.startsWith('|')) {
+          // It's a data row
+          const cells = tTrimmed.split('|').map(c => c.trim()).filter((_, idx, arr) => idx > 0 && idx < arr.length - 1);
+          rows.push({ isHeader: false, cells });
+        }
+      });
+
+      if (rows.length > 0) {
+        // Treat the first row as header
+        rows[0].isHeader = true;
+
+        rendered.push(
+          <div key={`table-${i}`} style={{ margin: '1.2rem 0', overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', background: 'rgba(255,255,255,0.02)', borderRadius: '6px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <thead>
+                <tr style={{ background: 'rgba(255,255,255,0.06)', borderBottom: '2px solid rgba(255,255,255,0.15)' }}>
+                  {rows[0].cells.map((cell, cIdx) => (
+                    <th key={cIdx} style={{ padding: '0.65rem 1rem', fontSize: '0.85rem', fontWeight: 600, textAlign: 'left', color: 'var(--text-1)' }}>
+                      {formatMathText(cell)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {rows.slice(1).map((row, rIdx) => (
+                  <tr key={rIdx} style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: rIdx % 2 === 1 ? 'rgba(255,255,255,0.01)' : 'transparent' }}>
+                    {row.cells.map((cell, cIdx) => (
+                      <td key={cIdx} style={{ padding: '0.6rem 1rem', fontSize: '0.85rem', color: 'var(--text-2)' }}>
+                        {formatMathText(cell)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      }
+      continue;
+    }
+
+    // 2. Check if it's the start of a Bar Chart block
+    const barRegex = /^([^:\[]+):\s*\[(#+)\]\s*([0-9\s]+[a-zA-Z%]+)/;
+    if (barRegex.test(trimmed)) {
+      const chartItems = [];
+      let maxHash = 0;
+
+      while (i < lines.length) {
+        const curLine = lines[i];
+        const match = curLine.trim().match(barRegex);
+        if (match) {
+          const label = match[1].trim();
+          const hashCount = match[2].length;
+          const value = match[3].trim();
+          maxHash = Math.max(maxHash, hashCount);
+          chartItems.push({ label, hashCount, value });
+          i++;
+        } else {
+          break;
+        }
+      }
+
+      rendered.push(
+        <div key={`barchart-${i}`} style={{
+          padding: '1.25rem', background: 'rgba(255,255,255,0.02)', borderRadius: '8px',
+          border: '1px solid rgba(255,255,255,0.06)', margin: '1.2rem 0', display: 'flex', flexDirection: 'column', gap: '0.85rem'
+        }}>
+          {chartItems.map((item, idx) => {
+            const barPct = maxHash > 0 ? (item.hashCount / maxHash) * 100 : 0;
+            const barColor = COLORS[idx % COLORS.length];
+            return (
+              <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                <div style={{ width: '110px', minWidth: '100px', fontWeight: 600, fontSize: '0.85rem', color: 'var(--text-1)' }}>
+                  {item.label}
+                </div>
+                <div style={{ flex: 1, minWidth: '150px', background: 'rgba(255,255,255,0.06)', height: '14px', borderRadius: '7px', overflow: 'hidden' }}>
+                  <div style={{
+                    width: `${barPct}%`, background: `linear-gradient(90deg, ${barColor}, ${barColor}cc)`,
+                    height: '100%', borderRadius: '7px', transition: 'width 0.5s ease-out'
+                  }} />
+                </div>
+                <div style={{ width: '90px', textAlign: 'right', fontSize: '0.85rem', fontWeight: 600, color: '#fbbf24' }}>
+                  {item.value}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      );
+      continue;
+    }
+
+    // 3. Check if it's the start of a Pie/Segment List (bullet points with percentages)
+    const pieRegex = /^-\s*([^:]+):\s*(\d+)%/;
+    if (pieRegex.test(trimmed)) {
+      const pieItems = [];
+      while (i < lines.length) {
+        const curLine = lines[i];
+        const match = curLine.trim().match(pieRegex);
+        if (match) {
+          const label = match[1].trim();
+          const percent = parseInt(match[2]);
+          pieItems.push({ label, percent });
+          i++;
+        } else {
+          break;
+        }
+      }
+
+      rendered.push(
+        <div key={`piechart-${i}`} style={{
+          padding: '1.25rem', background: 'rgba(255,255,255,0.02)', borderRadius: '8px',
+          border: '1px solid rgba(255,255,255,0.06)', margin: '1.2rem 0', display: 'flex', flexDirection: 'column', gap: '0.85rem'
+        }}>
+          {pieItems.map((item, idx) => {
+            const barColor = COLORS[idx % COLORS.length];
+            return (
+              <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', width: '130px', minWidth: '120px' }}>
+                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: barColor }} />
+                  <span style={{ fontWeight: 500, fontSize: '0.85rem', color: 'var(--text-1)' }}>{item.label}</span>
+                </div>
+                <div style={{ flex: 1, minWidth: '150px', background: 'rgba(255,255,255,0.06)', height: '10px', borderRadius: '5px', overflow: 'hidden' }}>
+                  <div style={{
+                    width: `${item.percent}%`, background: barColor,
+                    height: '100%', borderRadius: '5px', transition: 'width 0.5s ease-out'
+                  }} />
+                </div>
+                <div style={{ width: '50px', textAlign: 'right', fontSize: '0.85rem', fontWeight: 700, color: '#fbbf24' }}>
+                  {item.percent}%
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      );
+      continue;
+    }
+
+    // 4. Default: Render line as normal math-formatted text
+    rendered.push(
       <div key={i} style={{
-        fontFamily: isTable ? 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace' : 'inherit',
         whiteSpace: 'pre-wrap',
-        background: isTable ? 'rgba(255,255,255,0.04)' : 'transparent',
-        padding: isTable ? '0.1rem 0.5rem' : '0',
-        letterSpacing: isTable ? '0.02em' : 'normal',
-        lineHeight: isTable ? '1.35' : '1.68',
-        borderRadius: isTable ? '2px' : '0'
+        letterSpacing: 'normal',
+        lineHeight: '1.68',
+        margin: trimmed ? '0.2rem 0' : '0.6rem 0'
       }}>
-        {isTable ? line : formatMathText(line)}
+        {formatMathText(line)}
       </div>
     );
-  });
+    i++;
+  }
+
+  return rendered;
 }
 
 export default function ResultsPage() {

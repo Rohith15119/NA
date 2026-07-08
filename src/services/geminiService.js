@@ -113,6 +113,8 @@ ${exclusion}
 5. Questions must be scenario-based word problems of 3 to 5 lines. They should have a clear, easy-to-understand real-world scenario, but require multi-step logical thinking, clever shortcuts, and strong quantitative skills to solve. Avoid dry, one-line arithmetic equations.
 6. NO LaTeX formatting or math delimiters like $ or $$. Write equations and values in clean, plain-text human-readable format. E.g., write 'x squared' or 'x^2' instead of 'x²', write '3/5' or '3 out of 5' instead of '\\frac{3}{5}', write 'phi(N)' instead of '\\phi(N)', and write 'pi' instead of 'π'.
 7. Explanation: clear step-by-step working showing exactly how to reach the answer
+8. STRICT SYLLABUS LIMITATION: Ensure questions do NOT use concepts outside the standard TCS NQT syllabus (e.g. absolutely NO calculus, NO trigonometry, NO coordinate geometry, NO complex numbers, and NO advanced physics). Focus strictly on commercial math, arithmetic, algebra, simple logarithms, quadratic equations, simple inequalities, mensuration (area/volume), statistics, probability, and permutations/combinations.
+9. STRICT VALIDATION: You must verify that the math holds true. Solve the problem yourself first to check that the correct option is exactly equal to the mathematical result, and distractor options are mathematically clean numbers. Verify that the answer index (0-3) points to the correct option exactly.
 
 OUTPUT: Return ONLY a raw JSON array — NO markdown, NO prose, NO code fences:
 [{"question":"<full question>","options":["<A>","<B>","<C>","<D>"],"answer":<0|1|2|3>,"explanation":"Step 1: ... Step 2: ... ∴ Answer = ...","subtopic":"<specific subtopic>"}]`;
@@ -139,6 +141,8 @@ ${exclusion}
 5. Every calculation 100% correct — double-check before writing
 6. 4 options, 1 correct, plausible distractors
 7. Include "topicTitle" field set to the exact topic name from the list above
+8. STRICT SYLLABUS LIMITATION: Ensure questions do NOT use concepts outside the standard TCS NQT syllabus (e.g. absolutely NO calculus, NO trigonometry, NO coordinate geometry, NO complex numbers, and NO advanced physics). Focus strictly on commercial math, arithmetic, algebra, simple logarithms, quadratic equations, simple inequalities, mensuration (area/volume), statistics, probability, and permutations/combinations.
+9. STRICT VALIDATION: You must verify that the math holds true. Solve the problem yourself first to check that the correct option is exactly equal to the mathematical result, and distractor options are mathematically clean numbers. Verify that the answer index (0-3) points to the correct option exactly.
 
 OUTPUT: Return ONLY a raw JSON array:
 [{"question":"...","options":["...","...","...","..."],"answer":<0|1|2|3>,"explanation":"Step-by-step...","subtopic":"...","topicTitle":"<exact name from list>"}]`;

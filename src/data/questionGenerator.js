@@ -686,160 +686,128 @@ const GENERATORS = {
   // ==========================================
   // 4. AGES
   // ==========================================
-  'ages': {
+  'mixture-alligation': {
     Easy: [
       () => {
-        const ans = 45;
+        const pct1 = 10, pct2 = 20, v1 = 2, v2 = 3;
+        const ans = Math.round((pct1 * v1 + pct2 * v2) / (v1 + v2));
         return {
-          question: `Ram is 3 times as old as his son. 5 years later, Ram will be 2.5 times as old as his son. Find Ram's current age.`,
-          options: makeOptions(ans, 5, 10, (x) => `${x} years`),
+          question: `If ${v1} liters of a ${pct1}% acid solution are mixed with ${v2} liters of a ${pct2}% acid solution, what is the concentration of acid in the final mixture?`,
+          options: makeOptions(ans, 1, 3, (x) => `${x}%`),
           answer: 0,
-          explanation: `Let son be x. Ram is 3x. 3x + 5 = 2.5(x + 5) → 0.5x = 7.5 → x = 15. Ram is 3 × 15 = 45 years old.`,
-          subtopic: 'Ages'
+          explanation: `Total acid = (${pct1}% of ${v1}) + (${pct2}% of ${v2}) = ${(pct1*v1 + pct2*v2)/100}L. Total volume = ${v1 + v2}L. Concentration = (${(pct1*v1 + pct2*v2)/100} / ${v1 + v2}) * 100 = ${ans}%.`,
+          subtopic: 'Solution Mixing'
         };
       },
       () => {
-        const ans = 15;
+        const c1 = 32, c2 = 45, target = 40;
+        const p1 = target - c1, p2 = c2 - target;
+        const g = gcd(p1, p2);
         return {
-          question: `The ratio of the ages of A and B is 3:5. After 10 years, their ratio becomes 5:7. Find A's current age.`,
-          options: makeOptions(ans, 2, 5, (x) => `${x} years`),
+          question: `In what ratio must rice at Rs. ${c1}/kg be mixed with rice at Rs. ${c2}/kg so that the mixture is worth Rs. ${target}/kg?`,
+          options: [`${p2/g}:${p1/g}`, `${p1/g}:${p2/g}`, `${(p2+g)/g}:${p1/g}`, `1:1`],
           answer: 0,
-          explanation: `Let A = 3x, B = 5x. (3x + 10)/(5x + 10) = 5/7 → 21x + 70 = 25x + 50 → 4x = 20 → x = 5. A's age = 3 × 5 = 15 years.`,
-          subtopic: 'Ages'
+          explanation: `By alligation: Ratio = (${c2} - ${target}) : (${target} - ${c1}) = ${c2-target} : ${target-c1} = ${p2/g}:${p1/g}.`,
+          subtopic: 'Alligation Rule'
         };
       },
       () => {
-        const ans = 15;
+        const total = 30, water = 10;
+        const ans = Math.round((water / total) * 100);
         return {
-          question: `A father is 30 years older than his son. 5 years ago, the father was 4 times as old as his son. Find the son's current age.`,
-          options: makeOptions(ans, 2, 5, (x) => `${x} years`),
+          question: `A ${total} liter mixture of milk and water contains ${water} liters of water. What is the percentage of milk in the mixture?`,
+          options: makeOptions(100 - ans, 2, 8, (x) => `${x}%`),
           answer: 0,
-          explanation: `Let son be S. Father is S + 30. 5 years ago: (S + 30) - 5 = 4(S - 5) → S + 25 = 4S - 20 → 3S = 45 → S = 15.`,
-          subtopic: 'Ages'
+          explanation: `Milk volume = ${total - water}L. Percentage of milk = (${total - water} / ${total}) * 100 = ${100 - ans}%.`,
+          subtopic: 'Purity Percentage'
         };
       },
       () => {
-        const ans = 6;
+        const total = 50, pct = 20;
+        const ans = (pct / 100) * total;
         return {
-          question: `Meena's age is 3 times Rohan's age. 6 years hence, Meena will be 2 times Rohan's age. Rohan's current age is:`,
-          options: makeOptions(ans, 1, 3, (x) => `${x} years`),
+          question: `A 50-liter container is filled with a salt solution containing ${pct}% salt. How many liters of pure salt are in the container?`,
+          options: makeOptions(ans, 1, 4, (x) => `${x} liters`),
           answer: 0,
-          explanation: `Let Rohan be R. Meena is 3R. 3R + 6 = 2(R + 6) → R = 6 years.`,
-          subtopic: 'Ages'
-        };
-      },
-      () => {
-        const ans = 22;
-        return {
-          question: `A man is 24 years older than his son. In 2 years, his age will be twice the age of his son. Find the present age of the son.`,
-          options: makeOptions(ans, 2, 4, (x) => `${x} years`),
-          answer: 0,
-          explanation: `Let son be S, father is S + 24. In 2 years: S + 26 = 2(S + 2) → S = 22.`,
-          subtopic: 'Ages'
+          explanation: `Salt volume = ${pct}% of ${total} = ${ans} liters.`,
+          subtopic: 'Solution Concentration'
         };
       }
     ],
     Medium: [
       () => {
-        const ans = 40;
+        const cCheap = 60, cDear = 84, target = 75;
+        const ratioCheap = cDear - target, ratioDear = target - cCheap;
+        const g = gcd(ratioCheap, ratioDear);
         return {
-          question: `The sum of the ages of a father and his son is 56 years. 4 years ago, the father was 3 times as old as the son. Find the father's current age.`,
-          options: makeOptions(ans, 2, 6, (x) => `${x} years`),
+          question: `A merchant mixes two varieties of wheat costing Rs. ${cCheap}/kg and Rs. ${cDear}/kg. If the final mixture is sold at Rs. ${target}/kg, find the ratio in which the two varieties were blended.`,
+          options: [`${ratioCheap/g}:${ratioDear/g}`, `${ratioDear/g}:${ratioCheap/g}`, `${(ratioCheap+g)/g}:${ratioDear/g}`, `1:1`],
           answer: 0,
-          explanation: `Let Father be F, Son be S. F + S = 56. 4 years ago: F - 4 = 3(S - 4) → F = 3S - 8. Substitute: (3S - 8) + S = 56 → 4S = 64 → S = 16. Father = 40 years.`,
-          subtopic: 'Ages'
+          explanation: `Ratio = (${cDear} - ${target}) : (${target} - ${cCheap}) = ${ratioCheap} : ${ratioDear} = ${ratioCheap/g}:${ratioDear/g}.`,
+          subtopic: 'Alligation Ratio'
         };
       },
       () => {
-        const ans = 30;
+        const total = 40, rem = 8;
+        const finalPct = Math.round(((total - rem) / total) * 100);
         return {
-          question: `Present ages of A and B differ by 16 years. 6 years ago, A was 3 times as old as B. Find A's present age.`,
-          options: makeOptions(ans, 2, 5, (x) => `${x} years`),
+          question: `A vessel contains ${total} liters of pure chemical sanitizer. A lab tech removes ${rem} liters of sanitizer and replaces it with water. What is the percentage concentration of pure sanitizer remaining in the vessel?`,
+          options: makeOptions(finalPct, 2, 6, (x) => `${x}%`),
           answer: 0,
-          explanation: `A - B = 16. 6 years ago: A - 6 = 3(B - 6) → solving gives B = 14. A = 30 years.`,
-          subtopic: 'Ages'
+          explanation: `Sanitizer remaining = ${total - rem}L. Concentration = (${total - rem} / ${total}) * 100 = ${finalPct}%.`,
+          subtopic: 'Single Replacement'
         };
       },
-      () => {
-        const ans = 70;
-        return {
-          question: `10 years ago, the age of a father was 3 times the age of his son. 10 years hence, the father's age will be 2 times the age of his son. Find the present age of the father.`,
-          options: makeOptions(ans, 5, 10, (x) => `${x} years`),
-          answer: 0,
-          explanation: `10 years ago son = x, father = 3x. Present: son = x+10, father = 3x+10. 10 years hence: 3x+20 = 2(x+20) → x = 20. Father = 3(20)+10 = 70.`,
-          subtopic: 'Ages'
-        };
-      },
-      () => {
-        const ans = 20;
-        return {
-          question: `The product of the present ages of a mother and her daughter is 240. If the daughter's age is doubled, it exceeds the mother's age by 4 years. Find the mother's present age.`,
-          options: makeOptions(ans, 2, 5, (x) => `${x} years`),
-          answer: 0,
-          explanation: `M × D = 240. 2D = M + 4 → M = 2D - 4. (2D - 4) × D = 240 → D² - 2D - 120 = 0 → D = 12. Mother = 20 years.`,
-          subtopic: 'Ages'
-        };
-      },
-      () => {
-        const ans = '3:5';
-        return {
-          question: `The ratio of the present ages of two brothers is 1:2 and 5 years back, the ratio was 1:3. What will be the ratio of their ages after 5 years?`,
-          options: ['3:5','2:3','4:7','5:8'],
-          answer: 0,
-          explanation: `Present: x, 2x. 5 years ago: (x-5)/(2x-5) = 1/3 → x = 10. Present ages: 10 and 20. In 5 years: 15 and 25 → 3:5.`,
-          subtopic: 'Ages'
-        };
+      {
+        question: `skip`
       }
     ],
     Hard: [
       () => {
-        const ans = 20;
+        const total = 50, rem = 10, n = 2;
+        const remain = Math.pow((total - rem)/total, n);
+        const ml = Math.round(total * remain), w = total - ml, g = gcd(ml, w);
         return {
-          question: `The average age of a family of 5 members is 20 years. If the age of the youngest member is 4 years, what was the average age of the family (excluding the youngest) at the time of the birth of the youngest member?`,
-          options: makeOptions(ans, 1, 3, (x) => `${x} years`),
+          question: `A container contains ${total} liters of pure milk. A milkman removes ${rem} liters of milk and replaces it with water. He repeats this process one more time (total 2 times). Find the final ratio of milk to water in the container.`,
+          options: [`${ml/g}:${w/g}`, `${(ml+g)/g}:${w/g}`, `${ml/g}:${(w+g)/g}`, `1:1`],
           answer: 0,
-          explanation: `Sum of ages now = 100. 4 years ago, sum of other 4 members was 100 - 4 - 16 = 80. Average = 80 / 4 = 20 years.`,
-          subtopic: 'Ages'
+          explanation: `Milk remaining = ${total} * (1 - ${rem}/${total})^2 = ${ml}L. Water = ${w}L. Ratio = ${ml/g}:${w/g}.`,
+          subtopic: 'Repeated Replacement'
         };
       },
       () => {
-        const ans = 18;
+        const c1 = 30, c2 = 50, target = 35;
+        const p1 = target - c1, p2 = c2 - target;
+        const g = gcd(p1, p2);
         return {
-          question: `A is twice as old as B was when A was as old as B is now. If A's present age is 24 years, find B's present age.`,
-          options: makeOptions(ans, 2, 4, (x) => `${x} years`),
+          question: `In what ratio must a shopkeeper mix sugar of Rs. ${c1}/kg with sugar of Rs. ${c2}/kg to get a mixture worth Rs. ${target}/kg?`,
+          options: [`${p2/g}:${p1/g}`, `${p1/g}:${p2/g}`, `${(p2+g)/g}:${p1/g}`, `1:1`],
           answer: 0,
-          explanation: `Let B = B. Diff = 24 - B. When A was B, B was 2B - 24. 24 = 2(2B - 24) → 4B = 72 → B = 18.`,
-          subtopic: 'Ages'
+          explanation: `By alligation: Ratio of cheaper to dearer = (${c2} - ${target}) : (${target} - ${c1}) = ${p2} : ${p1} = ${p2/g}:${p1/g}.`,
+          subtopic: 'Alligation Rule'
         };
       },
       () => {
-        const ans = '12 years ago';
+        const r1 = 3, r2 = 2;
+        const s1 = 4, s2 = 1;
         return {
-          question: `The ratio of the ages of a man and his wife is 4:3. After 4 years, this ratio will be 9:7. If at the time of their marriage, the ratio was 5:3, how many years ago were they married?`,
-          options: ['12 years ago','8 years ago','10 years ago','15 years ago'],
+          question: `Two vessels A and B contain milk and water in ratios of ${r1}:${r2} and ${s1}:${s2} respectively. If equal quantities from both vessels are mixed together, find the ratio of milk to water in the new mixture.`,
+          options: [`7:3`, `3:2`, `4:3`, `5:3`],
           answer: 0,
-          explanation: `Let man=4x, wife=3x. (4x+4)/(3x+4)=9/7 → x = 8. Present ages: 32, 24. Married t years ago: (32-t)/(24-t) = 5/3 → t = 12.`,
-          subtopic: 'Ages'
+          explanation: `Vessel A milk = 3/5. Vessel B milk = 4/5. Average milk = (3/5 + 4/5)/2 = 7/10. Combined ratio of milk to water is 7:3.`,
+          subtopic: 'Vessel Mixing'
         };
       },
       () => {
-        const ans = 35;
+        const total = 40, pct = 10;
+        const newPct = 20;
+        const add = 5;
         return {
-          question: `Ten years ago, the age of A was half of B. If the ratio of their present ages is 3:4, find the sum of their present ages.`,
-          options: makeOptions(ans, 5, 10, (x) => `${x} years`),
+          question: `A mixture of ${total} liters of milk and water contains ${pct}% water. How many liters of water must be added to this mixture so that water becomes ${newPct}% of the final mixture?`,
+          options: makeOptions(add, 1, 4),
           answer: 0,
-          explanation: `Present: 3x, 4x. 10 years ago: 3x-10 = 0.5(4x-10) → x=5. Present ages: 15, 20. Sum = 35 years.`,
-          subtopic: 'Ages'
-        };
-      },
-      () => {
-        const ans = 8;
-        return {
-          question: `In a family, the average age of a father, mother, and their only son is 30 years. 5 years ago, the average age of the father and mother was 36 years. Find the present age of the son.`,
-          options: makeOptions(ans, 2, 4, (x) => `${x} years`),
-          answer: 0,
-          explanation: `Present sum = 90. 5 years ago F+M = 72. Present sum of F+M = 82. Son's age = 90 - 82 = 8 years.`,
-          subtopic: 'Ages'
+          explanation: `Initial water = 10% of 40 = 4L, Milk = 36L. Let x liters of water be added. (4 + x)/(40 + x) = 20/100 = 1/5 -> 20 + 5x = 40 + x -> 4x = 20 -> x = 5L.`,
+          subtopic: 'Dilution Problems'
         };
       }
     ]
@@ -2881,43 +2849,50 @@ const HARD_POOL = {
         options:makeOptions(wa,2,6),answer:0,
         explanation:`(${n1}×${p1}+${n2}×${p2})/${n1+n2}=${wa}%.`,subtopic:'Weighted Average'};},
   ],
-  'ages': [
-    () => { // Ratio at two time points
-      const pa=getRandomInt(25,40),pb=getRandomInt(15,pa-5),years=getRandomInt(5,15);
-      const g1=gcd(pa,pb),g2=gcd(pa+years,pb+years);
-      return{question:`A & B's present ages ratio is ${pa/g1}:${pb/g1}. ${years} years hence ratio is ${(pa+years)/g2}:${(pb+years)/g2}. A's present age?`,
-        options:makeOptions(pa,3,10),answer:0,
-        explanation:`Let ages=${pa/g1}k,${pb/g1}k. Solve (${pa/g1}k+${years})/(${pb/g1}k+${years})=${(pa+years)/g2}/${(pb+years)/g2}. k=${g1}. A=${pa}.`,subtopic:'Age Ratios'};},
-    () => { // Sum and difference
-      const diffAge=getRandomInt(1,9)*2,sumAge=getRandomInt(25,40)*2;
-      const older=(sumAge+diffAge)/2,younger=(sumAge-diffAge)/2;
-      return{question:`Sum of two siblings' ages = ${sumAge}, difference = ${diffAge}. Elder sibling's age?`,
-        options:makeOptions(older,3,10),answer:0,
-        explanation:`Elder=(Sum+Diff)/2=(${sumAge}+${diffAge})/2=${older}.`,subtopic:'Sum & Difference'};},
-    () => { // Father-son future ratio
-      const f=getRandomInt(35,50),s=getRandomInt(8,20),yrs=getRandomInt(5,15);
-      const ff=f+yrs,sf=s+yrs,g=gcd(ff,sf);
-      return{question:`Father is ${f}, son is ${s}. Ratio of their ages after ${yrs} years?`,
-        options:[`${ff/g}:${sf/g}`,`${f}:${s}`,`${ff/g+1}:${sf/g}`,`${ff}:${sf}`],answer:0,
-        explanation:`After ${yrs}y: ${ff}:${sf}=${ff/g}:${sf/g}.`,subtopic:'Father-Son Ages'};},
-    () => { // Age as multiple
-      const multiple=getRandomInt(2,4),basek=multiple-1,multiplier=getRandomInt(3,7);
-      const k=basek*multiplier,age=multiple*multiplier;
-      return{question:`${k} years ago a person was 1/${multiple} of their current age. Current age?`,
-        options:makeOptions(age,3,12),answer:0,
-        explanation:`x−${k}=x/${multiple} → x(${multiple}−1)/${multiple}=${k} → x=${age}.`,subtopic:'Age as Fraction'};},
-    () => { // Three people AP
-      const a=getRandomInt(20,35),b=a+getRandomInt(3,8),c=b+getRandomInt(3,8);
-      const avg=Math.round((a+b+c)/3);
-      return{question:`Three people's ages are in AP. Youngest ${a}, eldest ${c}. Average age?`,
-        options:makeOptions(avg,2,8),answer:0,
-        explanation:`Sum=${a}+${b}+${c}=${a+b+c}. Average=${avg}. (Middle term=average in AP.)`,subtopic:'AP Ages'};},
-    () => { // Combined family average
-      const m=getRandomInt(30,45),c1=getRandomInt(5,12),c2=getRandomInt(c1+1,16);
-      const avg=Math.round((m+c1+c2)/3);
-      return{question:`Mother is ${m}, children are ${c1} and ${c2}. Family's average age?`,
-        options:makeOptions(avg,2,6),answer:0,
-        explanation:`Total=${m+c1+c2}. Average=${avg}.`,subtopic:'Family Average Age'};},
+  'mixture-alligation': [
+    () => {
+      const total = 50, rem = 10, n = 2;
+      const remain = Math.pow((total - rem)/total, n);
+      const ml = Math.round(total * remain), w = total - ml, g = gcd(ml, w);
+      return {
+        question: `A container contains ${total} liters of pure milk. A milkman removes ${rem} liters of milk and replaces it with water. He repeats this process one more time (total 2 times). Find the final ratio of milk to water in the container.`,
+        options: [`${ml/g}:${w/g}`, `${(ml+g)/g}:${w/g}`, `${ml/g}:${(w+g)/g}`, `1:1`], answer: 0,
+        explanation: `Milk remaining = ${total} * (1 - ${rem}/${total})^2 = ${ml}L. Water = ${w}L. Ratio = ${ml/g}:${w/g}.`,
+        subtopic: 'Repeated Replacement'
+      };
+    },
+    () => {
+      const c1 = 30, c2 = 50, target = 35;
+      const p1 = target - c1, p2 = c2 - target;
+      const g = gcd(p1, p2);
+      return {
+        question: `In what ratio must a shopkeeper mix sugar of Rs. ${c1}/kg with sugar of Rs. ${c2}/kg to get a mixture worth Rs. ${target}/kg?`,
+        options: [`${p2/g}:${p1/g}`, `${p1/g}:${p2/g}`, `${(p2+g)/g}:${p1/g}`, `1:1`], answer: 0,
+        explanation: `By alligation: Ratio of cheaper to dearer = (${c2} - ${target}) : (${target} - ${c1}) = ${p2} : ${p1} = ${p2/g}:${p1/g}.`,
+        subtopic: 'Alligation Rule'
+      };
+    },
+    () => {
+      const r1 = 3, r2 = 2;
+      const s1 = 4, s2 = 1;
+      return {
+        question: `Two vessels A and B contain milk and water in ratios of ${r1}:${r2} and ${s1}:${s2} respectively. If equal quantities from both vessels are mixed together, find the ratio of milk to water in the new mixture.`,
+        options: [`7:3`, `3:2`, `4:3`, `5:3`], answer: 0,
+        explanation: `Vessel A milk = 3/5. Vessel B milk = 4/5. Average milk = (3/5 + 4/5)/2 = 7/10. Combined ratio of milk to water is 7:3.`,
+        subtopic: 'Vessel Mixing'
+      };
+    },
+    () => {
+      const total = 40, pct = 10;
+      const newPct = 20;
+      const add = 5;
+      return {
+        question: `A mixture of ${total} liters of milk and water contains ${pct}% water. How many liters of water must be added to this mixture so that water becomes ${newPct}% of the final mixture?`,
+        options: makeOptions(add, 1, 4), answer: 0,
+        explanation: `Initial water = 10% of 40 = 4L, Milk = 36L. Let x liters of water be added. (4 + x)/(40 + x) = 20/100 = 1/5 -> 20 + 5x = 40 + x -> 4x = 20 -> x = 5L.`,
+        subtopic: 'Dilution Problems'
+      };
+    }
   ],
   'percentages': [
     () => { // Net successive change
@@ -3535,18 +3510,51 @@ const EXPERT_POOL = {
         options:makeOptions(Math.round(newAvg),1,3),answer:0,
         explanation:`Net change in age sum = (${new1} - ${old1}) + (${new2} - ${old2}) = ${new1-old1+new2-old2} years. Rise in average = ${new1-old1+new2-old2}/${n} = ${(new1-old1+new2-old2)/n} years. New Average = ${newAvg} years.`,subtopic:'Double Replacement'};},
   ],
-  'ages': [
-    () => { // Multi-person Age System
-      const diff=15, sum=55, yrs=5;
-      const father = (sum+diff)/2, son = (sum-diff)/2;
-      return{question:`A father and son are discussing their career paths. The sum of their present ages is ${sum} years, and the difference is ${diff} years. Find the ratio of the father's age to the son's age after exactly ${yrs} years.`,
-        options:[`${(father+yrs)/gcd(father+yrs,son+yrs)}:${(son+yrs)/gcd(father+yrs,son+yrs)}`, `3:1`, `4:1`, `2:1`],answer:0,
-        explanation:`Father's present age = (${sum} + ${diff})/2 = ${father} years. Son's present age = ${son} years. After ${yrs} years: Father = ${father+yrs}, Son = ${son+yrs}. Ratio = ${(father+yrs)/gcd(father+yrs,son+yrs)}:${(son+yrs)/gcd(father+yrs,son+yrs)}.`,subtopic:'Father-Son Ages'};},
-    () => { // Three-person system
-      const diff=6, b=24, a=b+diff, c=b-diff;
-      return{question:`In a corporate team of three developers (A, B, and C), the difference between A's age and B's age is ${diff} years, and the difference between B's age and C's age is also ${diff} years. If A is the eldest and C is the youngest, and B's age is ${b} years, find the average age of the developers.`,
-        options:makeOptions(b,1,4),answer:0,
-        explanation:`A's age = ${a} years, B's age = ${b} years, C's age = ${c} years. Sum = ${a+b+c} years. Average = ${b} years. (B is the middle term of an AP).`,subtopic:'AP Ages'};},
+  'mixture-alligation': [
+    () => {
+      const total = 80, rem = 20, n = 3;
+      const remain = Math.pow((total - rem)/total, n);
+      const ml = Math.round(total * remain), w = total - ml, g = gcd(ml, w);
+      return {
+        question: `A pharmaceutical firm maintains a stock of ${total} liters of pure chemical sanitizer. A lab assistant extracts ${rem} liters of sanitizer and replaces it with water. This exact procedure of removing ${rem} liters of mixture and replacing it with water is repeated a total of ${n} times. Find the final ratio of pure chemical sanitizer to water remaining in the stock container.`,
+        options: [`${ml/g}:${w/g}`, `${(ml+g)/g}:${w/g}`, `${ml/g}:${(w+g)/g}`, `1:1`], answer: 0,
+        explanation: `Using the repeated replacement formula: Final chemical = ${total} * ((1 - ${rem}/${total})^${n}) = ${ml} liters. Water = ${total} - ${ml} = ${w} liters. The ratio is ${ml/g}:${w/g}.`,
+        subtopic: 'Repeated Replacement'
+      };
+    },
+    () => {
+      const c1 = 30, c2 = 60, c3 = 90;
+      const v1 = 1, v2 = 2, v3 = 3;
+      const totVol = v1 + v2 + v3;
+      const mixAlcohol = (c1*v1 + c2*v2 + c3*v3)/totVol;
+      const rMix = Math.round(mixAlcohol), g = gcd(rMix, 100 - rMix);
+      return {
+        question: `Three containers hold liquid fuels of different purities: the first has ${c1}% alcohol, the second has ${c2}% alcohol, and the third has ${c3}% alcohol. A technician mixes the contents in the volume ratio of ${v1}:${v2}:${v3} respectively. Find the final ratio of pure alcohol to water in the resulting composite fuel mixture.`,
+        options: [`${rMix/g}:${(100-rMix)/g}`, `${(rMix+g)/g}:${(100-rMix)/g}`, `${rMix/g}:${(100-rMix+g)/g}`, `1:2`], answer: 0,
+        explanation: `Alcohol volume = ${c1}%*${v1} + ${c2}%*${v2} + ${c3}%*${v3} = ${c1*v1 + c2*v2 + c3*v3} units out of ${totVol} total volume. Average alcohol % = ${rMix}%. Water % = ${100-rMix}%. Ratio = ${rMix/g}:${(100-rMix)/g}.`,
+        subtopic: '3-Container Mixture'
+      };
+    },
+    () => {
+      const c1 = 40, c2 = 75, target = 54;
+      const p1 = target - c1, p2 = c2 - target;
+      const g = gcd(p1, p2);
+      return {
+        question: `A tea distributor wishes to blend low-grade tea leaves costing Rs. ${c1}/kg with premium tea leaves costing Rs. ${c2}/kg. In what ratio must he mix the two varieties of tea leaves so that the resulting composite blend is valued at exactly Rs. ${target}/kg?`,
+        options: [`${p2/g}:${p1/g}`, `${p1/g}:${p2/g}`, `${(p2+g)/g}:${p1/g}`, `1:1`], answer: 0,
+        explanation: `By the Alligation Rule: Ratio of cheaper to dearer = (Dearer Price - Mean Price) : (Mean Price - Cheaper Price) = (${c2} - ${target}) : (${target} - ${c1}) = ${p2} : ${p1} = ${p2/g}:${p1/g}.`,
+        subtopic: 'Alligation Rule'
+      };
+    },
+    () => {
+      const g1 = 22, g2 = 14, target = 18;
+      return {
+        question: `A goldsmith wants to melt and blend two gold alloys of different purities, measured at ${g1} carats and ${g2} carats respectively. In what ratio by weight must he mix these two alloys to produce a new ornament of ${target} carats purity?`,
+        options: [`1:1`, `2:1`, `1:2`, `3:2`], answer: 0,
+        explanation: `Using alligation: Ratio of ${g1} carat to ${g2} carat = (${target} - ${g2}) : (${g1} - ${target}) = 4:4 = 1:1.`,
+        subtopic: 'Alloy Mixing'
+      };
+    }
   ],
   'percentages': [
     () => { // Voter turnout math with invalid ballots

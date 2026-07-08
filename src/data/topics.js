@@ -41,18 +41,19 @@ export const TOPICS = [
     examWeight: '2 Q/A'
   },
   {
-    id: 'ages',
-    title: 'Ages',
-    icon: '👶',
-    description: 'Problems on ages — present, past, future',
-    subtopics: ['Present Age', 'Past Age', 'Future Age'],
+    id: 'mixture-alligation',
+    title: 'Mixture & Alligation',
+    icon: '⚗️',
+    description: 'Alligation rule, weighted mixtures, replacements & purity',
+    subtopics: ['Alligation Rule', 'Repeated Replacement', 'Liquid Mixing'],
     testSize: 10,
     duration: 15,
     color: '#10b981',
     gradient: 'linear-gradient(135deg, #10b981, #059669)',
-    difficulty: 'Easy',
-    examWeight: '1 Q/A'
+    difficulty: 'Hard',
+    examWeight: '2-3 Q/A'
   },
+
   {
     id: 'percentages',
     title: 'Percentages',

@@ -31,14 +31,15 @@ export const TOPIC_DETAILS = {
     hard:   'multiple consecutive replacements changing average each time, average speed over mixed-mode journey, constrained max/min member value given average',
     expert: 'TCS NQT Actual Exam Level: Tricky consecutive replacements with varying values, weighted average variations of multiple subsets with overlapping constraints, and dynamic averages of Arithmetic Progressions (AP).'
   },
-  'ages': {
-    title: 'Ages',
-    subtopics: 'Present Ages, Past & Future Ages, Ratio of Ages, Multi-person Age Systems',
-    easy:   'two-person age problem with simple present/past equation',
-    medium: 'ratio of ages at two distinct points in time, three-person age equations',
-    hard:   'five+ persons with multiple ratio conditions across several different years, min/max age constraints',
-    expert: 'TCS NQT Actual Exam Level: Multi-generational age equations involving non-linear multipliers, ratios shifting with variable time periods, and system of inequalities restricting ages.'
+  'mixture-alligation': {
+    title: 'Mixture & Alligation',
+    subtopics: 'Weighted Mixtures, Alligation Rule, Repeated Replacements, Solution Concentration, Purity & Cost Optimization',
+    easy:   'simple mixing of two solutions with given percentages, basic ratio of mixtures',
+    medium: 'alligation rule to find ratio of two cost prices, replacement of chemical with water once',
+    hard:   'repeated replacement of liquid with water, multi-alloy gold mixing, cost minimization of multi-component blends',
+    expert: 'TCS NQT Actual Exam Level: Multi-stage repeated replacements with unequal fractions, multi-container weighted mixing with profit margins, and complex alligation of three or more components.'
   },
+
   'percentages': {
     title: 'Percentages',
     subtopics: 'Percentage Change, Successive Change, Percentage of Percentage, Elections, Population Growth, Expenditure',

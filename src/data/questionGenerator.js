@@ -3365,6 +3365,67 @@ const HARD_POOL = {
         options:[`Mode=${mode}, Range=${range}`,`Mode=${data[1]}, Range=${range-2}`,`Mode=${mode}, Range=${range+1}`,`Mode=${data[2]}, Range=${range}`],
         answer:0,explanation:`Mode=${mode} (appears twice). Range=Max−Min=${Math.max(...data)}−${Math.min(...data)}=${range}.`,subtopic:'Mode & Range'};},
   ],
+  'data-interpretation': [
+    () => {
+      const val1 = getRandomInt(80, 120), val2 = getRandomInt(90, 130), val3 = getRandomInt(100, 140);
+      const avg = Math.round((val1 + val2 + val3) / 3);
+      const table = `\n+-------+--------+\n| Year  | Sales  |\n+-------+--------+\n| 2021  |   ${val1}  |\n| 2022  |   ${val2}  |\n| 2023  |   ${val3}  |\n+-------+--------+\n`;
+      return {
+        question: `Refer to the sales revenue data table below (revenue in Rs. Lakhs):${table}Find the average annual sales revenue of the company over the three years.`,
+        options: makeOptions(avg, 2, 8), answer: 0,
+        explanation: `Sum = ${val1} + ${val2} + ${val3} = ${val1+val2+val3}. Average = ${val1+val2+val3} / 3 = ${avg} Lakhs.`,
+        subtopic: 'Tabular Data'
+      };
+    },
+    () => {
+      const a = getRandomInt(30, 50), b = getRandomInt(50, 80);
+      const total = a + b;
+      const pct = Math.round(a / total * 100);
+      const chart = `\nActive Users:\nMobile: [#####] ${a} million\nDesktop: [########] ${b} million\n`;
+      return {
+        question: `Refer to the subscriber volume data below:${chart}What percentage of total active users are mobile users?`,
+        options: makeOptions(pct, 2, 8, (x) => `${x}%`), answer: 0,
+        explanation: `Total = ${a} + ${b} = ${total} million. Mobile user percentage = (${a} / ${total}) * 100 = ${pct}%.`,
+        subtopic: 'Bar Chart Interpretation'
+      };
+    }
+  ],
+  'quadratic-equations': [
+    () => {
+      const k = getRandomInt(2, 6);
+      const sum = 2 * k;
+      return {
+        question: `Solve the quadratic equation x^2 - ${sum}x + ${k*k - 1} = 0. Find the sum of the roots.`,
+        options: makeOptions(sum, 1, 4), answer: 0,
+        explanation: `Comparing with x^2 - (sum)x + product = 0, the sum of the roots is ${sum}.`,
+        subtopic: 'Root Properties'
+      };
+    }
+  ],
+  'inequalities': [
+    () => {
+      const a = getRandomInt(2, 5), b = a + getRandomInt(2, 5);
+      return {
+        question: `Find the range of x that satisfies the inequality (x - ${a})(x - ${b}) <= 0.`,
+        options: [`${a} <= x <= ${b}`, `x <= ${a} or x >= ${b}`, `${a-1} <= x <= ${b}`, `${a} <= x <= ${b+1}`], answer: 0,
+        explanation: `The solution to (x - a)(x - b) <= 0 for a < b is the interval [a, b], which is ${a} <= x <= ${b}.`,
+        subtopic: 'Quadratic Inequalities'
+      };
+    }
+  ],
+  'logarithms': [
+    () => {
+      const a = getRandomInt(2, 4);
+      const ans = Math.round(Math.pow(2, a));
+      return {
+        question: `Solve the equation log_2(x) = ${a}. Find x.`,
+        options: makeOptions(ans, 2, 8), answer: 0,
+        explanation: `log_2(x) = ${a} implies x = 2^${a} = ${ans}.`,
+        subtopic: 'Logarithmic Equations'
+      };
+    }
+  ],
+
 };
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -3755,6 +3816,99 @@ const EXPERT_POOL = {
         subtopic: 'Coefficient of Variation'
       };
     }
+  ],
+  'data-interpretation': [
+    () => {
+      const s1 = getRandomInt(120, 150), s2 = getRandomInt(250, 300);
+      const b1 = getRandomInt(100, 130), b2 = getRandomInt(220, 260);
+      const growthA = Math.round((s2 - s1) / s1 * 100);
+      const growthB = Math.round((b2 - b1) / b1 * 100);
+      const ans = Math.abs(growthA - growthB);
+      const table = `\n+------+---------+---------+\n| Year | Dept A  | Dept B  |\n+------+---------+---------+\n| 2021 |   ${s1}   |   ${b1}   |\n| 2024 |   ${s2}   |   ${b2}   |\n+------+---------+---------+\n`;
+      return {
+        question: `Refer to the sales distribution table below showing annual sales revenue (in Rs. Lakhs) of two departments (Dept A and Dept B) over four years:${table}Calculate the difference (in percentage points) between the overall sales growth percentage of Dept A and Dept B from 2021 to 2024.`,
+        options: makeOptions(ans, 1, 5, (x) => `${x}%`), answer: 0,
+        explanation: `Dept A growth = (${s2} - ${s1})/${s1} * 100 = ${growthA}%. Dept B growth = (${b2} - ${b1})/${b1} * 100 = ${growthB}%. Difference = |${growthA} - ${growthB}| = ${ans}%.`,
+        subtopic: 'Tabular Data'
+      };
+    },
+    () => {
+      const prodX = getRandomInt(40, 50), prodY = getRandomInt(65, 80), prodZ = getRandomInt(85, 100);
+      const chart = `\nProduction levels (in Tons):\nProduct X: [#####] ${prodX} Tons\nProduct Y: [########] ${prodY} Tons\nProduct Z: [##########] ${prodZ} Tons\n`;
+      const total = prodX + prodY + prodZ;
+      const pctY = Math.round((prodY / total) * 100);
+      return {
+        question: `Refer to the horizontal bar chart below representing production volume of three chemical materials (X, Y, and Z) in a factory:${chart}What percentage of the total production volume is contributed by Product Y?`,
+        options: makeOptions(pctY, 2, 8, (x) => `${x}%`), answer: 0,
+        explanation: `Total production = ${prodX} + ${prodY} + ${prodZ} = ${total} Tons. Contribution of Product Y = (${prodY} / ${total}) * 100 = ${pctY}%.`,
+        subtopic: 'Bar Graph Interpretation'
+      };
+    },
+    () => {
+      const salary = getRandomInt(45, 75) * 1000;
+      const food = 30, rent = 25;
+      const diff = Math.round(salary * (food - rent) / 100);
+      const chart = `\nMonthly Expenditure Distribution (% of total salary):\n- Food: 30%\n- Rent: 25%\n- Utilities: 25%\n- Savings: 20%\n`;
+      return {
+        question: `Refer to the budget distribution breakdown below for an employee with a net monthly salary of Rs. ${salary}:${chart}Calculate the difference (in Rs.) between the monthly amount spent on Food and Rent.`,
+        options: makeOptions(diff, 100, 500, (x) => `Rs. ${x}`), answer: 0,
+        explanation: `Food spending = 30% of Rs. ${salary}. Rent spending = 25% of Rs. ${salary}. Difference = 5% of Rs. ${salary} = Rs. ${diff}.`,
+        subtopic: 'Pie Chart Interpretation'
+      };
+    }
+  ],
+  'quadratic-equations': [
+    () => {
+      const k = getRandomInt(2, 6);
+      const sum = 2 * k;
+      return {
+        question: `Consider the quadratic equation x^2 - ${2*k}x + ${k*k - 1} = 0. If the roots are alpha and beta, find the sum of their squares (alpha^2 + beta^2).`,
+        options: makeOptions(2 * k * k + 2, 4, 20), answer: 0,
+        explanation: `Sum of roots (alpha + beta) = ${2*k}. Product of roots (alpha * beta) = ${k*k - 1}. alpha^2 + beta^2 = (alpha+beta)^2 - 2*alpha*beta = ${4*k*k} - 2*(${k*k - 1}) = ${2*k*k + 2}.`,
+        subtopic: 'Root Properties'
+      };
+    }
+  ],
+  'inequalities': [
+    () => {
+      const a = getRandomInt(2, 5), b = a + getRandomInt(2, 5);
+      return {
+        question: `Find the number of integer values of x that satisfy the inequality x^2 - ${a+b}x + ${a*b} <= 0.`,
+        options: makeOptions(b - a + 1, 1, 3), answer: 0,
+        explanation: `The inequality factors as (x - ${a})(x - ${b}) <= 0. The solution set is ${a} <= x <= ${b}. The integers are from ${a} to ${b}, giving a total of ${b - a + 1} values.`,
+        subtopic: 'Quadratic Inequalities'
+      };
+    },
+    () => {
+      const a = getRandomInt(3, 8), b = getRandomInt(1, 3);
+      return {
+        question: `Find the range of x that satisfies the absolute value inequality |x - ${a}| <= ${b}.`,
+        options: [`${a-b} <= x <= ${a+b}`, `${a-b-1} <= x <= ${a+b}`, `${a-b} <= x <= ${a+b+1}`, `None of these`], answer: 0,
+        explanation: `|x - ${a}| <= ${b} implies -${b} <= x - ${a} <= ${b}. Adding ${a} gives ${a-b} <= x <= ${a+b}.`,
+        subtopic: 'Modular Inequalities'
+      };
+    }
+  ],
+  'logarithms': [
+    () => {
+      const a = getRandomInt(2, 4);
+      const ans = Math.round(Math.pow(2, a));
+      return {
+        question: `Solve the logarithmic equation: log_2(x) + log_4(x) = ${a * 1.5}. Find the value of x.`,
+        options: makeOptions(ans, 2, 8), answer: 0,
+        explanation: `log_4(x) = 0.5 * log_2(x). Equation becomes 1.5 * log_2(x) = ${a * 1.5} -> log_2(x) = ${a} -> x = 2^${a} = ${ans}.`,
+        subtopic: 'Logarithmic Equations'
+      };
+    },
+    () => {
+      const a = getRandomInt(2, 4);
+      return {
+        question: `If log_10(2) = 0.3010, find the number of digits in the integer 2^${a * 10}.`,
+        options: makeOptions(Math.floor(a * 10 * 0.3010) + 1, 1, 3), answer: 0,
+        explanation: `Number of digits = floor(log_10(2^${a * 10})) + 1 = floor(${a * 10} * 0.3010) + 1 = ${Math.floor(a * 10 * 0.3010) + 1}.`,
+        subtopic: 'Log Properties'
+      };
+    }
   ]
 };
 
@@ -3766,12 +3920,25 @@ export function generateQuestions(topicId, difficulty, count = 5) {
     ? 'Expert'
     : raw.charAt(0).toUpperCase() + raw.slice(1);
 
-  let genPool;
-  if (key === 'Expert' && EXPERT_POOL[topicId]?.length)      genPool = EXPERT_POOL[topicId];
-  else if (key === 'Hard' && HARD_POOL[topicId]?.length)     genPool = HARD_POOL[topicId];
-  else                                                        genPool = GENERATORS[topicId]?.[key] || [];
+  const getPool = (tid) => {
+    if (key === 'Expert' && EXPERT_POOL[tid]?.length) return EXPERT_POOL[tid];
+    if (key === 'Hard' && HARD_POOL[tid]?.length) return HARD_POOL[tid];
+    return GENERATORS[tid]?.[key] || [];
+  };
+
+  let genPool = [];
+  if (topicId === 'interest-installments') {
+    genPool = [...getPool('simple-interest'), ...getPool('compound-interest')];
+  } else if (topicId === 'boat-streams-trains') {
+    genPool = [...getPool('boats-streams'), ...getPool('trains'), ...getPool('time-distance')];
+  } else if (topicId === 'perm-comb-prob') {
+    genPool = [...getPool('permutation-combination'), ...getPool('probability')];
+  } else {
+    genPool = getPool(topicId);
+  }
 
   if (!genPool || genPool.length === 0) return [];
+
 
   const result = [], usedIndices = new Set(), safety = count * 8;
   let i = 0;

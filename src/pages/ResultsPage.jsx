@@ -14,6 +14,84 @@ function getGrade(pct) {
   return GRADES.find(g => pct >= g.min) || GRADES[GRADES.length - 1];
 }
 
+function formatMathText(text) {
+  if (typeof text !== 'string') return text;
+  let s = text
+    .replace(/\balpha\b/g, 'α')
+    .replace(/\bbeta\b/g, 'β')
+    .replace(/\btheta\b/g, 'θ')
+    .replace(/\bsqrt/g, '√')
+    .replace(/ \* /g, ' × ')
+    .replace(/<=/g, '≤')
+    .replace(/>=/g, '≥')
+    .replace(/!=/g, '≠')
+    .replace(/\bpi\b/g, 'π');
+
+  const parts = [];
+  let idx = 0;
+  let keyCounter = 0;
+  const rx = /(?:\b(\d+)\s*\/\s*(\d+)\b)|(?:(log|Log|LOG)_(\d+)\(([^)]+)\))|(?:([a-zA-Z0-9αβπθ]+)\^(\d+))|(?:([a-zA-Z]+)_(\d+)(?!\())/g;
+  let m;
+
+  while ((m = rx.exec(s)) !== null) {
+    if (m.index > idx) parts.push(s.substring(idx, m.index));
+    if (m[1] !== undefined && m[2] !== undefined) {
+      parts.push(
+        <span key={`frac-${keyCounter++}`} style={{
+          display: 'inline-flex', flexDirection: 'column', alignItems: 'center',
+          verticalAlign: 'middle', margin: '0 0.15em', lineHeight: 1.1, fontSize: '0.92em'
+        }}>
+          <span style={{ borderBottom: '1.5px solid currentColor', padding: '0 0.2em 0.08em' }}>{m[1]}</span>
+          <span style={{ padding: '0.08em 0.2em 0' }}>{m[2]}</span>
+        </span>
+      );
+    } else if (m[3] !== undefined) {
+      parts.push(
+        <span key={`log-${keyCounter++}`}>
+          log<sub style={{ fontSize: '0.75em', verticalAlign: 'sub' }}>{m[4]}</sub>({m[5]})
+        </span>
+      );
+    } else if (m[6] !== undefined) {
+      parts.push(
+        <span key={`sup-${keyCounter++}`}>
+          {m[6]}<sup style={{ fontSize: '0.75em', verticalAlign: 'super' }}>{m[7]}</sup>
+        </span>
+      );
+    } else if (m[8] !== undefined) {
+      parts.push(
+        <span key={`sub-${keyCounter++}`}>
+          {m[8]}<sub style={{ fontSize: '0.75em', verticalAlign: 'sub' }}>{m[9]}</sub>
+        </span>
+      );
+    }
+    idx = rx.lastIndex;
+  }
+  if (idx < s.length) parts.push(s.substring(idx));
+  return parts.length > 0 ? parts : s;
+}
+
+function renderQuestionText(text) {
+  if (!text) return null;
+  const lines = text.split('\n');
+  return lines.map((line, i) => {
+    const trimmed = line.trim();
+    const isTable = trimmed.startsWith('+') || trimmed.startsWith('|') || /^[-+|]+$/.test(trimmed);
+    return (
+      <div key={i} style={{
+        fontFamily: isTable ? 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace' : 'inherit',
+        whiteSpace: 'pre-wrap',
+        background: isTable ? 'rgba(255,255,255,0.04)' : 'transparent',
+        padding: isTable ? '0.1rem 0.5rem' : '0',
+        letterSpacing: isTable ? '0.02em' : 'normal',
+        lineHeight: isTable ? '1.35' : '1.68',
+        borderRadius: isTable ? '2px' : '0'
+      }}>
+        {isTable ? line : formatMathText(line)}
+      </div>
+    );
+  });
+}
+
 export default function ResultsPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -148,7 +226,7 @@ export default function ResultsPage() {
                     <span className="review-ic">{icon}</span>
                     <div>
                       <div className="review-q">
-                        <strong>Q{i + 1}.</strong> {q.question}
+                        <strong>Q{i + 1}.</strong> {renderQuestionText(q.question)}
                       </div>
                       {isOverall && q.topicTitle && (
                         <span className="q-topic-chip" style={{ marginTop: '0.35rem', display: 'inline-flex' }}>📚 {q.topicTitle}</span>
@@ -159,12 +237,12 @@ export default function ResultsPage() {
                   <div className="review-ans">
                     {!isSkipped && (
                       <span className={`ans-pill ${isCorrect ? 'ans-correct' : 'ans-wrong'}`}>
-                        {isCorrect ? '✓' : '✗'} Your Answer: {KEYS[userAns]}. {q.options[userAns]}
+                        {isCorrect ? '✓' : '✗'} Your Answer: {KEYS[userAns]}. {formatMathText(q.options[userAns])}
                       </span>
                     )}
                     {!isCorrect && (
                       <span className="ans-pill ans-correct">
-                        ✓ Correct Answer: {KEYS[q.answer]}. {q.options[q.answer]}
+                        ✓ Correct Answer: {KEYS[q.answer]}. {formatMathText(q.options[q.answer])}
                       </span>
                     )}
                   </div>
@@ -172,7 +250,7 @@ export default function ResultsPage() {
                   {q.explanation && (
                     <div className="explain">
                       <div className="explain-label">💡 Explanation</div>
-                      <div className="explain-text">{q.explanation}</div>
+                      <div className="explain-text">{renderQuestionText(q.explanation)}</div>
                     </div>
                   )}
                 </div>

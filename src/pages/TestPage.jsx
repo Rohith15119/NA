@@ -16,6 +16,95 @@ function capFirst(s) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : '';
 }
 
+function formatMathText(text) {
+  if (typeof text !== 'string') return text;
+
+  // Unicode symbol replacements
+  let s = text
+    .replace(/\balpha\b/g, 'α')
+    .replace(/\bbeta\b/g, 'β')
+    .replace(/\btheta\b/g, 'θ')
+    .replace(/\bsqrt/g, '√')
+    .replace(/ \* /g, ' × ')
+    .replace(/<=/g, '≤')
+    .replace(/>=/g, '≥')
+    .replace(/!=/g, '≠')
+    .replace(/\bpi\b/g, 'π');
+
+  const parts = [];
+  let idx = 0;
+  let keyCounter = 0;
+
+  // Combined regex: fractions (num/den), subscripts (base_sub), superscripts (base^sup), log_base(...)
+  const rx = /(?:\b(\d+)\s*\/\s*(\d+)\b)|(?:(log|Log|LOG)_(\d+)\(([^)]+)\))|(?:([a-zA-Z0-9αβπθ]+)\^(\d+))|(?:([a-zA-Z]+)_(\d+)(?!\())/g;
+  let m;
+
+  while ((m = rx.exec(s)) !== null) {
+    if (m.index > idx) parts.push(s.substring(idx, m.index));
+
+    if (m[1] !== undefined && m[2] !== undefined) {
+      // Fraction: num/den → styled inline fraction
+      parts.push(
+        <span key={`frac-${keyCounter++}`} style={{
+          display: 'inline-flex', flexDirection: 'column', alignItems: 'center',
+          verticalAlign: 'middle', margin: '0 0.15em', lineHeight: 1.1, fontSize: '0.92em'
+        }}>
+          <span style={{ borderBottom: '1.5px solid currentColor', padding: '0 0.2em 0.08em' }}>{m[1]}</span>
+          <span style={{ padding: '0.08em 0.2em 0' }}>{m[2]}</span>
+        </span>
+      );
+    } else if (m[3] !== undefined) {
+      // log_base(arg)
+      parts.push(
+        <span key={`log-${keyCounter++}`}>
+          log<sub style={{ fontSize: '0.75em', verticalAlign: 'sub' }}>{m[4]}</sub>({m[5]})
+        </span>
+      );
+    } else if (m[6] !== undefined) {
+      // base^exp
+      parts.push(
+        <span key={`sup-${keyCounter++}`}>
+          {m[6]}<sup style={{ fontSize: '0.75em', verticalAlign: 'super' }}>{m[7]}</sup>
+        </span>
+      );
+    } else if (m[8] !== undefined) {
+      // base_sub (e.g. P_1, a_n)
+      parts.push(
+        <span key={`sub-${keyCounter++}`}>
+          {m[8]}<sub style={{ fontSize: '0.75em', verticalAlign: 'sub' }}>{m[9]}</sub>
+        </span>
+      );
+    }
+
+    idx = rx.lastIndex;
+  }
+
+  if (idx < s.length) parts.push(s.substring(idx));
+  return parts.length > 0 ? parts : s;
+}
+
+function renderQuestionText(text) {
+  if (!text) return null;
+  const lines = text.split('\n');
+  return lines.map((line, i) => {
+    const trimmed = line.trim();
+    const isTable = trimmed.startsWith('+') || trimmed.startsWith('|') || /^[-+|]+$/.test(trimmed);
+    return (
+      <div key={i} style={{
+        fontFamily: isTable ? 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace' : 'inherit',
+        whiteSpace: 'pre-wrap',
+        background: isTable ? 'rgba(255,255,255,0.04)' : 'transparent',
+        padding: isTable ? '0.1rem 0.5rem' : '0',
+        letterSpacing: isTable ? '0.02em' : 'normal',
+        lineHeight: isTable ? '1.35' : '1.68',
+        borderRadius: isTable ? '2px' : '0'
+      }}>
+        {isTable ? line : formatMathText(line)}
+      </div>
+    );
+  });
+}
+
 export default function TestPage() {
   const { topicId, difficulty } = useParams();
   const navigate   = useNavigate();
@@ -303,7 +392,7 @@ export default function TestPage() {
               </span>
             </div>
 
-            <div className="q-text">{current.question}</div>
+            <div className="q-text">{renderQuestionText(current.question)}</div>
 
             <div className="options">
               {current.options.map((opt, i) => (
@@ -313,7 +402,7 @@ export default function TestPage() {
                   onClick={() => handleAnswer(i)}
                 >
                   <span className="opt-key">{KEYS[i]}</span>
-                  <span className="opt-txt">{opt}</span>
+                  <span className="opt-txt">{formatMathText(opt)}</span>
                 </button>
               ))}
             </div>

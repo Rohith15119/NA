@@ -705,7 +705,7 @@ const GENERATORS = {
         const g = gcd(p1, p2);
         return {
           question: `In what ratio must rice at Rs. ${c1}/kg be mixed with rice at Rs. ${c2}/kg so that the mixture is worth Rs. ${target}/kg?`,
-          options: [`${p2/g}:${p1/g}`, `${p1/g}:${p2/g}`, `${(p2+g)/g}:${p1/g}`, `1:1`],
+          options: [`${p2/g}:${p1/g}`, `${p1/g}:${p2/g}`, `${p2/g+1}:${p1/g}`, `1:1`],
           answer: 0,
           explanation: `By alligation: Ratio = (${c2} - ${target}) : (${target} - ${c1}) = ${c2-target} : ${target-c1} = ${p2/g}:${p1/g}.`,
           subtopic: 'Alligation Rule'
@@ -741,7 +741,7 @@ const GENERATORS = {
         const g = gcd(ratioCheap, ratioDear);
         return {
           question: `A merchant mixes two varieties of wheat costing Rs. ${cCheap}/kg and Rs. ${cDear}/kg. If the final mixture is sold at Rs. ${target}/kg, find the ratio in which the two varieties were blended.`,
-          options: [`${ratioCheap/g}:${ratioDear/g}`, `${ratioDear/g}:${ratioCheap/g}`, `${(ratioCheap+g)/g}:${ratioDear/g}`, `1:1`],
+          options: [`${ratioCheap/g}:${ratioDear/g}`, `${ratioDear/g}:${ratioCheap/g}`, `${ratioCheap/g+1}:${ratioDear/g}`, `1:1`],
           answer: 0,
           explanation: `Ratio = (${cDear} - ${target}) : (${target} - ${cCheap}) = ${ratioCheap} : ${ratioDear} = ${ratioCheap/g}:${ratioDear/g}.`,
           subtopic: 'Alligation Ratio'
@@ -769,7 +769,7 @@ const GENERATORS = {
         const ml = Math.round(total * remain), w = total - ml, g = gcd(ml, w);
         return {
           question: `A container contains ${total} liters of pure milk. A milkman removes ${rem} liters of milk and replaces it with water. He repeats this process one more time (total 2 times). Find the final ratio of milk to water in the container.`,
-          options: [`${ml/g}:${w/g}`, `${(ml+g)/g}:${w/g}`, `${ml/g}:${(w+g)/g}`, `1:1`],
+          options: [`${ml/g}:${w/g}`, `${ml/g+1}:${w/g}`, `${ml/g}:${w/g+1}`, `1:1`],
           answer: 0,
           explanation: `Milk remaining = ${total} * (1 - ${rem}/${total})^2 = ${ml}L. Water = ${w}L. Ratio = ${ml/g}:${w/g}.`,
           subtopic: 'Repeated Replacement'
@@ -781,7 +781,7 @@ const GENERATORS = {
         const g = gcd(p1, p2);
         return {
           question: `In what ratio must a shopkeeper mix sugar of Rs. ${c1}/kg with sugar of Rs. ${c2}/kg to get a mixture worth Rs. ${target}/kg?`,
-          options: [`${p2/g}:${p1/g}`, `${p1/g}:${p2/g}`, `${(p2+g)/g}:${p1/g}`, `1:1`],
+          options: [`${p2/g}:${p1/g}`, `${p1/g}:${p2/g}`, `${p2/g+1}:${p1/g}`, `1:1`],
           answer: 0,
           explanation: `By alligation: Ratio of cheaper to dearer = (${c2} - ${target}) : (${target} - ${c1}) = ${p2} : ${p1} = ${p2/g}:${p1/g}.`,
           subtopic: 'Alligation Rule'
@@ -2856,7 +2856,7 @@ const HARD_POOL = {
       const ml = Math.round(total * remain), w = total - ml, g = gcd(ml, w);
       return {
         question: `A container contains ${total} liters of pure milk. A milkman removes ${rem} liters of milk and replaces it with water. He repeats this process one more time (total 2 times). Find the final ratio of milk to water in the container.`,
-        options: [`${ml/g}:${w/g}`, `${(ml+g)/g}:${w/g}`, `${ml/g}:${(w+g)/g}`, `1:1`], answer: 0,
+        options: [`${ml/g}:${w/g}`, `${ml/g+1}:${w/g}`, `${ml/g}:${w/g+1}`, `1:1`], answer: 0,
         explanation: `Milk remaining = ${total} * (1 - ${rem}/${total})^2 = ${ml}L. Water = ${w}L. Ratio = ${ml/g}:${w/g}.`,
         subtopic: 'Repeated Replacement'
       };
@@ -2867,7 +2867,7 @@ const HARD_POOL = {
       const g = gcd(p1, p2);
       return {
         question: `In what ratio must a shopkeeper mix sugar of Rs. ${c1}/kg with sugar of Rs. ${c2}/kg to get a mixture worth Rs. ${target}/kg?`,
-        options: [`${p2/g}:${p1/g}`, `${p1/g}:${p2/g}`, `${(p2+g)/g}:${p1/g}`, `1:1`], answer: 0,
+        options: [`${p2/g}:${p1/g}`, `${p1/g}:${p2/g}`, `${p2/g+1}:${p1/g}`, `1:1`], answer: 0,
         explanation: `By alligation: Ratio of cheaper to dearer = (${c2} - ${target}) : (${target} - ${c1}) = ${p2} : ${p1} = ${p2/g}:${p1/g}.`,
         subtopic: 'Alligation Rule'
       };
@@ -3486,7 +3486,7 @@ const EXPERT_POOL = {
       const remain=Math.pow((total-rem)/total,n);
       const ml=Math.round(total*remain), w=total-ml, g=gcd(ml,w);
       return{question:`A pharmaceutical firm maintains a stock of ${total} liters of pure chemical sanitizer. A lab assistant extracts ${rem} liters of sanitizer and replaces it with water. This exact procedure of removing ${rem} liters of mixture and replacing it with water is repeated a total of ${n} times. Find the final ratio of pure chemical sanitizer to water remaining in the stock container.`,
-        options:[`${ml/g}:${w/g}`, `${(ml+g)/g}:${w/g}`, `${ml/g}:${(w+g)/g}`, `1:1`],answer:0,
+        options:[`${ml/g}:${w/g}`, `${ml/g+1}:${w/g}`, `${ml/g}:${w/g+1}`, `1:1`],answer:0,
         explanation:`Using the repeated replacement formula: Final chemical = ${total} * ((1 - ${rem}/${total})^${n}) = ${ml} liters. Water = ${total} - ${ml} = ${w} liters. The ratio is ${ml/g}:${w/g}.`,subtopic:'Mixture Replacement'};},
     () => { // Partnership with active manager salary
       const P1=12000, P2=18000, profit=60000, mgrPct=10;
@@ -3505,7 +3505,7 @@ const EXPERT_POOL = {
       const mixAlcohol = (c1*v1 + c2*v2 + c3*v3)/totVol;
       const rMix = Math.round(mixAlcohol), g=gcd(rMix, 100-rMix);
       return{question:`Three containers hold liquid fuels of different purities: the first has ${c1}% alcohol, the second has ${c2}% alcohol, and the third has ${c3}% alcohol. A technician mixes the contents in the volume ratio of ${v1}:${v2}:${v3} respectively. Find the final ratio of pure alcohol to water in the resulting composite fuel mixture.`,
-        options:[`${rMix/g}:${(100-rMix)/g}`, `${(rMix+2)/g}:${(100-rMix)/g}`, `${rMix/g}:${(100-rMix+2)/g}`, `1:2`],answer:0,
+        options:[`${rMix/g}:${(100-rMix)/g}`, `${rMix/g + 1}:${(100-rMix)/g}`, `${rMix/g}:${(100-rMix)/g + 1}`, `1:2`],answer:0,
         explanation:`Alcohol volume = ${c1}%*${v1} + ${c2}%*${v2} + ${c3}%*${v3} = ${c1*v1 + c2*v2 + c3*v3} units out of ${totVol} total volume. Average alcohol % = ${rMix}%. Water % = ${100-rMix}%. Ratio = ${rMix/g}:${(100-rMix)/g}.`,subtopic:'3-Container Mixture'};},
   ],
   'averages': [
@@ -3529,7 +3529,7 @@ const EXPERT_POOL = {
       const ml = Math.round(total * remain), w = total - ml, g = gcd(ml, w);
       return {
         question: `A pharmaceutical firm maintains a stock of ${total} liters of pure chemical sanitizer. A lab assistant extracts ${rem} liters of sanitizer and replaces it with water. This exact procedure of removing ${rem} liters of mixture and replacing it with water is repeated a total of ${n} times. Find the final ratio of pure chemical sanitizer to water remaining in the stock container.`,
-        options: [`${ml/g}:${w/g}`, `${(ml+g)/g}:${w/g}`, `${ml/g}:${(w+g)/g}`, `1:1`], answer: 0,
+        options: [`${ml/g}:${w/g}`, `${ml/g+1}:${w/g}`, `${ml/g}:${w/g+1}`, `1:1`], answer: 0,
         explanation: `Using the repeated replacement formula: Final chemical = ${total} * ((1 - ${rem}/${total})^${n}) = ${ml} liters. Water = ${total} - ${ml} = ${w} liters. The ratio is ${ml/g}:${w/g}.`,
         subtopic: 'Repeated Replacement'
       };
@@ -3542,7 +3542,7 @@ const EXPERT_POOL = {
       const rMix = Math.round(mixAlcohol), g = gcd(rMix, 100 - rMix);
       return {
         question: `Three containers hold liquid fuels of different purities: the first has ${c1}% alcohol, the second has ${c2}% alcohol, and the third has ${c3}% alcohol. A technician mixes the contents in the volume ratio of ${v1}:${v2}:${v3} respectively. Find the final ratio of pure alcohol to water in the resulting composite fuel mixture.`,
-        options: [`${rMix/g}:${(100-rMix)/g}`, `${(rMix+g)/g}:${(100-rMix)/g}`, `${rMix/g}:${(100-rMix+g)/g}`, `1:2`], answer: 0,
+        options: [`${rMix/g}:${(100-rMix)/g}`, `${rMix/g+1}:${(100-rMix)/g}`, `${rMix/g}:${(100-rMix)/g+1}`, `1:2`], answer: 0,
         explanation: `Alcohol volume = ${c1}%*${v1} + ${c2}%*${v2} + ${c3}%*${v3} = ${c1*v1 + c2*v2 + c3*v3} units out of ${totVol} total volume. Average alcohol % = ${rMix}%. Water % = ${100-rMix}%. Ratio = ${rMix/g}:${(100-rMix)/g}.`,
         subtopic: '3-Container Mixture'
       };
@@ -3553,7 +3553,7 @@ const EXPERT_POOL = {
       const g = gcd(p1, p2);
       return {
         question: `A tea distributor wishes to blend low-grade tea leaves costing Rs. ${c1}/kg with premium tea leaves costing Rs. ${c2}/kg. In what ratio must he mix the two varieties of tea leaves so that the resulting composite blend is valued at exactly Rs. ${target}/kg?`,
-        options: [`${p2/g}:${p1/g}`, `${p1/g}:${p2/g}`, `${(p2+g)/g}:${p1/g}`, `1:1`], answer: 0,
+        options: [`${p2/g}:${p1/g}`, `${p1/g}:${p2/g}`, `${p2/g+1}:${p1/g}`, `1:1`], answer: 0,
         explanation: `By the Alligation Rule: Ratio of cheaper to dearer = (Dearer Price - Mean Price) : (Mean Price - Cheaper Price) = (${c2} - ${target}) : (${target} - ${c1}) = ${p2} : ${p1} = ${p2/g}:${p1/g}.`,
         subtopic: 'Alligation Rule'
       };
@@ -3763,7 +3763,7 @@ const EXPERT_POOL = {
       const g = gcd(fav, tot);
       return {
         question: `A storage box contains ${red} red server nodes and ${blue} blue server nodes. A network administrator randomly selects 3 nodes from the box without replacement to configure a cluster. What is the probability that exactly 2 of the selected nodes are red and 1 is blue?`,
-        options: [`${fav/g}/${tot/g}`, `${(fav+1)/g}/${tot/g}`, `${fav/g}/${(tot+2)/g}`, `1/2`], answer: 0,
+        options: [`${fav/g}/${tot/g}`, `${fav/g + 1}/${tot/g}`, `${fav/g}/${tot/g + 2}`, `1/2`], answer: 0,
         explanation: `Favorable outcomes = C(${red},2) * C(${blue},1) = ${nCr(red, 2)} * ${blue} = ${fav}. Total outcomes = C(${total},3) = ${tot}. Probability = ${fav}/${tot} = ${fav/g}/${tot/g}.`,
         subtopic: 'Ball Drawing'
       };

@@ -44,11 +44,11 @@ export default function Home() {
           <h1>Master Numerical Ability<br />for TCS NQT</h1>
           <p>
             Practice 16 topics with expert-curated questions. Select your difficulty level
-            (Easy, Medium, or Hard) to build complete exam proficiency.
+            (Easy, Medium, Hard, or TCS NQT Level) to build complete exam proficiency.
           </p>
           <div className="hero-stats">
             <div className="stat-pill"><span className="icon">📚</span> {TOPICS.length} Topics</div>
-            <div className="stat-pill"><span className="icon">❓</span> 240+ Questions</div>
+            <div className="stat-pill"><span className="icon">❓</span> 320+ Questions</div>
             <div className="stat-pill"><span className="icon">⏱️</span> 25 min Mock Test</div>
             <div className="stat-pill"><span className="icon">🏆</span> Level Wise Practice</div>
           </div>
@@ -58,12 +58,12 @@ export default function Home() {
         <div className="overall-card">
           <div className="overall-icon">🎯</div>
           <div className="overall-text">
-            <h2>Full Mock Test <span className="badge badge-hard" style={{ fontSize: '0.72rem', verticalAlign: 'middle', marginLeft: '0.4rem' }}>🔴 HARD</span></h2>
-            <p>20 hard-level questions from all 16 topics — simulating the <strong>actual TCS NQT difficulty</strong> to push your limits</p>
+            <h2>Full Mock Test <span className="badge badge-expert" style={{ fontSize: '0.72rem', verticalAlign: 'middle', marginLeft: '0.4rem' }}>🏆 TCS NQT LEVEL</span></h2>
+            <p>20 expert-level questions from all 16 topics — simulating the <strong>actual TCS NQT difficulty</strong> to push your limits</p>
             <div className="overall-tags">
               <span className="overall-tag">⏱️ 25 minutes</span>
               <span className="overall-tag">❓ 20 Questions</span>
-              <span className="overall-tag">🔴 Hard Level Only</span>
+              <span className="overall-tag">🏆 Expert Level Only</span>
               <span className="overall-tag">📊 Detailed Review</span>
             </div>
           </div>
@@ -76,7 +76,7 @@ export default function Home() {
         <div className="section-head">
           <div>
             <div className="section-title">📖 Topic-Wise Practice</div>
-            <div className="section-sub">Select any topic to choose a difficulty level (Easy, Medium, Hard)</div>
+            <div className="section-sub">Select any topic to choose a difficulty level (Easy, Medium, Hard, or TCS NQT Level)</div>
           </div>
         </div>
         <div className="topics-grid">
@@ -107,10 +107,11 @@ export default function Home() {
                     {topic.subtopics.length > 3 && <span className="tc-tag">+{topic.subtopics.length - 3}</span>}
                   </div>
                   <div className="tc-meta">
-                    <span className="tc-meta-item">❓ 15 Qs total</span>
+                    <span className="tc-meta-item">❓ 20 Qs total</span>
                     <span className="tc-meta-item">🟢 Easy</span>
                     <span className="tc-meta-item">🟡 Med</span>
                     <span className="tc-meta-item">🔴 Hard</span>
+                    <span className="tc-meta-item">🏆 Expert</span>
                   </div>
                   {tp && typeof tp === 'object' && typeof tp.best === 'number' && typeof tp.total === 'number' && tp.total > 0 && (
                     <div className="tc-progress">
@@ -176,7 +177,20 @@ export default function Home() {
                   </span>
                   <span className="badge badge-hard">⏱️ 10 mins</span>
                 </button>
+
+                <button 
+                  className="opt" 
+                  onClick={() => handleStartTest('expert')}
+                  style={{ display: 'flex', justifyContent: 'space-between', width: '100%', border: '1px solid rgba(245, 158, 11, 0.4)' }}
+                >
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span className="opt-key" style={{ background: 'linear-gradient(135deg, #d97706, #f59e0b)', borderColor: 'transparent', color: 'white' }}>T</span>
+                    <strong style={{ fontSize: '0.86rem', color: '#fbbf24' }}>🏆 TCS NQT Level</strong>
+                  </span>
+                  <span className="badge badge-expert">⏱️ 15 mins</span>
+                </button>
               </div>
+
 
               <div className="modal-btns">
                 <button className="btn btn-secondary" onClick={() => setSelectedTopic(null)}>Cancel</button>

@@ -130,7 +130,7 @@ export default function TestPage() {
   const current      = questions[currentIndex] || null;
   const answered     = Object.keys(answers).length;
   const pct          = Math.round(((currentIndex + 1) / Math.max(totalExpected, 1)) * 100);
-  const testDuration = isOverall ? 25 : (String(difficulty).toLowerCase() === 'hard' ? 10 : 8);
+  const testDuration = isOverall ? 25 : (String(difficulty).toLowerCase() === 'expert' ? 15 : (String(difficulty).toLowerCase() === 'hard' ? 10 : 8));
 
   // ── Handlers ──────────────────────────────────────────────────────────────
   const handleAnswer = useCallback((optIdx) => {
@@ -237,10 +237,10 @@ export default function TestPage() {
         <div className="test-header-inner">
           <div className="test-info">
             <div className="test-topic">
-              {isOverall ? 'Overall Mock Test' : `${topic?.title} (${String(difficulty).toUpperCase()})`}
+              {isOverall ? 'Overall Mock Test' : `${topic?.title} (${String(difficulty).toLowerCase() === 'expert' ? '🏆 TCS NQT LEVEL' : String(difficulty).toUpperCase()})`}
             </div>
             <div className="test-name">
-              {isOverall ? '🎯 TCS NQT Mock Exam' : `📖 ${topic?.title} — ${capFirst(difficulty)} Test`}
+              {isOverall ? '🎯 TCS NQT Mock Exam' : `📖 ${topic?.title} — ${String(difficulty).toLowerCase() === 'expert' ? '🏆 TCS NQT Level' : capFirst(difficulty)} Test`}
               {aiPowered && <span className="ai-live-badge">🤖 AI</span>}
             </div>
           </div>

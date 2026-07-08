@@ -212,9 +212,9 @@ export const TOPICS = [
   }
 ];
 
-export function getTopicTestQuestions(topicId, difficulty) {
-  // Let's generate 5 unique questions for the test
-  return generateQuestions(topicId, difficulty || 'easy', 5);
+export function getTopicTestQuestions(topicId, difficulty, count = 15) {
+  // Let's generate unique questions for the test
+  return generateQuestions(topicId, difficulty || 'easy', count);
 }
 
 export function getOverallTestQuestions(totalCount = 20) {

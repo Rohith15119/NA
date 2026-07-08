@@ -3363,6 +3363,18 @@ const HARD_POOL = {
         explanation: `Total = ${a} + ${b} = ${total} million. Mobile user percentage = (${a} / ${total}) * 100 = ${pct}%.`,
         subtopic: 'Bar Chart Interpretation'
       };
+    },
+    () => {
+      const c1 = getRandomInt(10, 20), c2 = getRandomInt(20, 30);
+      const m1 = getRandomInt(15, 25), m2 = getRandomInt(25, 35);
+      const ratio = Math.round(((c1+c2) / (m1+m2)) * 100);
+      const table = `\n+------+-----------+-----------+\n| Year | Chrome    | Firefox   |\n+------+-----------+-----------+\n| 2021 |   ${c1}M  |   ${m1}M  |\n| 2022 |   ${c2}M  |   ${m2}M  |\n+------+-----------+-----------+\n`;
+      return {
+        question: `The table below represents active user statistics (in Millions) for two web browsers over two years:${table}Calculate the percentage ratio of Chrome users to Firefox users over the entire period (round to the nearest whole %).`,
+        options: makeOptions(ratio, 2, 8, (x) => `${x}%`), answer: 0,
+        explanation: `Total Chrome = ${c1+c2}M. Total Firefox = ${m1+m2}M. Ratio = (${c1+c2} / ${m1+m2}) * 100 = ${ratio}%.`,
+        subtopic: 'Tabular Data'
+      };
     }
   ],
   'quadratic-equations': [
@@ -3862,6 +3874,18 @@ const EXPERT_POOL = {
         options: makeOptions(diff, 100, 500, (x) => `Rs. ${x}`), answer: 0,
         explanation: `Food spending = 30% of Rs. ${salary}. Rent spending = 25% of Rs. ${salary}. Difference = 5% of Rs. ${salary} = Rs. ${diff}.`,
         subtopic: 'Pie Chart Interpretation'
+      };
+    },
+    () => {
+      const c1 = getRandomInt(15, 25), c2 = getRandomInt(26, 35), c3 = getRandomInt(36, 45);
+      const m1 = getRandomInt(20, 30), m2 = getRandomInt(31, 40), m3 = getRandomInt(41, 50);
+      const ratio = Math.round(((c1+c2+c3) / (m1+m2+m3)) * 100);
+      const table = `\n+------+-----------+-----------+\n| Year | Chrome    | Firefox   |\n+------+-----------+-----------+\n| 2021 |   ${c1}M  |   ${m1}M  |\n| 2022 |   ${c2}M  |   ${m2}M  |\n| 2023 |   ${c3}M  |   ${m3}M  |\n+------+-----------+-----------+\n`;
+      return {
+        question: `The table below represents active user statistics (in Millions) for two web browsers over three years:${table}Calculate the percentage ratio of the total Chrome users to the total Firefox users over the entire three-year period (round to the nearest whole %).`,
+        options: makeOptions(ratio, 2, 8, (x) => `${x}%`), answer: 0,
+        explanation: `Total Chrome users = ${c1} + ${c2} + ${c3} = ${c1+c2+c3}M. Total Firefox users = ${m1} + ${m2} + ${m3} = ${m1+m2+m3}M. Ratio = (${c1+c2+c3} / ${m1+m2+m3}) * 100 = ${ratio}%.`,
+        subtopic: 'Tabular Data'
       };
     }
   ],

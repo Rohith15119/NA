@@ -7,8 +7,8 @@ import Timer from '../components/Timer';
 const KEYS = ['A', 'B', 'C', 'D'];
 
 // Batch sizes for paginated loading
-const TOPIC_INITIAL   = 3;   // show quickly, user starts immediately
-const TOPIC_TOTAL     = 5;
+const TOPIC_INITIAL   = 5;   // show quickly, user starts immediately
+const TOPIC_TOTAL     = 15;
 const OVERALL_INITIAL = 8;
 const OVERALL_TOTAL   = 20;
 
@@ -84,7 +84,7 @@ export default function TestPage() {
             // Fill remaining slots with static questions
             const staticAll = isOverall
               ? getOverallTestQuestions(total)
-              : getTopicTestQuestions(topicId, difficulty);
+              : getTopicTestQuestions(topicId, difficulty, total);
             const staticSlice = staticAll.slice(batch1.length, total);
             if (!cancelRef.current && staticSlice.length > 0) {
               setQuestions(prev => {
@@ -95,7 +95,7 @@ export default function TestPage() {
           } finally {
             if (!cancelRef.current) setIsLoadingMore(false);
           }
-          return; // done
+          return;
         }
       } catch (e1) {
         console.warn('[AI Batch 1 failed] falling back to full static pool:', e1.message);
@@ -106,7 +106,7 @@ export default function TestPage() {
         try {
           const staticQs = isOverall
             ? getOverallTestQuestions(total)
-            : getTopicTestQuestions(topicId, difficulty);
+            : getTopicTestQuestions(topicId, difficulty, total);
           if (staticQs && staticQs.length > 0) {
             setQuestions(staticQs);
             setAiPowered(false);

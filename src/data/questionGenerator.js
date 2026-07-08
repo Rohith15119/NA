@@ -3377,65 +3377,62 @@ const EXPERT_POOL = {
       const d1=getRandomInt(3,5),d2=d1+getRandomInt(2,4),d3=d2+getRandomInt(2,3);
       const r1=getRandomInt(1,d1-1),r2=getRandomInt(1,d2-1),r3=getRandomInt(1,d3-1);
       const L=lcmThree(d1,d2,d3);
-      // find smallest N by brute force (guaranteed finite)
       let N=1;while(N<1000){if(N%d1===r1&&N%d2===r2&&N%d3===r3)break;N++;}
-      return{question:`Find the smallest number that leaves remainder ${r1} on dividing by ${d1}, remainder ${r2} on ${d2}, and remainder ${r3} on ${d3}.`,
+      return{question:`A local logistics company is sorting package shipments. When the warehouse supervisor attempts to organize the total package count into bins of ${d1}, there are ${r1} packages left over. When sorted into bins of ${d2}, there are ${r2} left over, and when sorted into bins of ${d3}, there are ${r3} left over. If the total stock represents the smallest positive number satisfying these conditions, find the total package count in the warehouse.`,
         options:makeOptions(N,5,30),answer:0,
-        explanation:`Solve by Chinese Remainder Theorem or systematic search. Answer: ${N}. Verify: ${N}%${d1}=${N%d1},  ${N}%${d2}=${N%d2}, ${N}%${d3}=${N%d3}.`,subtopic:'CRT'};},
+        explanation:`Using the Chinese Remainder Theorem: package count mod ${d1} = ${r1}, mod ${d2} = ${r2}, and mod ${d3} = ${r3}. The unique solution modulo LCM(${d1},${d2},${d3}) is ${N}.`,subtopic:'CRT'};},
     () => { // Last 2 digits (mod 100) using pattern
       const bases=[3,7,13,17,19,23,27,29,33,37];
       const base=pickRandomArray(bases),exp=getRandomInt(50,200);
       const last2=powerMod(base,exp,100);
-      return{question:`Find the last TWO digits of ${base}^${exp}.`,
-        options:makeOptions(last2,5,20),answer:0,
-        explanation:`${base}^${exp} mod 100 = ${last2}. (Use cyclicity: powers of ${base} mod 100 repeat with period dividing φ(100)=40.)`,subtopic:'Last Two Digits'};},
+      const strLast2=String(last2).padStart(2,'0');
+      return{question:`A high-precision scientific simulation measures a compound population that grows by a multiplier factor of ${base} every hour. If the culture starts with a base multiplier of 1, find the last two digits of the total population index at the end of exactly ${exp} hours.`,
+        options:[strLast2, String((last2+13)%100).padStart(2,'0'), String((last2+27)%100).padStart(2,'0'), String((last2+41)%100).padStart(2,'0')],answer:0,
+        explanation:`Find (${base} raised to the power of ${exp}) modulo 100. Using Euler's totient theorem, period of units/tens digit divides phi(100) = 40. Solving gives the last two digits as ${strLast2}.`,subtopic:'Last Two Digits'};},
     () => { // Sum of digits divisible by 9: count
-      const d=getRandomInt(3,6),start=getRandomInt(100,999);
-      let count=0,n=start;
-      while(count<5){if(n%d===0){count++;}n++;}
-      const ans=n-1-start+1-1;
-      // simpler: how many multiples of d in [1000,9999]
+      const d=getRandomInt(3,6);
       const total=Math.floor(9999/d)-Math.floor(999/d);
-      return{question:`How many 4-digit numbers are exact multiples of ${d}?`,
+      return{question:`A network configuration protocol generates sequence numbers for local routing databases. An systems engineer needs to calculate the exact quantity of four-digit identifiers (ranging from 1000 to 9999 inclusive) that are perfectly divisible by the server subnet priority key ${d}. How many valid routing identifiers are available in this sequence range?`,
         options:makeOptions(total,5,30),answer:0,
-        explanation:`⌊9999/${d}⌋−⌊999/${d}⌋=${Math.floor(9999/d)}−${Math.floor(999/d)}=${total}.`,subtopic:'Counting Multiples'};},
+        explanation:`Calculate total multiples of ${d} in the range 1000 to 9999. First multiple is 1000 + (${d} - (1000 mod ${d})). Total count = floor(9999/${d}) - floor(999/${d}) = ${total}.`,subtopic:'Counting Multiples'};},
     () => { // Remainder of product mod prime
       const mod=pickRandomArray([7,11,13]);
       const a=getRandomInt(2,mod-1),b=getRandomInt(2,mod-1),c=getRandomInt(2,mod-1);
       const rem=(a*b*c)%mod;
-      return{question:`Find the remainder when ${a}×${b}×${c} is divided by ${mod}.`,
+      return{question:`An encryption algorithm computes a security validation checksum by multiplying three dynamically generated parameters: ${a}, ${b}, and ${c}. To fit this checksum index into a secure transmission packet channel, the program takes the remainder when the product of the three parameters is divided by the primary security code ${mod}. What is the resulting packet remainder value?`,
         options:makeOptions(rem,1,5),answer:0,
-        explanation:`${a*b}×${c} mod ${mod}. ${a*b} mod ${mod}=${(a*b)%mod}. Then ×${c} mod ${mod}=${rem}.`,subtopic:'Product Remainder'};},
+        explanation:`Product = ${a} * ${b} * ${c} = ${a*b*c}. Remainder modulo ${mod} is (${a*b*c} mod ${mod}) = ${rem}.`,subtopic:'Product Remainder'};},
     () => { // Digit sum rule + divisibility trap
-      const n=getRandomInt(10,30)*9+getRandomInt(1,8); // not divisible by 9
+      const n=getRandomInt(10,30)*9+getRandomInt(1,8);
       const digitSum=String(n).split('').reduce((a,c)=>a+parseInt(c),0);
       const nearestMult9=Math.ceil(digitSum/9)*9;
       const toAdd=nearestMult9-digitSum;
-      return{question:`What is the smallest digit that must be added to ${n} to make it divisible by 9?`,
+      return{question:`A financial database stores transaction logs under ID ${n}. To verify integrity, the system runs a check where the digits of the ID must sum to a value that is perfectly divisible by 9. What is the minimum positive single-digit integer that must be added to the ID ${n} to satisfy this integrity requirement?`,
         options:makeOptions(toAdd,1,4),answer:0,
-        explanation:`Digit sum of ${n}=${digitSum}. Nearest multiple of 9≥${digitSum} is ${nearestMult9}. Add ${toAdd}.`,subtopic:'Divisibility by 9'};},
+        explanation:`The digit sum of ${n} is ${digitSum}. The next multiple of 9 is ${nearestMult9}. The difference is ${toAdd}, which is the minimum value to add.`,subtopic:'Divisibility by 9'};},
     () => { // Euler's totient count
       const p=pickRandomArray([5,7,11,13]);
       const q=pickRandomArray([3,4,8]).filter(x=>gcd(x,p)===1).pop()||4;
-      const N=p*q,phi=p>1&&q>1?(p-1)*(q-1):N;
-      return{question:`How many integers from 1 to ${N} are coprime to ${N}?`,
+      const N=p*q,phi=(p-1)*(q-1);
+      return{question:`A secure cryptography generator assigns keys based on integer pairings with a system constant N = ${N}. The generator must calculate the exact number of integers in the range from 1 to ${N} inclusive that share no common factors (coprime) with ${N} other than 1. Find the total number of coprime pairings.`,
         options:makeOptions(phi,2,8),answer:0,
-        explanation:`φ(${N})=φ(${p})×φ(${q})=(${p}-1)×(${q}-1)=${phi}.`,subtopic:"Euler's Totient"};},
+        explanation:`Using Euler's Totient function: phi(${N}) = phi(${p} * ${q}) = (${p}-1) * (${q}-1) = ${phi} numbers.`,subtopic:"Euler's Totient"};},
     () => { // Perfect square factors
       const a=getRandomInt(2,4),b=getRandomInt(1,3);
       const N=Math.pow(2,2*a)*Math.pow(3,2*b);
       const sqFact=(a+1)*(b+1);
-      return{question:`Find the number of perfect-square factors of ${N}.`,
+      return{question:`A structural design program evaluates load distribution configurations using a stress tolerance variable N = ${N}. To assess vibrational stability, the engineer needs to determine how many factors of this stress variable N are perfect squares (greater than or equal to 1). How many perfect-square factors are associated with N?`,
         options:makeOptions(sqFact,2,8),answer:0,
-        explanation:`${N}=2^${2*a}×3^${2*b}. Perfect-square factors use even exponents: (${a}+1)×(${b}+1)=${sqFact}.`,subtopic:'Perfect Square Factors'};},
+        explanation:`Given N = 2^${2*a} * 3^${2*b}. Perfect square factors must have even powers of 2 (from 0 to ${2*a}) and 3 (from 0 to ${2*b}). Total count = (${a}+1) * (${b}+1) = ${sqFact}.`,subtopic:'Perfect Square Factors'};},
     () => { // Sum of digits after repeated operations
       const n=getRandomInt(100,999),power=getRandomInt(2,4);
       let val=Math.pow(n,power);
       while(val>=10){val=String(val).split('').reduce((a,c)=>a+parseInt(c),0);}
-      return{question:`Compute the digital root of ${n}^${power}.`,
+      return{question:`A database integrity test calculates the digital root of a large exponential value. The base variable is set to ${n} and the exponential index is ${power}. If the digital root is defined as the single-digit sum obtained by repeatedly summing the digits of the result until a single digit remains, calculate the digital root of ${n} raised to the power of ${power}.`,
         options:makeOptions(val,1,4),answer:0,
-        explanation:`Digital root = ((${n}^${power}−1) mod 9)+1 = ${val}.`,subtopic:'Digital Root'};},
+        explanation:`The digital root of an integer is equivalent to the number modulo 9 (where a remainder of 0 maps to 9). For ${n}^${power}, this evaluates to ${val}.`,subtopic:'Digital Root'};},
   ],
+
   'ratio-proportion': [
     () => { // Repeated replacement: exact ratio after n steps
       const C=getRandomInt(40,100),rem=getRandomInt(10,30),n=getRandomInt(3,4);

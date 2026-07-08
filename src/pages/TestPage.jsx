@@ -7,8 +7,8 @@ import Timer from '../components/Timer';
 const KEYS = ['A', 'B', 'C', 'D'];
 
 // Batch sizes for paginated loading
-const TOPIC_INITIAL   = 5;   // show quickly, user starts immediately
-const TOPIC_TOTAL     = 10;
+const TOPIC_INITIAL   = 3;   // show quickly, user starts immediately
+const TOPIC_TOTAL     = 5;
 const OVERALL_INITIAL = 8;
 const OVERALL_TOTAL   = 20;
 

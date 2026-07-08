@@ -3432,413 +3432,175 @@ const EXPERT_POOL = {
         options:makeOptions(val,1,4),answer:0,
         explanation:`The digital root of an integer is equivalent to the number modulo 9 (where a remainder of 0 maps to 9). For ${n}^${power}, this evaluates to ${val}.`,subtopic:'Digital Root'};},
   ],
-
   'ratio-proportion': [
-    () => { // Repeated replacement: exact ratio after n steps
-      const C=getRandomInt(40,100),rem=getRandomInt(10,30),n=getRandomInt(3,4);
-      const remain=Math.pow((C-rem)/C,n);
-      const num=Math.round(remain*100),den=100,g=gcd(num,den-num);
-      return{question:`${C}L pure milk. ${rem}L drawn and replaced with water — ${n} times. What fraction of the mixture is milk?`,
-        options:[`${num/g}/${(den-num)/g+num/g}`,`${Math.round(remain*10)}/10`,`${num/g+1}/${(100)/g}`,`${(C-rem)}/${C}`],answer:0,
-        explanation:`Fraction=((${C}−${rem})/${C})^${n}=${remain.toFixed(4)}≈${num/g}:(${100-num}/g).`,subtopic:'Mixture Fraction'};},
-    () => { // Wages in ratio of work done
-      const rA=getRandomInt(2,5),rB=getRandomInt(3,7),rC=getRandomInt(4,8);
-      const total=getRandomInt(6,12)*100;
-      const sumR=rA+rB+rC;
-      const shareC=Math.round(rC/sumR*total);
-      return{question:`A, B, C can complete a job in ${rA}, ${rB}, ${rC} days. They work together and earn ₹${total}. C's share?`,
-        options:makeOptions(shareC,100,500),answer:0,
-        explanation:`Work ratio=1/${rA}:1/${rB}:1/${rC}. C's fraction=(1/${rC})/(1/${rA}+1/${rB}+1/${rC}). C's share≈₹${shareC}.`,subtopic:'Work & Wages'};},
-    () => { // Gold alloy mixing
-      const gold1=getRandomInt(60,80),gold2=getRandomInt(40,55),target=getRandomInt(gold2+5,gold1-5);
-      const r1=gold1-target,r2=target-gold2,g=gcd(r1,r2);
-      return{question:`${gold1}% gold alloy mixed with ${gold2}% gold alloy to get ${target}% gold. Ratio of first to second?`,
-        options:[`${r2/g}:${r1/g}`,`${r1/g}:${r2/g}`,`${r1}:${r2}`,`${r2}:${r1}`],answer:0,
-        explanation:`Alligation: (${gold1}−${target}):(${target}−${gold2})=${r1}:${r2}. But ratio is cheaper:dearer=${r1/g}:${r2/g}.`,subtopic:'Alligation — Gold'};},
-    () => { // Partnership: A joins late
-      const P1=getRandomInt(5,10)*1000,P2=getRandomInt(6,12)*1000;
-      const t1=12,t2=getRandomInt(6,10);
-      const profit=getRandomInt(8,20)*1000;
-      const wA=P1*t1,wB=P2*t2,g=gcd(wA,wB),shareA=Math.round(wA/(wA+wB)*profit);
-      return{question:`A invested ₹${P1} for the whole year. B joined after ${t1-t2} months with ₹${P2}. Annual profit ₹${profit}. A's share?`,
-        options:makeOptions(shareA,1000,5000),answer:0,
-        explanation:`A: ${P1}×12, B: ${P2}×${t2}. Ratio=${wA/g}:${wB/g}. A's share=₹${shareA}.`,subtopic:'Partnership — Timing'};},
-    () => { // 3-container mixing: find volume of each
-      const v=getRandomInt(5,10)*10;
-      const c1=getRandomInt(20,40),c2=getRandomInt(45,65),c3=getRandomInt(70,90);
-      const cMix=(c1+c2+c3)/3;
-      return{question:`Equal quantities from 3 containers with ${c1}%, ${c2}%, ${c3}% alcohol mixed. Resultant %?`,
-        options:[`${Math.round(cMix)}%`,`${c1+c3-c2}%`,`${Math.round(cMix)+2}%`,`${Math.round(cMix)-2}%`],answer:0,
-        explanation:`Equal volumes: avg=(${c1}+${c2}+${c3})/3=${Math.round(cMix)}%.`,subtopic:'3-Container Mixture'};},
-    () => { // Ratio chain problem
-      const a=getRandomInt(3,6),b=getRandomInt(4,8),c=getRandomInt(5,9),d=getRandomInt(6,10),total=getRandomInt(100,300);
-      const sumParts=a+b+c+d,shareA=Math.round(a/sumParts*total);
-      return{question:`₹${total} divided among A,B,C,D in ratio ${a}:${b}:${c}:${d}. A's share?`,
-        options:makeOptions(shareA,10,50),answer:0,
-        explanation:`A's share=${a}/${sumParts}×${total}=₹${shareA}.`,subtopic:'Ratio Division'};},
+    () => { // Repeated replacement with varying levels
+      const total=80, rem=20, n=3;
+      const remain=Math.pow((total-rem)/total,n);
+      const ml=Math.round(total*remain), w=total-ml, g=gcd(ml,w);
+      return{question:`A pharmaceutical firm maintains a stock of ${total} liters of pure chemical sanitizer. A lab assistant extracts ${rem} liters of sanitizer and replaces it with water. This exact procedure of removing ${rem} liters of mixture and replacing it with water is repeated a total of ${n} times. Find the final ratio of pure chemical sanitizer to water remaining in the stock container.`,
+        options:[`${ml/g}:${w/g}`, `${(ml+g)/g}:${w/g}`, `${ml/g}:${(w+g)/g}`, `1:1`],answer:0,
+        explanation:`Using the repeated replacement formula: Final chemical = ${total} * ((1 - ${rem}/${total})^${n}) = ${ml} liters. Water = ${total} - ${ml} = ${w} liters. The ratio is ${ml/g}:${w/g}.`,subtopic:'Mixture Replacement'};},
+    () => { // Partnership with active manager salary
+      const P1=12000, P2=18000, profit=60000, mgrPct=10;
+      const mgrSal = Math.round(profit * mgrPct / 100);
+      const netProfit = profit - mgrSal;
+      const w1=P1*12, w2=P2*8; // B joins after 4 months
+      const totW = w1 + w2;
+      const shareB = Math.round((w2 / totW) * netProfit);
+      return{question:`A and B establish a digital marketing agency. A invests Rs. ${P1} for the entire year, while B joins the venture 4 months later with an investment of Rs. ${P2}. Since A manages the daily operations, he receives ${mgrPct}% of the annual profit as a manager salary before the remaining profit is distributed. If the total annual profit is Rs. ${profit}, calculate B's final share from the profit distribution.`,
+        options:makeOptions(shareB,500,2000),answer:0,
+        explanation:`A's salary = Rs. ${mgrSal}. Remaining profit = Rs. ${netProfit}. A's investment month product = ${P1} * 12 = ${w1}. B's = ${P2} * 8 = ${w2}. Ratio = ${w1}:${w2}. B's share = (${w2}/${totW}) * ${netProfit} = Rs. ${shareB}.`,subtopic:'Partnership — Timing'};},
+    () => { // 3-container mixing in unequal volumes
+      const c1=30, c2=60, c3=90;
+      const v1=1, v2=2, v3=3;
+      const totVol = v1 + v2 + v3;
+      const mixAlcohol = (c1*v1 + c2*v2 + c3*v3)/totVol;
+      const rMix = Math.round(mixAlcohol), g=gcd(rMix, 100-rMix);
+      return{question:`Three containers hold liquid fuels of different purities: the first has ${c1}% alcohol, the second has ${c2}% alcohol, and the third has ${c3}% alcohol. A technician mixes the contents in the volume ratio of ${v1}:${v2}:${v3} respectively. Find the final ratio of pure alcohol to water in the resulting composite fuel mixture.`,
+        options:[`${rMix/g}:${(100-rMix)/g}`, `${(rMix+2)/g}:${(100-rMix)/g}`, `${rMix/g}:${(100-rMix+2)/g}`, `1:2`],answer:0,
+        explanation:`Alcohol volume = ${c1}%*${v1} + ${c2}%*${v2} + ${c3}%*${v3} = ${c1*v1 + c2*v2 + c3*v3} units out of ${totVol} total volume. Average alcohol % = ${rMix}%. Water % = ${100-rMix}%. Ratio = ${rMix/g}:${(100-rMix)/g}.`,subtopic:'3-Container Mixture'};},
   ],
   'averages': [
-    () => { // Average in AP sequence
-      const first=getRandomInt(10,30),last=first+getRandomInt(20,60);
-      const n=getRandomInt(5,20)*2+1;// odd count
-      const avg=(first+last)/2;
-      return{question:`The first term of an AP is ${first} and the last term is ${last}. The AP has ${n} terms. Average?`,
-        options:[`${avg}`,`${avg+1}`,`${(first+last)/2+0.5}`,`${Math.round(avg)-1}`],answer:0,
-        explanation:`In AP, average=(first+last)/2=(${first}+${last})/2=${avg}.`,subtopic:'AP Average'};},
-    () => { // Age average shifts with new member
-      const n=getRandomInt(10,25),avg=getRandomInt(25,45),newAge=getRandomInt(avg+5,avg+20);
-      const newAvg=Math.round(((avg*n+newAge)/(n+1))*10)/10;
-      const rise=Math.round((newAvg-avg)*10)/10;
-      return{question:`${n} people avg age ${avg}. A person aged ${newAge} joins. New average?`,
-        options:[`${newAvg}`,`${Math.round(newAvg+1)}`,`${avg}`,`${Math.round(newAvg-1)}`],answer:0,
-        explanation:`(${avg}×${n}+${newAge})/${n+1}=${newAvg}. Rise=${rise}.`,subtopic:'Average — New Member'};},
-    () => { // Wrong reading: effect on average
-      const n=getRandomInt(30,60),avg=getRandomInt(40,80),wrong=getRandomInt(10,avg-10);
-      const correct=wrong+getRandomInt(20,50),newAvg=Math.round(((avg*n-wrong+correct)/n)*100)/100;
-      return{question:`Average of ${n} numbers is ${avg}. One number recorded as ${wrong} instead of ${correct}. Correct average?`,
-        options:[`${newAvg}`,`${avg}`,`${(parseFloat(newAvg)+1).toFixed(2)}`,`${(parseFloat(newAvg)-1).toFixed(2)}`],answer:0,
-        explanation:`Correct sum=${avg*n-wrong+correct}. Avg=${newAvg}.`,subtopic:'Corrected Average'};},
-    () => { // Multiple replacements
-      const n=getRandomInt(8,15),avg=getRandomInt(30,55);
-      const old1=getRandomInt(10,25),old2=getRandomInt(old1+1,30),new1=old1+n,new2=old2+n;
-      const newAvg=avg+(new1-old1+new2-old2)/n;
-      return{question:`Group of ${n}: avg=${avg}. Members aged ${old1} & ${old2} replaced by ${new1} & ${new2}. New avg?`,
-        options:[`${newAvg}`,`${newAvg+1}`,`${avg}`,`${newAvg-1}`],answer:0,
-        explanation:`Net increase=${new1+new2-old1-old2}=${n*2}. Rise=${2}. New avg=${newAvg}.`,subtopic:'Double Replacement'};},
-    () => { // Harmonic mean interpretation
-      const s1=getRandomInt(30,60),s2=getRandomInt(40,80);
-      const hm=Math.round(2*s1*s2/(s1+s2));
-      return{question:`A person covers equal distances at ${s1}km/h and ${s2}km/h. Average speed for entire journey?`,
-        options:[`${hm}km/h`,`${Math.round((s1+s2)/2)}km/h`,`${hm+2}km/h`,`${hm-2}km/h`],answer:0,
-        explanation:`Average speed (equal dist)=2ab/(a+b)=2×${s1}×${s2}/${s1+s2}=${hm}km/h.`,subtopic:'Harmonic Mean Speed'};},
-    () => { // Three group combined
-      const n1=getRandomInt(5,10),m1=getRandomInt(40,55),n2=getRandomInt(8,14),m2=getRandomInt(56,70),n3=getRandomInt(6,12),m3=getRandomInt(71,85);
-      const combined=Math.round((n1*m1+n2*m2+n3*m3)/(n1+n2+n3));
-      return{question:`Groups: A(${n1},avg ${m1}), B(${n2},avg ${m2}), C(${n3},avg ${m3}). Overall average?`,
+    () => { // Weighted average variations of multiple subsets
+      const n1=10, m1=60, n2=15, m2=70, n3=25, m3=80;
+      const combined=Math.round((n1*m1 + n2*m2 + n3*m3)/(n1+n2+n3));
+      return{question:`A training academy evaluates three distinct batches of software engineers. Batch A has ${n1} engineers with an average score of ${m1} points, Batch B has ${n2} engineers with an average of ${m2} points, and Batch C has ${n3} engineers with an average of ${m3} points. Find the combined average performance score of all the software engineers across the three batches.`,
         options:makeOptions(combined,2,8),answer:0,
-        explanation:`(${n1*m1}+${n2*m2}+${n3*m3})/${n1+n2+n3}=${combined}.`,subtopic:'Three-Group Average'};},
+        explanation:`Combined Average = ((${n1} * ${m1}) + (${n2} * ${m2}) + (${n3} * ${m3})) / (${n1} + ${n2} + ${n3}) = ${n1*m1+n2*m2+n3*m3} / ${n1+n2+n3} = ${combined} points.`,subtopic:'Weighted Average'};},
+    () => { // Double Replacement with shift
+      const n=10, avg=40, old1=20, old2=30, new1=35, new2=45;
+      const newAvg = avg + (new1 - old1 + new2 - old2)/n;
+      return{question:`The average age of a committee consisting of ${n} members is ${avg} years. Two members whose ages are ${old1} years and ${old2} years resign from the committee, and they are replaced by two new members of ages ${new1} years and ${new2} years respectively. Find the new average age of the committee members.`,
+        options:makeOptions(Math.round(newAvg),1,3),answer:0,
+        explanation:`Net change in age sum = (${new1} - ${old1}) + (${new2} - ${old2}) = ${new1-old1+new2-old2} years. Rise in average = ${new1-old1+new2-old2}/${n} = ${(new1-old1+new2-old2)/n} years. New Average = ${newAvg} years.`,subtopic:'Double Replacement'};},
   ],
   'ages': [
-    () => { // A:B now, C:D in future — system of equations
-      const pA=getRandomInt(20,35),pB=getRandomInt(10,pA-5),yrs=getRandomInt(5,12);
-      const g1=gcd(pA,pB),fA=pA/g1,fB=pB/g1;
-      const g2=gcd(pA+yrs,pB+yrs),fA2=(pA+yrs)/g2,fB2=(pB+yrs)/g2;
-      return{question:`Ages of A & B are in ratio ${fA}:${fB}. After ${yrs} years ratio becomes ${fA2}:${fB2}. Sum of present ages?`,
-        options:makeOptions(pA+pB,5,15),answer:0,
-        explanation:`A=${pA}, B=${pB}. Sum=${pA+pB}.`,subtopic:'Age Ratio System'};},
-    () => { // Grandfather-father-child chain
-      const gf=getRandomInt(55,70),f=getRandomInt(28,40),c=getRandomInt(4,12);
-      const yrs=getRandomInt(3,8);
-      const futureAvg=Math.round((gf+yrs+f+yrs+c+yrs)/3);
-      return{question:`Grandfather (${gf}), Father (${f}), Child (${c}). Average age after ${yrs} years?`,
-        options:makeOptions(futureAvg,2,8),answer:0,
-        explanation:`Each +${yrs}: avg=(${gf+yrs}+${f+yrs}+${c+yrs})/3=${futureAvg}.`,subtopic:'Multi-generation Ages'};},
-    () => { // Five years ago, ten years hence
-      const now=getRandomInt(25,45),pastYrs=5,futureYrs=10;
-      const past=now-pastYrs,future=now+futureYrs,ratio=Math.round(future/past*10)/10;
-      return{question:`${pastYrs} years ago a person was ${past}. What is the ratio of their age ${futureYrs} years hence to their age ${pastYrs} years ago?`,
-        options:[`${future}:${past}`,`${future}:${now}`,`${now}:${past}`,`${future+2}:${past}`],answer:0,
-        explanation:`Now=${now}. ${futureYrs}y hence=${future}. ${pastYrs}y ago=${past}. Ratio=${future}:${past}.`,subtopic:'Past & Future Ratio'};},
-    () => { // Combined family: mother + 3 children
-      const mAge=getRandomInt(32,45);
-      const c=[getRandomInt(5,10),getRandomInt(10,15),getRandomInt(15,20)];
-      const sumNow=mAge+c[0]+c[1]+c[2];
-      const yrs=getRandomInt(3,7),sumFuture=sumNow+4*yrs;
-      return{question:`Mother (${mAge}) and 3 children (${c[0]},${c[1]},${c[2]}). Sum of ages after ${yrs} years?`,
-        options:makeOptions(sumFuture,10,30),answer:0,
-        explanation:`Current sum=${sumNow}. After ${yrs}y: +4×${yrs}=${sumNow+4*yrs}.`,subtopic:'Family Age Sum'};},
-    () => { // Age condition: "as old as"
-      const aAge=getRandomInt(20,40),bAge=getRandomInt(aAge+2,aAge+15);
-      const diff=bAge-aAge;
-      const yrs_ago_b_was_a=diff;
-      return{question:`A is ${aAge}, B is ${bAge}. How many years ago was B as old as A is now?`,
-        options:makeOptions(diff,2,8),answer:0,
-        explanation:`B needs to go back ${bAge}-${aAge}=${diff} years to reach A's current age.`,subtopic:'Age Cross Condition'};},
-    () => { // Ratio changes every decade
-      const now=getRandomInt(24,36),then=getRandomInt(4,12),yrs=getRandomInt(10,20);
-      const g1=gcd(now,then),g2=gcd(now+yrs,then+yrs);
-      return{question:`A is ${now}, B is ${then}. In ${yrs} years, ratio of A:B = ${(now+yrs)/g2}:${(then+yrs)/g2}. Verify and state A's present age.`,
-        options:makeOptions(now,3,10),answer:0,
-        explanation:`Present A=${now},B=${then}. After ${yrs}: ${now+yrs}:${then+yrs}=${(now+yrs)/g2}:${(then+yrs)/g2}. ✓`,subtopic:'Verify Age Ratio'};},
+    () => { // Multi-person Age System
+      const diff=15, sum=55, yrs=5;
+      const father = (sum+diff)/2, son = (sum-diff)/2;
+      return{question:`A father and son are discussing their career paths. The sum of their present ages is ${sum} years, and the difference is ${diff} years. Find the ratio of the father's age to the son's age after exactly ${yrs} years.`,
+        options:[`${(father+yrs)/gcd(father+yrs,son+yrs)}:${(son+yrs)/gcd(father+yrs,son+yrs)}`, `3:1`, `4:1`, `2:1`],answer:0,
+        explanation:`Father's present age = (${sum} + ${diff})/2 = ${father} years. Son's present age = ${son} years. After ${yrs} years: Father = ${father+yrs}, Son = ${son+yrs}. Ratio = ${(father+yrs)/gcd(father+yrs,son+yrs)}:${(son+yrs)/gcd(father+yrs,son+yrs)}.`,subtopic:'Father-Son Ages'};},
+    () => { // Three-person system
+      const diff=6, b=24, a=b+diff, c=b-diff;
+      return{question:`In a corporate team of three developers (A, B, and C), the difference between A's age and B's age is ${diff} years, and the difference between B's age and C's age is also ${diff} years. If A is the eldest and C is the youngest, and B's age is ${b} years, find the average age of the developers.`,
+        options:makeOptions(b,1,4),answer:0,
+        explanation:`A's age = ${a} years, B's age = ${b} years, C's age = ${c} years. Sum = ${a+b+c} years. Average = ${b} years. (B is the middle term of an AP).`,subtopic:'AP Ages'};},
   ],
   'percentages': [
-    () => { // Three successive changes
-      const p1=getRandomInt(10,25),p2=getRandomInt(10,20),p3=getRandomInt(5,15);
-      const net=Math.round(((100+p1)*(100-p2)*(100+p3)/10000-1)*100);
-      return{question:`Price up ${p1}%, then down ${p2}%, then up ${p3}%. Net % change?`,
-        options:[`${net}%`,`${p1-p2+p3}%`,`${net+3}%`,`${net-3}%`],answer:0,
-        explanation:`(${100+p1}/100)×(${100-p2}/100)×(${100+p3}/100)−1=${net}%.`,subtopic:'Three Successive Changes'};},
-    () => { // Exam pass percentage trap
-      const total=getRandomInt(5,12)*100,passPct=getRandomInt(55,75),passMark=getRandomInt(30,50);
-      const passed=Math.round(total*passPct/100);
-      return{question:`${total} students appeared. ${passPct}% passed. If pass mark is ${passMark}%, and passer average is ${Math.round(passMark+getRandomInt(10,20))}%, what's the overall average? (TRAP: direct info given)`,
-        options:[`${Math.round(passMark+getRandomInt(5,10))}%`,`${passPct}%`,`${passMark}%`,`${Math.round(passMark+15)}%`],answer:0,
-        explanation:`${passed} passed out of ${total}. Focus on what's asked — average requires all data.`,subtopic:'Pass Percentage'};},
-    () => { // Tax-on-tax: compound duty
-      const price=getRandomInt(500,2000),tax1=getRandomInt(5,12),tax2=getRandomInt(3,8);
-      const final=Math.round(price*(1+tax1/100)*(1+tax2/100));
-      return{question:`Article costs ₹${price}. ${tax1}% tax applied, then ${tax2}% tax on new price. Final price?`,
-        options:makeOptions(final,50,200),answer:0,
-        explanation:`${price}×(1+${tax1}/100)×(1+${tax2}/100)=₹${final}.`,subtopic:'Cascaded Tax'};},
-    () => { // Percentage gain on selling X items at CP of Y
-      const x=getRandomInt(8,20),y=getRandomInt(x+2,x+12);
-      const gainPct=Math.round((y-x)/x*100);
-      return{question:`By selling ${x} articles at CP of ${y} articles, gain%?`,
-        options:makeOptions(gainPct,3,12),answer:0,
-        explanation:`Gain%=(${y}−${x})/${x}×100=${gainPct}%.`,subtopic:'Gain on Articles'};},
-    () => { // Income-tax bracket
-      const income=getRandomInt(5,15)*100000;
-      const exemption=250000;
-      const taxable=Math.max(0,income-exemption);
-      const tax=taxable<=250000?Math.round(taxable*0.05):Math.round(250000*0.05+(taxable-250000)*0.20);
-      return{question:`Annual income ₹${income.toLocaleString('en-IN')}. Tax: 0% up to ₹2.5L, 5% on ₹2.5L–5L, 20% above ₹5L. Tax payable?`,
-        options:makeOptions(tax,2000,20000),answer:0,
-        explanation:`Taxable=₹${taxable.toLocaleString('en-IN')}. Tax=₹${tax}.`,subtopic:'Income Tax'};},
-    () => { // Percentage more/less — comparison
-      const a=getRandomInt(200,500),b=getRandomInt(300,600);
-      const pct=Math.round(Math.abs(a-b)/Math.min(a,b)*100);
-      const which=a>b?`A is ${pct}% more than B`:`B is ${pct}% more than A`;
-      return{question:`A=₹${a}, B=₹${b}. By what % is the ${a>b?'larger':'larger'} quantity more than the smaller?`,
-        options:[`${pct}%`,`${pct+5}%`,`${Math.round(Math.abs(a-b)/Math.max(a,b)*100)}%`,`${pct-5}%`],answer:0,
-        explanation:`Diff=${Math.abs(a-b)}. % more than smaller=${Math.abs(a-b)}/${Math.min(a,b)}×100=${pct}%.`,subtopic:'Comparison Percentage'};},
+    () => { // Voter turnout math with invalid ballots
+      const total=50000, turnout=80, invalid=10, winner=60;
+      const voted = total * turnout / 100;
+      const valid = voted * (100 - invalid) / 100;
+      const margin = Math.round(valid * (winner - (100 - winner)) / 100);
+      return{question:`In a municipal election, exactly ${turnout}% of the ${total.toLocaleString('en-IN')} registered voters cast their ballots. During the audit, ${invalid}% of the cast votes were declared invalid. The winning candidate secured ${winner}% of the valid votes. By what margin of votes did the winning candidate defeat the opponent?`,
+        options:makeOptions(margin,200,1000),answer:0,
+        explanation:`Votes cast = ${voted}. Valid votes = ${valid}. Winner gets ${winner}%, opponent gets ${100-winner}%. Margin = ${winner - (100-winner)}% of valid votes = ${margin}.`,subtopic:'Election Problems'};},
+    () => { // Tax-on-tax (cascaded duties)
+      const price=2000, tax1=10, tax2=5;
+      const final = Math.round(price * (1 + tax1/100) * (1 + tax2/100));
+      return{question:`An import duty scheme applies tax in successive stages. A luxury electronic component has a base price of Rs. ${price}. An initial customs duty of ${tax1}% is added, followed by an additional luxury surcharge of ${tax2}% applied on the newly accumulated price. Find the final price paid by the importer.`,
+        options:makeOptions(final,10,100),answer:0,
+        explanation:`Price after customs duty = Rs. ${price} * 1.10 = Rs. ${price*(1+tax1/100)}. Price after surcharge = Rs. ${price*(1+tax1/100)} * 1.05 = Rs. ${final}.`,subtopic:'Cascaded Tax'};},
   ],
   'profit-loss': [
-    () => { // Markup + two successive discounts
-      const cp=getRandomInt(300,800),markup=getRandomInt(30,60);
-      const mp=Math.round(cp*(1+markup/100));
-      const d1=getRandomInt(10,20),d2=getRandomInt(5,15);
-      const sp=Math.round(mp*(1-d1/100)*(1-d2/100));
-      const profitPct=Math.round((sp-cp)/cp*100);
-      return{question:`CP=₹${cp}. Marked ${markup}% above CP. Two discounts: ${d1}% then ${d2}%. Profit/loss%?`,
-        options:[`${profitPct>=0?'Profit':'Loss'} ${Math.abs(profitPct)}%`,`${d1+d2-markup}%`,`${Math.abs(profitPct)+3}%`,`${Math.abs(profitPct)-3}%`],answer:0,
-        explanation:`MP=₹${mp}. SP=${mp}×${(1-d1/100).toFixed(2)}×${(1-d2/100).toFixed(2)}=₹${sp}. Result=${profitPct}%.`,subtopic:'Successive Discounts'};},
-    () => { // Manufacturer→Dealer→Consumer
-      const mfgCP=getRandomInt(200,500),m2d=getRandomInt(15,30),d2c=getRandomInt(10,25);
-      const dealerCP=Math.round(mfgCP*(1+m2d/100)),consumerPrice=Math.round(dealerCP*(1+d2c/100));
-      const totalGain=Math.round((consumerPrice-mfgCP)/mfgCP*100);
-      return{question:`Manufacturer makes at ₹${mfgCP}, sells to dealer at ${m2d}% profit. Dealer sells to consumer at ${d2c}% profit. Consumer pays ₹${consumerPrice}. Manufacturer's % gain on cost if he sells directly?`,
-        options:makeOptions(totalGain,5,20),answer:0,
-        explanation:`Consumer price=₹${consumerPrice}. If mfg sold directly, profit=(${consumerPrice}−${mfgCP})/${mfgCP}×100=${totalGain}%.`,subtopic:'Supply Chain Profit'};},
-    () => { // Buy at 3 for ₹X, sell at 2 for ₹Y
-      const buyQty=getRandomInt(3,5),buyPrice=getRandomInt(5,15)*buyQty;
-      const sellQty=buyQty-1,sellPrice=getRandomInt(buyPrice+2,buyPrice+10)*sellQty;
-      const profitPct=Math.round((sellPrice/sellQty*buyQty-buyPrice)/buyPrice*100);
-      return{question:`Bought ${buyQty} for ₹${buyPrice}, sold ${sellQty} for ₹${sellPrice}. Profit%?`,
-        options:makeOptions(profitPct,5,20),answer:0,
-        explanation:`CP/item=${(buyPrice/buyQty).toFixed(1)}, SP/item=${(sellPrice/sellQty).toFixed(1)}. Profit%=${profitPct}%.`,subtopic:'Bulk Trade'};},
-    () => { // Loss in selling + recover
-      const cp=getRandomInt(400,800),lossPct=getRandomInt(10,20);
-      const sp=Math.round(cp*(1-lossPct/100));
-      const sp2=cp+Math.round(cp*getRandomInt(5,15)/100);
-      const gainPct=Math.round((sp2-cp)/cp*100);
-      return{question:`Article sold at ${lossPct}% loss for ₹${sp}. At what price should it be sold to gain ${gainPct}%?`,
-        options:makeOptions(sp2,50,200),answer:0,
-        explanation:`CP=₹${cp}. Target SP=CP×(1+${gainPct}/100)=₹${sp2}.`,subtopic:'Target Selling Price'};},
-    () => { // Three items: mix of profit and loss
-      const n1=getRandomInt(3,5),p1=getRandomInt(10,25),n2=getRandomInt(3,5),l1=getRandomInt(10,20);
-      const cp1=getRandomInt(100,300)*n1,cp2=getRandomInt(100,300)*n2;
-      const sp1=Math.round(cp1*(1+p1/100)),sp2=Math.round(cp2*(1-l1/100));
-      const netPct=Math.round((sp1+sp2-cp1-cp2)/(cp1+cp2)*100);
-      return{question:`Sold ${n1} articles at ${p1}% profit (CP ₹${cp1}) and ${n2} articles at ${l1}% loss (CP ₹${cp2}). Overall %?`,
-        options:[`${netPct>=0?'Profit':'Loss'} ${Math.abs(netPct)}%`,`${p1-l1}%`,`${Math.abs(netPct)+2}%`,`Break even`],answer:0,
-        explanation:`Net=(${sp1}+${sp2}−${cp1+cp2})/${cp1+cp2}×100=${netPct}%.`,subtopic:'Mixed Trade'};},
-    () => { // Discount series equivalent
-      const d1=getRandomInt(10,25),d2=getRandomInt(5,20);
-      const equiv=Math.round((1-(1-d1/100)*(1-d2/100))*100);
-      return{question:`Two successive discounts of ${d1}% and ${d2}%. Equivalent single discount?`,
-        options:[`${equiv}%`,`${d1+d2}%`,`${equiv+2}%`,`${d1+d2-2}%`],answer:0,
-        explanation:`Equiv=1−(1−${d1}/100)(1−${d2}/100)=${equiv}%.`,subtopic:'Equivalent Discount'};},
+    () => { // Dishonest dealer buying and selling cheats
+      const buyCheat=10, sellCheat=10;
+      const trueProfit = Math.round((( (100+buyCheat)/(100-sellCheat) ) - 1) * 100);
+      return{question:`A wholesale fruit merchant cheats by ${buyCheat}% while purchasing fruits from the grower (uses a larger scale), and cheats by ${sellCheat}% while selling to customers (uses a smaller scale). If he sells the fruits at the official cost price, calculate his net profit percentage.`,
+        options:makeOptions(trueProfit,1,5),answer:0,
+        explanation:`He gets ${(100+buyCheat)} grams of stock for the price of 100 grams. He sells ${(100-sellCheat)} grams of stock for the price of 100 grams. Net profit = (${(100+buyCheat)}/${(100-sellCheat)} - 1) * 100 = ${trueProfit}%.`,subtopic:'Dishonest Weights'};},
+    () => { // Successive sell chains with repairs
+      const cp=5000, pA=20, costR=1000, pB=10;
+      const spA = cp * (1 + pA/100);
+      const cpB = spA + costR;
+      const spB = Math.round(cpB * (1 + pB/100));
+      return{question:`A purchases a used smartphone for Rs. ${cp} and sells it to B at a profit of ${pA}%. B then spends Rs. ${costR} on replacing the screen and battery, and later sells the smartphone to C at a profit of ${pB}%. Find the final price paid by C.`,
+        options:makeOptions(spB,100,500),answer:0,
+        explanation:`SP of A = Rs. ${spA}. Cost price of B = ${spA} + ${costR} = Rs. ${cpB}. SP of B (C's price) = ${cpB} * 1.10 = Rs. ${spB}.`,subtopic:'Chain Selling'};},
   ],
   'simple-interest': [
-    () => { const P=getRandomInt(5,15)*1000,r=getRandomInt(8,15),n=3;
-      const SI=Math.round(P*r*n/100),A=P+SI;
-      return{question:`₹${P} at ${r}% SI for ${n} years. Amount?`,options:makeOptions(A,500,3000),answer:0,explanation:`SI=${P}×${r}×${n}/100=₹${SI}. A=₹${A}.`,subtopic:'SI Amount'};},
-    () => { const A1=getRandomInt(8,14)*1000,t1=getRandomInt(2,4),A2=getRandomInt(A1+500,A1+3000),t2=t1+getRandomInt(2,4);
-      const P=Math.round((A2*t1-A1*t2)/(t1-t2)),r=Math.round((A1-P)*100/(P*t1));
-      return{question:`A sum amounts to ₹${A1} in ${t1} years and ₹${A2} in ${t2} years at SI. Rate?`,options:makeOptions(r,2,5),answer:0,explanation:`SI/yr=(${A2}−${A1})/(${t2}−${t1})=₹${(A2-A1)/(t2-t1)}/yr. P=₹${P}. r=${r}%.`,subtopic:'Two Amounts SI'};},
-    () => { const P=getRandomInt(6,15)*1000,r=getRandomInt(5,12),t=getRandomInt(3,6);
-      const SI=Math.round(P*r*t/100);
-      return{question:`Principal ₹${P}, rate ${r}%, time ${t} years. Find SI.`,options:makeOptions(SI,200,1500),answer:0,explanation:`SI=P×r×t/100=${SI}.`,subtopic:'Simple Interest'};},
-    () => { const SI=getRandomInt(3,8)*1000,r=getRandomInt(5,10),t=getRandomInt(2,5);
-      const P=Math.round(SI*100/(r*t));
-      return{question:`SI=₹${SI}, rate=${r}%, time=${t}y. Find principal.`,options:makeOptions(P,500,2000),answer:0,explanation:`P=SI×100/(r×t)=${SI*100}/${r*t}=₹${P}.`,subtopic:'Find Principal'};},
-    () => { const P=getRandomInt(5,12)*1000,r=getRandomInt(5,10);const t=100/r;const A=P*2;
-      return{question:`At ${r}% SI, ₹${P} doubles in how many years?`,options:makeOptions(t,2,5),answer:0,explanation:`Doubles when SI=P. t=100/${r}=${t} years.`,subtopic:'Doubling Time'};},
-    () => { const P=getRandomInt(4,10)*1000,r1=getRandomInt(5,8),r2=r1+getRandomInt(3,7),t=getRandomInt(2,5);
-      const diff=Math.round(P*(r2-r1)*t/100);
-      return{question:`₹${P} at ${r2}% vs ${r1}% SI for ${t} years. Difference in interest?`,options:makeOptions(diff,100,500),answer:0,explanation:`Diff=₹${P}×(${r2}−${r1})×${t}/100=₹${diff}.`,subtopic:'SI Difference'};},
+    () => { // Split principal with equal interest constraints
+      const total=10000, r1=6, r2=9, t=2;
+      // P1*r1*t/100 = P2*r2*t/100 -> P1/P2 = r2/r1 = 3/2
+      const P1 = Math.round(total * r2 / (r1 + r2)), P2 = total - P1;
+      const interest = Math.round(P1 * r1 * t / 100);
+      return{question:`A retired officer splits a sum of Rs. ${total} into two parts and invests them in different mutual funds. The first part is invested at ${r1}% per annum simple interest, and the second part is invested at ${r2}% per annum simple interest. If the total interest earned from both investments at the end of ${t} years is identical, find the amount invested in the first fund.`,
+        options:makeOptions(P1,100,1000),answer:0,
+        explanation:`Interest equal implies P1 * r1 * t = P2 * r2 * t, so P1 * ${r1} = P2 * ${r2}. Ratio P1:P2 = ${r2}:${r1} = 9:6 = 3:2. First part P1 = (3/5) * ${total} = Rs. ${P1}.`,subtopic:'Split Principal'};},
+    () => { // Installment repayment SI
+      const P=9000, r=10, t=3;
+      // x + (x + x*r/100) + (x + x*r*2/100) = P + P*r*t/100 -> 3x + 3x*r/100 = P*(1+r*t/100)
+      const totalAmt = P * (1 + r*t/100);
+      const install = Math.round(totalAmt / (t + (t*(t-1)/2)*r/100));
+      return{question:`A software developer takes an interest-bearing loan of Rs. ${P} at ${r}% per annum simple interest. The loan is to be cleared in ${t} equal annual installments, where each installment is paid at the end of the year. Calculate the amount of each annual installment.`,
+        options:makeOptions(install,100,500),answer:0,
+        explanation:`Total debt after ${t} years = Rs. ${totalAmt}. Annual installment x satisfies: x + (x + x*r/100) + (x + x*r*2/100) = Rs. ${totalAmt}. This gives x = Rs. ${install}.`,subtopic:'SI Installments'};},
   ],
   'compound-interest': [
-    () => { const P=getRandomInt(5,12)*1000,r=getRandomInt(8,15),t=3;
-      const A=Math.round(P*Math.pow(1+r/100,t));
-      return{question:`₹${P} at ${r}% CI annually for ${t} years. Amount?`,options:makeOptions(A,500,5000),answer:0,explanation:`A=${P}×(1+${r}/100)^3≈₹${A}.`,subtopic:'CI Amount'};},
-    () => { const P=getRandomInt(5,15)*1000,r=getRandomInt(8,15);
-      const ci2=Math.round(P*(Math.pow(1+r/100,2)-1));
-      const si2=Math.round(P*r*2/100),diff=ci2-si2;
-      return{question:`For ₹${P} at ${r}% for 2 years, CI−SI=?`,options:makeOptions(diff,20,200),answer:0,explanation:`CI=${ci2},SI=${si2}. Diff=${diff}=(P×r²/10000).`,subtopic:'CI−SI'};},
-    () => { const t=getRandomInt(3,7);
-      return{question:`CI: sum doubles in ${t} years. When does it quadruple?`,options:makeOptions(2*t,3,10),answer:0,explanation:`Quadruple=double twice: ${t}+${t}=${2*t} years.`,subtopic:'Doubling→Quadrupling'};},
-    () => { const P=getRandomInt(5,10)*1000,r=getRandomInt(10,20),t=2;
-      const ciH=Math.round(P*(Math.pow(1+r/200,2*t)-1));
-      return{question:`₹${P} at ${r}% half-yearly for ${t} years. CI?`,options:makeOptions(ciH,500,3000),answer:0,explanation:`CI=P×[(1+${r}/200)^${2*t}−1]≈₹${ciH}.`,subtopic:'Half-yearly CI'};},
-    () => { const P=getRandomInt(6,14)*1000,r1=getRandomInt(8,12),r2=getRandomInt(12,18);
-      const A=Math.round(P*(1+r1/100)*(1+r2/100));
-      return{question:`₹${P} at ${r1}% first year, ${r2}% second year CI. Amount after 2 years?`,options:makeOptions(A,500,4000),answer:0,explanation:`A=${P}×(1+${r1}/100)×(1+${r2}/100)=₹${A}.`,subtopic:'Variable Rate CI'};},
-    () => { const loan=getRandomInt(10,20)*1000,r=getRandomInt(10,15),factor=1+r/100;
-      const inst=Math.round(loan*factor*factor/(factor+1));
-      return{question:`₹${loan} borrowed at ${r}% CI. Repaid in 2 equal annual installments. Installment?`,options:makeOptions(inst,1000,5000),answer:0,explanation:`x+x/(1+r/100)=${loan}×(1+r/100)^2/(1+r/100+1)≈₹${inst}.`,subtopic:'CI Installments'};},
+    () => { // Multi-year compounding changes with withdrawals
+      const P=10000, r1=10, r2=20;
+      const endYear1 = P * (1 + r1/100);
+      const finalAmt = Math.round(endYear1 * (1 + r2/100));
+      return{question:`An investment firm offers a dynamic portfolio that earns compound interest compounded annually. The interest rate is fixed at ${r1}% for the first year, and increases to ${r2}% for the second year. If an investor deposits Rs. ${P} initially, find the total amount in the portfolio at the end of 2 years.`,
+        options:makeOptions(finalAmt,200,1000),answer:0,
+        explanation:`Amount at end of year 1 = Rs. ${endYear1}. Amount at end of year 2 = Rs. ${endYear1} * (1 + ${r2}/100) = Rs. ${finalAmt}.`,subtopic:'Variable Rate CI'};},
+    () => { // Equal CI installments
+      const P=10500, r=10;
+      // x / 1.1 + x / (1.1^2) = P -> x * (1.1 + 1) / 1.21 = P -> x * 2.1 / 1.21 = P
+      const install = Math.round(P * 1.21 / 2.1);
+      return{question:`A technician purchases a modern workstation for Rs. ${P} on credit. If the shopkeeper charges compound interest at ${r}% per annum compounded annually, and the loan is to be cleared in 2 equal annual installments, calculate the value of each installment.`,
+        options:makeOptions(install,100,1000),answer:0,
+        explanation:`Let installment be x. Present value equation: x/(1.1) + x/(1.21) = ${P}. Solving gives x = Rs. ${install}.`,subtopic:'CI Installments'};},
   ],
   'time-work': [
-    () => { const a=getRandomInt(12,20),b=getRandomInt(15,25);
-      const abTog=Math.round(a*b/(a+b)*10)/10;
-      return{question:`A alone: ${a} days. B alone: ${b} days. Together?`,options:makeOptions(Math.round(abTog),1,4),answer:0,explanation:`Together=a×b/(a+b)=${a*b}/${a+b}≈${Math.round(abTog)} days.`,subtopic:'Combined Work'};},
-    () => { const a=getRandomInt(10,20),b=getRandomInt(15,30),days=getRandomInt(3,7);
-      const rem=1-days*(1/a+1/b),timeB=Math.round(rem*b);
-      return{question:`A & B together for ${days} days, then B leaves. A finishes in ${timeB} more days. A alone?`,options:makeOptions(a,3,8),answer:0,explanation:`Work left when B leaves=${rem.toFixed(2)}. A takes ${timeB}d. A's rate=1/${a}.`,subtopic:'Work Left'};},
-    () => { const men=getRandomInt(6,12),days=getRandomInt(10,20),leaveAfter=getRandomInt(3,7);
-      const totalWork=men*days,workDone=men*leaveAfter,rem=totalWork-workDone,half=Math.floor(men/2),extra=Math.ceil(rem/half);
-      return{question:`${men} men can do a job in ${days} days. After ${leaveAfter} days, half leave. Days more to finish?`,options:makeOptions(extra,2,10),answer:0,explanation:`Total=${totalWork}. Done=${workDone}. Left=${rem}. ${half} men finish in ${extra} days.`,subtopic:'Team Reduction'};},
-    () => { const a=getRandomInt(8,15),b=getRandomInt(10,20),c=getRandomInt(12,25);
-      const all3=Math.round(a*b*c/(a*b+b*c+c*a)*10)/10;
-      return{question:`A,B,C take ${a},${b},${c} days alone. Together?`,options:makeOptions(Math.round(all3),1,4),answer:0,explanation:`Together=1/(1/${a}+1/${b}+1/${c})≈${Math.round(all3)} days.`,subtopic:'Three Together'};},
-    () => { const f1=getRandomInt(4,8),f2=getRandomInt(6,12),e1=getRandomInt(10,20),t=getRandomInt(3,8);
-      const net=t*(1/f1+1/f2-1/e1),filled=Math.min(1,Math.max(0,net));
-      const totalT=Math.round(1/(1/f1+1/f2-1/e1));
-      return{question:`Pipe A fills in ${f1}h, B in ${f2}h. Pipe C drains in ${e1}h. All open — tank full in?`,options:makeOptions(totalT,2,8),answer:0,explanation:`Net rate=1/${f1}+1/${f2}−1/${e1}. Time=${totalT}h.`,subtopic:'Pipe & Drain'};},
-    () => { const eff=getRandomInt(2,4),a=getRandomInt(12,20);
-      const b=Math.round(a*eff);
-      return{question:`A is ${eff}× as efficient as B. Together they finish in ${Math.round(a*b/(a+b))} days. A alone?`,options:makeOptions(a,3,8),answer:0,explanation:`B takes ${b} days. Together=a×b/(a+b)=${Math.round(a*b/(a+b))}. A=${a} days.`,subtopic:'Efficiency Ratio'};},
+    () => { // Alternate day with scheduled breaks
+      const a=10, b=15;
+      const cycleWork = 1/a + 1/b; // 2 days work
+      const cycles = Math.floor(1/cycleWork);
+      const workDone = cycles * cycleWork;
+      const rem = 1 - workDone;
+      const days = cycles * 2 + (rem > 0 ? (rem <= 1/a ? rem*a : 1 + (rem - 1/a)*b) : 0);
+      const rDays = Math.round(days * 10)/10;
+      return{question:`Two structural engineers A and B work on alternate days to assemble a bridge framework. Engineer A takes ${a} days to complete the assembly alone, and B takes ${b} days. If they work on alternate days starting with A on the first day, find the total number of days taken to complete the entire assembly.`,
+        options:[`${rDays} days`, `${Math.round(rDays+1)} days`, `${Math.round(rDays-1)} days`, `12 days`],answer:0,
+        explanation:`A's 1-day work = 1/${a}, B's = 1/${b}. 2-day work = 1/${a} + 1/${b} = 5/30 = 1/6. In 6 cycles (12 days), work = 6 * (1/6) = 1. Total days = 12 days.`,subtopic:'Alternate Work'};},
+    () => { // Men-women-children efficiency
+      const m=4, w=6, d=8, newM=8, newW=9;
+      // Let 1 man = 2 women (efficiency ratio). Standard problem:
+      const totalDays = Math.round((m*d)/(newM + newW*(m/(w*2))));
+      return{question:`A software team composed of ${m} senior developers can build an API gateway in ${d} days. A team of ${w} junior developers takes the same ${d} days to build the gateway. How many days will it take a combined team of ${newM} senior developers and ${newW} junior developers to build the same API gateway?`,
+        options:makeOptions(totalDays,1,3),answer:0,
+        explanation:`Senior and junior team efficiencies: ${m} seniors = ${w} juniors, so 1 senior = 1.5 juniors in work rate. Combined team = ${newM} seniors + ${newW} juniors = ${newM + newW/1.5} seniors = ${newM + 6} seniors. Time = (${m} * ${d}) / 14 ≈ ${totalDays} days.`,subtopic:'Men-Women Efficiency'};},
   ],
   'time-distance': [
-    () => { const total=getRandomInt(100,300),s1=getRandomInt(30,60),s2=getRandomInt(50,90),t=getRandomInt(2,5);
-      const dist=s1*t;
-      return{question:`Two places ${total}km apart. Train A at ${s1}km/h, Train B at ${s2}km/h, opposite. Meet after?`,options:makeOptions(Math.round(total*60/(s1+s2)),5,20),answer:0,explanation:`Time=${total}/(${s1}+${s2})h=${Math.round(total*60/(s1+s2))}min.`,subtopic:'Opposite Meeting'};},
-    () => { const s1=getRandomInt(40,70),s2=s1+getRandomInt(20,40),gap=getRandomInt(60,120);
-      const t=Math.round(gap*60/(s2-s1));
-      return{question:`A leaves at ${s1}km/h. B starts ${gap} min later at ${s2}km/h (same dir). B overtakes A after (from B's start)?`,options:makeOptions(t,15,60),answer:0,explanation:`Head start=${s1}×${gap}/60km. Closing speed=${s2-s1}km/h. Time=${Math.round(s1*gap/60/(s2-s1)*60)}min.`,subtopic:'Overtaking Time'};},
-    () => { const u=getRandomInt(40,80),pct=getRandomInt(20,50),dist=getRandomInt(60,200);
-      const v=Math.round(u*(1-pct/100)),timeSaved=Math.round(dist/v*60)-Math.round(dist/u*60);
-      return{question:`Speed decreased by ${pct}%. Journey ${dist}km. Extra time (minutes)?`,options:makeOptions(timeSaved,5,30),answer:0,explanation:`Old=${Math.round(dist/u*60)}min. New=${Math.round(dist/v*60)}min. Extra=${timeSaved}min.`,subtopic:'Speed Decrease'};},
-    () => { const s=getRandomInt(60,100),pct=getRandomInt(20,40);
-      const timePct=Math.round(pct*100/(100+pct));
-      return{question:`Speed increases ${pct}%. By what % does time reduce for same distance?`,options:[`${timePct}%`,`${pct}%`,`${timePct+2}%`,`${100-timePct}%`],answer:0,explanation:`T∝1/S. New time=(1/(1+${pct}/100))=100/(100+${pct}). Reduction=${timePct}%.`,subtopic:'Speed-Time Relation'};},
-    () => { const d1=getRandomInt(50,150),s1=getRandomInt(40,70),d2=getRandomInt(40,120),s2=getRandomInt(50,80),d3=getRandomInt(30,80),s3=getRandomInt(60,90);
-      const avgS=Math.round((d1+d2+d3)/(d1/s1+d2/s2+d3/s3));
-      return{question:`Journey: ${d1}km@${s1}, ${d2}km@${s2}, ${d3}km@${s3} km/h. Average speed?`,options:[`${avgS}km/h`,`${Math.round((s1+s2+s3)/3)}km/h`,`${avgS+2}km/h`,`${avgS-2}km/h`],answer:0,explanation:`Avg=(${d1+d2+d3})/(${d1}/${s1}+${d2}/${s2}+${d3}/${s3})=${avgS}km/h.`,subtopic:'3-leg Average Speed'};},
-    () => { const a=getRandomInt(30,60),b=getRandomInt(40,70),dist=getRandomInt(100,300);
-      const tMeet=dist/(a+b),distA=Math.round(a*tMeet);
-      return{question:`A & B walk towards each other (${dist}km apart) at ${a} & ${b}km/h. Where do they meet from A's side?`,options:makeOptions(distA,10,40),answer:0,explanation:`Time=${dist}/(${a}+${b})h. A covers ${a}×${tMeet.toFixed(2)}=${distA}km.`,subtopic:'Meeting Point'};},
+    () => { // Circular track starting point meeting
+      const l=600, s1=10, s2=15, s3=20;
+      const t1=l/s1, t2=l/s2, t3=l/s3;
+      const ans = lcmThree(t1, t2, t3);
+      return{question:`Three runners A, B, and C start together from the same point on a circular athletics track of length ${l} meters. They run in the same direction with speeds of ${s1} m/s, ${s2} m/s, and ${s3} m/s respectively. Find the time after which all three will meet together at the starting point for the first time.`,
+        options:makeOptions(ans,10,60),answer:0,
+        explanation:`Time taken for one lap: A = ${t1}s, B = ${t2}s, C = ${t3}s. Meeting time at starting point is LCM(${t1}, ${t2}, ${t3}) = LCM(${t1}, ${t2}, ${t3}) = ${ans} seconds.`,subtopic:'Circular Track'};},
+    () => { // Relative speed train chase with delayed start
+      const s1=60, s2=80, delay=1; // delay in hours
+      const gap = s1 * delay;
+      const relSpeed = s2 - s1;
+      const timeToCatch = gap / relSpeed;
+      return{question:`A courier train leaves a sorting terminal traveling at a constant speed of ${s1} km/h. Exactly ${delay} hour later, a high-speed express train leaves the same terminal in the same direction, traveling at ${s2} km/h. How many hours will it take the express train to overtake the courier train from the moment the express train departs?`,
+        options:makeOptions(timeToCatch,1,3),answer:0,
+        explanation:`Distance gap created in ${delay} hour = ${gap} km. Relative speed = ${s2} - ${s1} = ${relSpeed} km/h. Time to catch = ${gap} / ${relSpeed} = ${timeToCatch} hours.`,subtopic:'Overtaking Time'};},
   ],
   'boats-streams': [
-    () => { const u=getRandomInt(6,14),v=getRandomInt(2,u-2),d=getRandomInt(20,60);
-      const tUp=d/(u-v),tDown=d/(u+v),total=Math.round((tUp+tDown)*10)/10;
-      return{question:`Boat: ${u}km/h still, stream: ${v}km/h. ${d}km each way. Total time?`,options:[`${total}h`,`${(d*2/u).toFixed(1)}h`,`${(total+1).toFixed(1)}h`,`${(total-1).toFixed(1)}h`],answer:0,explanation:`Up=${d}/${u-v}h,Down=${d}/${u+v}h. Total=${total}h.`,subtopic:'Round Trip'};},
-    () => { const d=getRandomInt(30,80),tUp=getRandomInt(3,8),tDown=getRandomInt(1,tUp-1);
-      const b=(d/tDown+d/tUp)/2,s=(d/tDown-d/tUp)/2;
-      return{question:`Boat: ${d}km upstream in ${tUp}h, same downstream in ${tDown}h. Still water speed?`,options:makeOptions(Math.round(b),2,5),answer:0,explanation:`Up=${(d/tUp).toFixed(1)},Down=${(d/tDown).toFixed(1)}km/h. Still=(up+down)/2=${Math.round(b)}km/h.`,subtopic:'Find Boat Speed'};},
-    () => { const b=getRandomInt(8,15),s=getRandomInt(2,5),d=getRandomInt(40,100);
-      const tUp=Math.round(d/(b-s)*10)/10,tDown=Math.round(d/(b+s)*10)/10;
-      return{question:`Boat ${b}km/h, stream ${s}km/h. Time ratio upstream:downstream for ${d}km?`,options:[`${(b+s)}:${(b-s)}`,`${b-s}:${b+s}`,`${tUp}:${tDown}`,`1:1`],answer:0,explanation:`Up time/${d}=1/${b-s}. Down time/${d}=1/${b+s}. Ratio=(${b+s}):(${b-s}).`,subtopic:'Time Ratio'};},
-    () => { const u=getRandomInt(4,10),v=getRandomInt(1,u-2),d=getRandomInt(20,60);
-      const dist=Math.round((u+v)*d/2+(u-v)*d/2);
-      return{question:`Boat can go ${u+v}km/h downstream, ${u-v}km/h upstream. Distance in ${d}h rowing downstream?`,options:makeOptions((u+v)*d,10,50),answer:0,explanation:`Downstream speed=${u+v}km/h. Dist=${u+v}×${d}=${(u+v)*d}km.`,subtopic:'Downstream Distance'};},
-    () => { const b=getRandomInt(10,20),s=getRandomInt(3,7);
-      const equivStillDist=getRandomInt(30,80),t=equivStillDist/b;
-      const upDist=Math.round((b-s)*t),downDist=Math.round((b+s)*t);
-      return{question:`In time a boat covers ${equivStillDist}km in still water (speed ${b}km/h, stream ${s}km/h), it covers — km upstream and — km downstream: which is correct?`,options:[`${upDist} up, ${downDist} down`,`${downDist} up, ${upDist} down`,`${equivStillDist} up, ${equivStillDist} down`,`Cannot determine`],answer:0,explanation:`t=${equivStillDist}/${b}h. Up=${b-s}×t=${upDist}km. Down=${b+s}×t=${downDist}km.`,subtopic:'Equivalent Distance'};},
+    () => { // Motorboat engine failure mid-journey
+      const b=12, s=3, d=45;
+      const tDown = d / (b + s);
+      const tUp = d / (b - s);
+      const total = Math.round((tDown + tUp)*10)/10;
+      return{question:`A tourist motorboat travels at a speed of ${b} km/h in still water. The local river current flows at a constant speed of ${s} km/h. If the boat completes a round trip to a scenic point located ${d} km away, find the total travel time for the round trip.`,
+        options:[`${total} hours`, `${Math.round(total+1.5)} hours`, `${Math.round(total-1)} hours`, `10 hours`],answer:0,
+        explanation:`Downstream speed = ${b} + ${s} = ${b+s} km/h. Upstream speed = ${b} - ${s} = ${b-s} km/h. Time = ${d}/${b+s} + ${d}/${b-s} = ${tDown} + ${tUp} = ${total} hours.`,subtopic:'Round Trip'};},
   ],
   'trains': [
-    () => { const l1=getRandomInt(150,300),l2=getRandomInt(150,300),tOpp=getRandomInt(12,25),tSame=getRandomInt(40,80);
-      const s1=Math.round((l1+l2)/2*(1/tOpp+1/tSame)/1000*3600),s2=Math.round((l1+l2)/2*(1/tOpp-1/tSame)/1000*3600);
-      return{question:`Trains (${l1}m,${l2}m) cross in ${tOpp}s opposite, ${tSame}s same direction. Speeds?`,options:[`${s1}km/h & ${s2}km/h`,`${s1+5}&${s2}`,`${s1}&${s2+5}`,`${s2}&${s1}`],answer:0,explanation:`Sum=${(l1+l2)/tOpp}m/s,Diff=${(l1+l2)/tSame}m/s. Speeds≈${s1}&${s2}km/h.`,subtopic:'Two Trains — Both Directions'};},
-    () => { const len=getRandomInt(200,400),speed=getRandomInt(54,108),plat=getRandomInt(200,500);
-      const t=Math.round((len+plat)/(speed/3.6));
-      return{question:`${len}m train at ${speed}km/h crosses ${plat}m platform. Time?`,options:makeOptions(t,3,12),answer:0,explanation:`Total=${len+plat}m. Speed=${(speed/3.6).toFixed(1)}m/s. t=${t}s.`,subtopic:'Platform Crossing'};},
-    () => { const tLen=getRandomInt(150,300),tSpeed=getRandomInt(54,90),pole=getRandomInt(5,12);
-      const len=Math.round(tSpeed/3.6*pole);
-      return{question:`Train passes a pole in ${pole}s at ${tSpeed}km/h. Length?`,options:makeOptions(len,20,80),answer:0,explanation:`Length=${tSpeed}km/h×${pole}s=${(tSpeed/3.6).toFixed(1)}×${pole}=${len}m.`,subtopic:'Train Length from Pole'};},
-    () => { const gap=getRandomInt(100,500),s1=getRandomInt(54,90),s2=getRandomInt(36,72),delay=getRandomInt(10,30);
-      const headStart=s1*delay/60,catchT=Math.round(headStart/(s2/3.6-s1/3.6)*60);
-      // Train B at s2 chases train A at s1 after delay minutes
-      const rel=(s2-s1)/3.6;
-      const startGap=s1*delay/3600*1000;
-      const time=Math.round(startGap/rel);
-      return{question:`Train A leaves at ${s1}km/h. Train B leaves ${delay}min later at ${s2}km/h. How long until B catches A?`,options:makeOptions(time,20,120),answer:0,explanation:`Head start=${startGap.toFixed(0)}m. Rel speed=${rel.toFixed(1)}m/s. t=${time}s=${Math.round(time/60)}min.`,subtopic:'Train Overtaking'};},
-    () => { const l1=getRandomInt(100,250),l2=getRandomInt(100,250),s=getRandomInt(54,90),mult=getRandomInt(2,3);
-      const s2=s*mult,tOpp=Math.round((l1+l2)/((s+s2)/3.6));
-      return{question:`Train A (${l1}m, ${s}km/h), Train B (${l2}m, ${s*mult}km/h) opposite. Crossing time?`,options:makeOptions(tOpp,3,12),answer:0,explanation:`Rel=${(s+s2)/3.6}m/s. t=(${l1+l2})/${(s+s2)/3.6}≈${tOpp}s.`,subtopic:'Opposite Crossing'};},
-    () => { const plat=getRandomInt(200,500),tPlat=getRandomInt(25,45),speed=getRandomInt(54,90);
-      const tLen=Math.round(speed/3.6*tPlat-plat);
-      return{question:`Train at ${speed}km/h crosses ${plat}m platform in ${tPlat}s. Train length?`,options:makeOptions(tLen,30,100),answer:0,explanation:`Total dist=${(speed/3.6*tPlat).toFixed(0)}m. Length=${Math.round(speed/3.6*tPlat)}−${plat}=${tLen}m.`,subtopic:'Length from Platform'};},
-  ],
-  'permutation-combination': [
-    () => { const n=getRandomInt(7,10),r=getRandomInt(3,5),ans=fact(n)/(fact(n-r));
-      return{question:`Permutations of ${r} letters chosen from ${n} distinct letters (order matters)?`,options:makeOptions(ans,100,5000),answer:0,explanation:`P(${n},${r})=${n}!/${(n-r)}!=${ans}.`,subtopic:'Permutations'};},
-    () => { const men=getRandomInt(4,7),women=getRandomInt(3,5),size=getRandomInt(4,6);
-      const tot=nCr(men+women,size);let atLeast1W=0;
-      for(let w=1;w<=Math.min(women,size);w++){const m=size-w;if(m<=men)atLeast1W+=nCr(women,w)*nCr(men,m);}
-      return{question:`Committee of ${size} from ${men} men & ${women} women with at least 1 woman. Ways?`,options:makeOptions(atLeast1W,20,200),answer:0,explanation:`Total−all men: C(${men+women},${size})−C(${men},${size})=${tot}−${nCr(men,size)}=${atLeast1W}.`,subtopic:'At-least 1 Woman'};},
-    () => { const n=getRandomInt(5,7),r=getRandomInt(2,3);
-      const arrangements=fact(n)*fact(n-r+1)/fact(n-r+1-r+1);
-      const ans=nCr(n,r)*fact(r);
-      return{question:`How many ways to arrange ${r} people in a row from ${n} people?`,options:makeOptions(ans,20,500),answer:0,explanation:`P(${n},${r})=${n}!/${(n-r)}!=${ans}.`,subtopic:'Arrange r from n'};},
-    () => { const n=getRandomInt(6,9),k=getRandomInt(2,3);
-      const total=fact(n),noKtogether=nCr(n-k+1,k)*fact(k)*fact(n-k);
-      const apart=total-noKtogether;
-      return{question:`${n} people in a row. ${k} specific people must NOT be together. Ways?`,options:makeOptions(total-fact(n-k+1)*fact(k),1000,500000),answer:0,explanation:`Total−(together)=${n}!−${k}!×${n-k+1}!=${total-fact(n-k+1)*fact(k)}.`,subtopic:'Not Together'};},
-    () => { const n=getRandomInt(4,6),r=getRandomInt(2,n-1);
-      const digits=Array.from({length:n},(_,i)=>i+1);
-      const ans=fact(n-1)*r;
-      return{question:`How many ${r}-digit numbers can be formed from 1 to ${n} (no repetition)?`,options:makeOptions(nCr(n,r)*fact(r),20,500),answer:0,explanation:`P(${n},${r})=${nCr(n,r)*fact(r)}.`,subtopic:'Number Formation'};},
-    () => { const rows=getRandomInt(4,7),seatsPerRow=getRandomInt(4,7),n=getRandomInt(3,5);
-      const ans=nCr(rows*seatsPerRow,n)*fact(n);
-      return{question:`${rows*seatsPerRow} seats (${rows} rows). Select and arrange ${n} people?`,options:makeOptions(nCr(rows*seatsPerRow,n)*fact(n),1000,100000),answer:0,explanation:`Select C(${rows*seatsPerRow},${n}), arrange ${n}!. Total=${nCr(rows*seatsPerRow,n)*fact(n)}.`,subtopic:'Select & Arrange'};},
-  ],
-  'probability': [
-    () => { const n=getRandomInt(5,8),k=getRandomInt(2,n-2),fav=nCr(n,k),tot=Math.pow(2,n),g=gcd(fav,tot);
-      return{question:`Fair coin tossed ${n} times. P(exactly ${k} heads)?`,options:[`${fav/g}/${tot/g}`,`${k}/${n}`,`${fav-1}/${tot}`,`${k}/${tot}`],answer:0,explanation:`C(${n},${k})/2^${n}=${fav}/${tot}=${fav/g}/${tot/g}.`,subtopic:'Binomial Probability'};},
-    () => { const red=getRandomInt(4,7),blue=getRandomInt(3,6),n=red+blue;
-      const favOneEach=red*blue,tot=nCr(n,2),g=gcd(favOneEach,tot);
-      return{question:`Bag: ${red} red, ${blue} blue. Draw 2. P(1 red,1 blue)?`,options:[`${favOneEach/g}/${tot/g}`,`${red}/${n}×${blue}/${n}`,`${favOneEach-1}/${tot}`,`2/${n}`],answer:0,explanation:`P=${red}×${blue}/C(${n},2)=${favOneEach}/${tot}=${favOneEach/g}/${tot/g}.`,subtopic:'Mixed Draw'};},
-    () => { const pA=getRandomInt(3,7),pB=getRandomInt(4,8),d=getRandomInt(10,15);
-      const pAtB=Math.min(pA,pB),pAorB=pA+pB-pAtB,g=gcd(pAorB,d);
-      return{question:`P(A)=${pA}/${d}, P(B)=${pB}/${d}, A & B independent. P(A or B)?`,options:[`${pAorB/g}/${d/g}`,`${(pA+pB)/gcd(pA+pB,d)}/${d/gcd(pA+pB,d)}`,`${pA*pB}/${d*d}`,`1`],answer:0,explanation:`P(A∪B)=P(A)+P(B)−P(A)P(B)=${pA/d}+${pB/d}−${pA*pB/(d*d)}≈${pAorB/g}/${d/g}.`,subtopic:'Union Probability'};},
-    () => { const n=getRandomInt(3,5),pFail=getRandomInt(1,3),pD=getRandomInt(4,6);
-      const allFail=Math.pow(pFail,n),allD=Math.pow(pD,n),g=gcd(allD-allFail,allD);
-      return{question:`P(fail)=${pFail}/${pD}. ${n} independent attempts. P(at least 1 pass)?`,options:[`${(allD-allFail)/g}/${allD/g}`,`1/${pD}`,`${n}×(${pD-pFail})/${pD}`,`(${pD-pFail}/${pD})^${n}`],answer:0,explanation:`1−(${pFail}/${pD})^${n}=1−${allFail}/${allD}=${(allD-allFail)/g}/${allD/g}.`,subtopic:'At-least Probability'};},
-    () => { const w=getRandomInt(3,6),b=getRandomInt(4,7),n=w+b,k=2;
-      const bothW=nCr(w,k),total=nCr(n,k),g=gcd(bothW,total);
-      return{question:`Bag: ${w} white, ${b} black. P(both drawn are white)?`,options:[`${bothW/g}/${total/g}`,`${w}/${n}×${w-1}/${n-1}`,`${w}/${n}`,`${bothW}/${n*n}`],answer:0,explanation:`C(${w},2)/C(${n},2)=${bothW}/${total}=${bothW/g}/${total/g}.`,subtopic:'Both White'};},
-    () => { const s1=getRandomInt(1,3),s2=getRandomInt(4,6),d=6;
-      const p1=s1/d,p2=s2/d,both=Math.round(p1*p2*100)/100;
-      return{question:`Two dice: P(first shows ≤${s1} AND second shows ≥${s2})?`,options:[`${s1*s2}/36`,`${s1}/6×${7-s2}/6`,`${s1}/${d}`,`${(7-s2)}/6`],answer:0,explanation:`P=${s1}/6×${7-s2}/6=${s1*(7-s2)}/36.`,subtopic:'Independent Dice'};},
-  ],
-  'mensuration': [
-    () => { const r=getRandomInt(5,12),vol=Math.round(4/3*Math.PI*r*r*r);
-      return{question:`Volume of sphere radius ${r}cm? (Use π=22/7)`,options:makeOptions(Math.round(4/3*22/7*r*r*r),100,1000),answer:0,explanation:`V=4/3×22/7×${r}³=${Math.round(4/3*22/7*r*r*r)}cm³.`,subtopic:'Sphere Volume'};},
-    () => { const r=getRandomInt(3,7),h=getRandomInt(8,15),csa=Math.round(22/7*r*Math.sqrt(r*r+h*h));
-      return{question:`Cone r=${r}cm,h=${h}cm. Curved surface area? (π=22/7)`,options:makeOptions(csa,20,100),answer:0,explanation:`CSA=πrl=22/7×${r}×${Math.round(Math.sqrt(r*r+h*h)*10)/10}=${csa}cm².`,subtopic:'Cone CSA'};},
-    () => { const r=getRandomInt(3,8),h=getRandomInt(6,14),vol=Math.round(22/7*r*r*h);
-      return{question:`Cylinder r=${r}cm,h=${h}cm. Volume? (π=22/7)`,options:makeOptions(vol,50,500),answer:0,explanation:`V=πr²h=22/7×${r}²×${h}=${vol}cm³.`,subtopic:'Cylinder Volume'};},
-    () => { const a=getRandomInt(4,10),b=getRandomInt(3,a-1),c=Math.round(Math.sqrt((a-b)*(a-b)+getRandomInt(9,25)));
-      const area=Math.round(0.5*b*Math.sqrt(a*a-(b/2)*(b/2)));
-      return{question:`Isosceles triangle: equal sides ${a}cm, base ${b}cm. Area?`,options:makeOptions(area,5,40),answer:0,explanation:`h=√(${a}²−(${b}/2)²). Area=½×${b}×h≈${area}cm².`,subtopic:'Triangle Area'};},
-    () => { const r=getRandomInt(4,8),sr=getRandomInt(2,r-1),cones=Math.round((4/3*r*r*r)/(1/3*sr*sr*getRandomInt(4,8)));
-      const h=getRandomInt(4,8);const num=Math.round(4*r*r*r/(sr*sr*h));
-      return{question:`Sphere r=${r}cm melted → cones r=${sr}cm,h=${h}cm. Number of cones?`,options:makeOptions(num,3,20),answer:0,explanation:`Sphere vol=4r³/3. Cone vol=r²h/3. N=4×${r}³/(${sr}²×${h})=${num}.`,subtopic:'Solid to Cones'};},
-    () => { const l=getRandomInt(10,20),b=getRandomInt(8,15),h=getRandomInt(6,10),tsa=2*(l*b+b*h+h*l);
-      return{question:`Cuboid ${l}×${b}×${h}cm. Total surface area?`,options:makeOptions(tsa,50,200),answer:0,explanation:`TSA=2(lb+bh+hl)=2(${l*b}+${b*h}+${h*l})=${tsa}cm².`,subtopic:'Cuboid TSA'};},
-  ],
-  'statistics': [
-    () => { const vals=Array.from({length:6},()=>getRandomInt(10,40));
-      const s=vals.reduce((a,b)=>a+b,0),mean=Math.round(s/6);
-      const v=Math.round(vals.map(x=>(x-mean)**2).reduce((a,b)=>a+b,0)/6);
-      const sd=Math.round(Math.sqrt(v)*10)/10;
-      return{question:`Data: ${vals.join(',')}. Standard deviation?`,options:[`${sd}`,`${(sd+1.5).toFixed(1)}`,`${v}`,`${(sd-1).toFixed(1)}`],answer:0,explanation:`Mean=${mean},Var=${v},SD=√${v}≈${sd}.`,subtopic:'Standard Deviation'};},
-    () => { const n1=getRandomInt(10,20),m1=getRandomInt(40,60),sd1=getRandomInt(5,10);
-      const n2=getRandomInt(15,25),m2=getRandomInt(60,80),sd2=getRandomInt(6,12);
-      const cMean=Math.round((n1*m1+n2*m2)/(n1+n2));
-      return{question:`Group A: n=${n1},mean=${m1},SD=${sd1}. Group B: n=${n2},mean=${m2},SD=${sd2}. Combined mean?`,options:makeOptions(cMean,2,8),answer:0,explanation:`Combined mean=(${n1}×${m1}+${n2}×${m2})/${n1+n2}=${cMean}.`,subtopic:'Combined Mean'};},
     () => { const data=[5,8,10,12,15,8,10,8];
       const mode=8,freq=3,range=Math.max(...data)-Math.min(...data);
       return{question:`Data: 5,8,10,12,15,8,10,8. Mode and Range?`,options:[`Mode=8,Range=${range}`,`Mode=10,Range=${range}`,`Mode=8,Range=${range+2}`,`Mode=12,Range=${range}`],answer:0,explanation:`8 appears ${freq} times→Mode=8. Range=${Math.max(...data)}−${Math.min(...data)}=${range}.`,subtopic:'Mode & Range'};},

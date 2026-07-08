@@ -58,12 +58,12 @@ export default function Home() {
         <div className="overall-card">
           <div className="overall-icon">🎯</div>
           <div className="overall-text">
-            <h2>Full Mock Test</h2>
-            <p>20 mixed questions from all 16 topics — just like the real TCS NQT exam format</p>
+            <h2>Full Mock Test <span className="badge badge-hard" style={{ fontSize: '0.72rem', verticalAlign: 'middle', marginLeft: '0.4rem' }}>🔴 HARD</span></h2>
+            <p>20 hard-level questions from all 16 topics — simulating the <strong>actual TCS NQT difficulty</strong> to push your limits</p>
             <div className="overall-tags">
               <span className="overall-tag">⏱️ 25 minutes</span>
               <span className="overall-tag">❓ 20 Questions</span>
-              <span className="overall-tag">🎲 Mixed Levels</span>
+              <span className="overall-tag">🔴 Hard Level Only</span>
               <span className="overall-tag">📊 Detailed Review</span>
             </div>
           </div>

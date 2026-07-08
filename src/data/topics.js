@@ -217,15 +217,15 @@ export function getTopicTestQuestions(topicId, difficulty) {
 }
 
 export function getOverallTestQuestions(totalCount = 20) {
-  const difficulties = ['easy', 'medium', 'hard'];
+  // TCS NQT is known to be very hard — mock test always uses Hard difficulty
+  // to simulate real exam pressure and best prepare the student.
   const all = [];
   
   // Randomly distribute across the 16 topics to pick 20 questions
   const pickedTopics = [...TOPICS].sort(() => Math.random() - 0.5);
   for (let i = 0; i < totalCount; i++) {
     const topic = pickedTopics[i % TOPICS.length];
-    const diff = difficulties[Math.floor(Math.random() * difficulties.length)];
-    const qList = generateQuestions(topic.id, diff, 1);
+    const qList = generateQuestions(topic.id, 'hard', 1);
     if (qList.length > 0) {
       all.push({
         ...qList[0],

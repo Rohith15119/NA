@@ -234,6 +234,42 @@ export default function TestPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // ── Fullscreen Mode ────────────────────────────────────────────────────────
+  useEffect(() => {
+    const enterFS = async () => {
+      try {
+        const elem = document.documentElement;
+        if (elem.requestFullscreen) {
+          await elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+          await elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+          await elem.msRequestFullscreen();
+        }
+      } catch (err) {
+        console.warn('Fullscreen entry denied:', err.message);
+      }
+    };
+
+    enterFS();
+
+    return () => {
+      try {
+        if (document.fullscreenElement) {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+        }
+      } catch (err) {
+        console.warn('Fullscreen exit failed:', err.message);
+      }
+    };
+  }, []);
+
   // ── Derived values ────────────────────────────────────────────────────────
   const current      = questions[currentIndex] || null;
   const answered     = Object.keys(answers).length;

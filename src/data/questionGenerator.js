@@ -3601,19 +3601,163 @@ const EXPERT_POOL = {
         explanation:`Downstream speed = ${b} + ${s} = ${b+s} km/h. Upstream speed = ${b} - ${s} = ${b-s} km/h. Time = ${d}/${b+s} + ${d}/${b-s} = ${tDown} + ${tUp} = ${total} hours.`,subtopic:'Round Trip'};},
   ],
   'trains': [
-    () => { const data=[5,8,10,12,15,8,10,8];
-      const mode=8,freq=3,range=Math.max(...data)-Math.min(...data);
-      return{question:`Data: 5,8,10,12,15,8,10,8. Mode and Range?`,options:[`Mode=8,Range=${range}`,`Mode=10,Range=${range}`,`Mode=8,Range=${range+2}`,`Mode=12,Range=${range}`],answer:0,explanation:`8 appears ${freq} times→Mode=8. Range=${Math.max(...data)}−${Math.min(...data)}=${range}.`,subtopic:'Mode & Range'};},
-    () => { const mean=getRandomInt(40,70),n=getRandomInt(15,30),wrong=getRandomInt(10,30),correct=wrong+getRandomInt(15,35);
-      const newMean=((mean*n-wrong+correct)/n).toFixed(1);
-      return{question:`Mean of ${n} values=${mean}. Value ${wrong} should be ${correct}. Correct mean?`,options:[`${newMean}`,`${mean}`,`${(parseFloat(newMean)+1).toFixed(1)}`,`${(parseFloat(newMean)-1).toFixed(1)}`],answer:0,explanation:`Corrected sum=${mean*n-wrong+correct}. Mean=${newMean}.`,subtopic:'Error Correction'};},
-    () => { const n=getRandomInt(5,9)*2+1,data=Array.from({length:n},()=>getRandomInt(10,50)).sort((a,b)=>a-b);
-      const median=data[Math.floor(n/2)];
-      return{question:`Sorted data: ${data.join(',')}. Median?`,options:[`${median}`,`${data[Math.floor(n/2)-1]}`,`${data[Math.floor(n/2)+1]}`,`${Math.round(data.reduce((a,b)=>a+b,0)/n)}`],answer:0,explanation:`n=${n} (odd). Median=middle value=data[${Math.floor(n/2)}]=${median}.`,subtopic:'Median'};},
-    () => { const m=getRandomInt(40,80),sd=getRandomInt(5,15),cv=Math.round(sd/m*100);
-      return{question:`Mean=${m}, SD=${sd}. Coefficient of Variation?`,options:[`${cv}%`,`${Math.round(m/sd*100)}%`,`${cv+5}%`,`${sd}%`],answer:0,explanation:`CV=SD/Mean×100=${sd}/${m}×100=${cv}%.`,subtopic:'Coefficient of Variation'};},
+    () => {
+      const s1 = getRandomInt(50, 70);
+      const s2 = s1 + getRandomInt(15, 30);
+      const l1 = getRandomInt(120, 200);
+      const l2 = l1 + getRandomInt(50, 100);
+      const delay = getRandomInt(10, 30);
+      const gap = s1 * (delay / 60) * 1000;
+      const relSpeed = (s2 - s1) / 3.6;
+      const time = Math.round((gap + l1 + l2) / relSpeed);
+      return {
+        question: `A local freight train of length ${l1} meters departs from a shipping yard at a constant speed of ${s1} km/h. Exactly ${delay} minutes later, an express passenger train of length ${l2} meters departs from the same yard along a parallel track in the same direction at a constant speed of ${s2} km/h. Calculate the time (in seconds) required for the passenger train to completely overtake and clear the freight train from the moment the passenger train departs.`,
+        options: makeOptions(time, 10, 100), answer: 0,
+        explanation: `Distance gap from delay = ${s1} * ${delay}/60 = ${(s1 * delay / 60).toFixed(2)} km = ${gap.toFixed(0)} meters. Total distance to cover for complete clear = gap + l1 + l2 = ${(gap + l1 + l2).toFixed(0)} meters. Relative speed = (${s2} - ${s1}) km/h = ${relSpeed.toFixed(2)} m/s. Time = ${(gap + l1 + l2).toFixed(0)} / ${relSpeed.toFixed(2)} = ${time} seconds.`,
+        subtopic: 'Train Overtaking'
+      };
+    },
+    () => {
+      const speed = getRandomInt(54, 90);
+      const tPlat = getRandomInt(25, 45);
+      const plat = getRandomInt(200, 450);
+      const len = Math.round((speed / 3.6) * tPlat - plat);
+      return {
+        question: `A passenger train traveling at a constant speed of ${speed} km/h approaches a station. It takes exactly ${tPlat} seconds to completely cross and clear the main platform, which is measured to be ${plat} meters long. Find the physical length of the passenger train in meters.`,
+        options: makeOptions(len, 20, 80), answer: 0,
+        explanation: `Speed in m/s = ${speed} / 3.6 = ${(speed/3.6).toFixed(2)} m/s. Total distance covered = Speed * Time = ${(speed/3.6).toFixed(2)} * ${tPlat} = ${Math.round((speed/3.6)*tPlat)} meters. Train length = Total distance - Platform length = ${Math.round((speed/3.6)*tPlat)} - ${plat} = ${len} meters.`,
+        subtopic: 'Platform Crossing'
+      };
+    }
   ],
+  'permutation-combination': [
+    () => {
+      const total = getRandomInt(7, 9);
+      const ans = fact(total - 2) * (total - 3);
+      return {
+        question: `During an international summit, a delegation of ${total} representatives is to be seated around a circular conference table. If two specific delegates represent rival nations and refuse to sit adjacent to each other, in how many distinct seating arrangements can the table be configured?`,
+        options: makeOptions(ans, 20, 200), answer: 0,
+        explanation: `Total circular seating = (${total}-1)! = ${fact(total-1)}. Seating where they sit together = 2 * (${total}-2)! = ${2 * fact(total-2)}. Seating where they are apart = (${total}-1)! - 2*(${total}-2)! = (${total}-2)! * (${total}-3) = ${ans} ways.`,
+        subtopic: 'Circular Arrangement'
+      };
+    },
+    () => {
+      const men = getRandomInt(6, 8);
+      const women = getRandomInt(4, 6);
+      const size = 5;
+      let ans = 0;
+      for (let w = 2; w <= Math.min(women, size); w++) {
+        ans += nCr(women, w) * nCr(men, size - w);
+      }
+      return {
+        question: `A cybersecurity task force consisting of ${size} analysts is to be selected from a pool of ${men} male developers and ${women} female developers. How many ways can the task force be selected if it must include at least 2 female developers to ensure gender diversity?`,
+        options: makeOptions(ans, 10, 50), answer: 0,
+        explanation: `We sum the cases for 2, 3, 4, and 5 female developers: C(${women},2)*C(${men},3) + C(${women},3)*C(${men},2) + C(${women},4)*C(${men},1) + C(${women},5)*C(${men},0) = ${ans} ways.`,
+        subtopic: 'Selection with Restriction'
+      };
+    }
+  ],
+  'probability': [
+    () => {
+      const pD = 1;
+      const pND = 99;
+      const testD = getRandomInt(90, 97);
+      const testND = getRandomInt(4, 8);
+      const fav = pD * testD;
+      const tot = pD * testD + pND * testND;
+      const prob = Math.round((fav / tot) * 100);
+      return {
+        question: `An automated code security scanner flags a potential SQL injection vulnerability with an accuracy of ${testD}% when the code is actually vulnerable. However, it yields a false positive alert rate of ${testND}% when the code is safe. If exactly 1% of the codebases in the company repository actually contain the vulnerability, what is the probability (in %) that a codebase flagged positive by the scanner is truly vulnerable?`,
+        options: [`${prob}%`, `${prob + 10}%`, `${prob - 5}%`, `95%`], answer: 0,
+        explanation: `Using Bayes' Theorem: P(Vulnerable | Positive) = (0.01 * ${testD/100}) / (0.01 * ${testD/100} + 0.99 * ${testND/100}) = ${(fav/tot).toFixed(4)} = ${prob}%.`,
+        subtopic: "Bayes' Theorem"
+      };
+    },
+    () => {
+      const red = getRandomInt(4, 7);
+      const blue = getRandomInt(4, 7);
+      const total = red + blue;
+      const fav = nCr(red, 2) * nCr(blue, 1);
+      const tot = nCr(total, 3);
+      const g = gcd(fav, tot);
+      return {
+        question: `A storage box contains ${red} red server nodes and ${blue} blue server nodes. A network administrator randomly selects 3 nodes from the box without replacement to configure a cluster. What is the probability that exactly 2 of the selected nodes are red and 1 is blue?`,
+        options: [`${fav/g}/${tot/g}`, `${(fav+1)/g}/${tot/g}`, `${fav/g}/${(tot+2)/g}`, `1/2`], answer: 0,
+        explanation: `Favorable outcomes = C(${red},2) * C(${blue},1) = ${nCr(red, 2)} * ${blue} = ${fav}. Total outcomes = C(${total},3) = ${tot}. Probability = ${fav}/${tot} = ${fav/g}/${tot/g}.`,
+        subtopic: 'Ball Drawing'
+      };
+    }
+  ],
+  'mensuration': [
+    () => {
+      const r = getRandomInt(5, 8);
+      const sr = 1;
+      const h = 3;
+      const loss = getRandomInt(8, 15);
+      const sphereVol = 4 * r * r * r;
+      const coneVol = sr * sr * h;
+      const totalCones = Math.round((sphereVol * (100 - loss) / 100) / coneVol);
+      return {
+        question: `A solid metal sphere of radius ${r} cm is melted down and recast into small solid right circular cones, each having a base radius of ${sr} cm and a height of ${h} cm. If exactly ${loss}% of the metal is lost during the melting and casting process, calculate the total number of complete cones that can be successfully manufactured.`,
+        options: makeOptions(totalCones, 5, 25), answer: 0,
+        explanation: `Sphere volume = (4/3) * pi * ${r}^3. Cone volume = (1/3) * pi * ${sr}^2 * ${h}. Net volume after ${loss}% loss = 0.${100-loss} * Volume of sphere. Total cones = Net Volume / Cone Volume = ${totalCones}.`,
+        subtopic: 'Volume Conservation'
+      };
+    },
+    () => {
+      const l = getRandomInt(30, 60);
+      const w = getRandomInt(15, 30);
+      const pw = getRandomInt(2, 4);
+      const pathArea = (l + 2 * pw) * (w + 2 * pw) - l * w;
+      return {
+        question: `A municipal park is rectangular in shape, measuring ${l} meters in length and ${w} meters in width. A concrete running track of uniform width ${pw} meters is constructed completely surrounding the park on the outside. Calculate the total surface area of the concrete track in square meters.`,
+        options: makeOptions(pathArea, 20, 80), answer: 0,
+        explanation: `Outer dimensions of park + track = ${l + 2*pw}m by ${w + 2*pw}m. Outer area = ${l + 2*pw} * ${w + 2*pw} = ${(l+2*pw)*(w+2*pw)} sq meters. Inner park area = ${l} * ${w} = ${l*w} sq meters. Track area = Outer area - Inner area = ${pathArea} sq meters.`,
+        subtopic: 'Area of Path'
+      };
+    }
+  ],
+  'statistics': [
+    () => {
+      const mean = getRandomInt(45, 65);
+      const sd = getRandomInt(8, 14);
+      const a = getRandomInt(2, 3);
+      const b = getRandomInt(4, 10);
+      const newMean = a * mean + b;
+      const newSd = a * sd;
+      return {
+        question: `A statistical evaluation of telemetry response times has a calculated average (mean) value of ${mean} milliseconds and a standard deviation of ${sd} milliseconds. If all telemetry logs are adjusted by multiplying them by ${a} and then adding ${b} milliseconds, what will be the new mean and standard deviation of the updated telemetry dataset?`,
+        options: [
+          `Mean = ${newMean}, SD = ${newSd}`,
+          `Mean = ${newMean}, SD = ${newSd + b}`,
+          `Mean = ${newMean + b}, SD = ${newSd}`,
+          `Mean = ${mean}, SD = ${sd}`
+        ], answer: 0,
+        explanation: `Under the linear transformation Y = ${a}X + ${b}: New Mean = ${a} * Mean + ${b} = ${newMean}. New Standard Deviation = ${a} * SD = ${newSd} (SD is scale-sensitive but location-insensitive).`,
+        subtopic: 'Linear Transformation'
+      };
+    },
+    () => {
+      const m1 = getRandomInt(40, 50), s1 = getRandomInt(4, 8);
+      const m2 = getRandomInt(60, 80), s2 = getRandomInt(6, 12);
+      const cv1 = Math.round(s1 / m1 * 100), cv2 = Math.round(s2 / m2 * 100);
+      const better = cv1 < cv2 ? 'A' : 'B';
+      const minCV = Math.min(cv1, cv2);
+      return {
+        question: `A quality testing team compiles two developer productivity datasets. Group A has a mean delivery index of ${m1} days with a standard deviation of ${s1} days, while Group B has a mean delivery index of ${m2} days with a standard deviation of ${s2} days. Which Group is more consistent in their deliveries, and what is its Coefficient of Variation (CV)?`,
+        options: [
+          `Group ${better} (CV = ${minCV}%)`,
+          `Group ${better === 'A' ? 'B' : 'A'} (CV = ${Math.max(cv1, cv2)}%)`,
+          `Both are equally consistent`,
+          `Group ${better} (CV = ${(minCV * 1.2).toFixed(0)}%)`
+        ], answer: 0,
+        explanation: `CV = (SD / Mean) * 100. CV_A = (${s1}/${m1})*100 = ${cv1}%. CV_B = (${s2}/${m2})*100 = ${cv2}%. Lower CV means more consistency. Group ${better} is more consistent.`,
+        subtopic: 'Coefficient of Variation'
+      };
+    }
+  ]
 };
+
 
 // ─── Generator Engine (routes by difficulty) ──────────────────────────────────
 export function generateQuestions(topicId, difficulty, count = 5) {

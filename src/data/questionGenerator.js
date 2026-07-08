@@ -3773,27 +3773,39 @@ export function generateQuestions(topicId, difficulty, count = 5) {
 
   if (!genPool || genPool.length === 0) return [];
 
-  const result = [], seen = new Set(), safety = count * 8;
+  const result = [], usedIndices = new Set(), safety = count * 8;
   let i = 0;
   while (result.length < count && i++ < safety) {
     try {
-      const q = pickRandomArray(genPool)();
-      if (!q?.question || q.question === 'skip' || seen.has(q.question)) continue;
-      seen.add(q.question);
+      // If we have exhausted all unique templates, reset the tracker to allow minimum necessary repetition
+      if (usedIndices.size >= genPool.length) {
+        usedIndices.clear();
+      }
+
+      const idx = getRandomInt(0, genPool.length - 1);
+      if (usedIndices.has(idx)) continue;
+
+      const q = genPool[idx]();
+      if (!q?.question || q.question === 'skip') continue;
+
+      usedIndices.add(idx);
       q.id         = `${topicId}_${raw}_${result.length}_${getRandomInt(1000,9999)}`;
       q.difficulty = key;
       result.push(q);
     } catch { /* skip malformed template */ }
   }
-  // safety fill
+
+  // Fallback safety fill if templates fail or are insufficient
   while (result.length < count) {
     try {
       const q = pickRandomArray(genPool)();
-      if (!q?.question) continue;
+      if (!q?.question) break;
       q.id         = `${topicId}_${raw}_${result.length}_${getRandomInt(1000,9999)}`;
       q.difficulty = key;
       result.push(q);
     } catch { break; }
   }
+
   return result.map(prepareQuestion);
 }
+

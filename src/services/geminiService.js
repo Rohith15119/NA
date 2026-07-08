@@ -9,18 +9,18 @@ const API_URL        = `https://generativelanguage.googleapis.com/v1beta/models/
 export const TOPIC_DETAILS = {
   'number-system': {
     title: 'Number System',
-    subtopics: 'LCM, HCF, Divisibility Rules, Remainders, Unit Digit Cyclicity, Trailing Zeros, Number of Factors, Simplification',
-    hint: 'Complex system of congruence equations, advanced Euler totient counts φ(N), Fermat Littles modulo composite variables, complex divisors and factorization count tricks, and base system conversion logic under time pressure.'
+    subtopics: 'LCM, HCF, Divisibility Rules, Remainders, Unit Digit Cyclicity, Trailing Zeros, Number of Factors, Simplification, Progressions (AP/GP)',
+    hint: 'Complex system of congruence equations, advanced Euler totient counts φ(N), Fermat Littles modulo composite variables, complex divisors and factorization count tricks, base system conversion logic, and Arithmetic/Geometric Progressions (AP/GP) under time pressure.'
   },
   'ratio-proportion': {
     title: 'Ratio & Proportion',
-    subtopics: 'Simple Ratios, Compound Ratios, Proportions, Direct/Inverse Variation, Mixtures, Alligation',
-    hint: 'Multi-leg compound ratios, complex partnerships where profit share is reinvested at varying cycles, complex repeated replacements with non-identical replacement quantities, and multi-component weighted mixtures.'
+    subtopics: 'Simple Ratios, Compound Ratios, Proportions, Direct/Inverse Variation, Mixtures, Alligation, Ages, Partnership',
+    hint: 'Multi-leg compound ratios, complex partnerships where profit share is reinvested at varying cycles, Age ratio calculations over multiple years, direct and inverse variations with constants, and multi-component weighted mixtures.'
   },
   'averages': {
     title: 'Averages',
-    subtopics: 'Simple Average, Weighted Average, Age Average, Score Replacement, Running Average',
-    hint: 'Tricky consecutive replacements with varying values, weighted average variations of multiple subsets with overlapping constraints, and dynamic averages of Arithmetic Progressions (AP).'
+    subtopics: 'Simple Average, Weighted Average, Age Average, Score Replacement, Running Average, Ages',
+    hint: 'Tricky consecutive replacements with varying values, weighted average variations of multiple subsets with overlapping constraints, age averages in changing family groups, and dynamic averages of Arithmetic Progressions (AP).'
   },
   'mixture-alligation': {
     title: 'Mixture & Alligation',
@@ -37,49 +37,49 @@ export const TOPIC_DETAILS = {
     subtopics: 'Profit%, Loss%, CP, SP, Marked Price, Discount%, Faulty Weights, Multiple Items',
     hint: 'Complex markup structures combined with multiple successions of random discount campaigns, dishonest trade where weights are manipulated in both buying AND selling, and triple-transaction supply chain margin optimization.'
   },
-  'simple-interest': {
-    title: 'Simple Interest',
-    subtopics: 'SI Formula, Principal, Rate, Time, Split Investment, Comparison Problems',
-    hint: 'Multi-part split investments with time duration constraints, complex equal installment repayment equations with interest accruals, and step-up rates of interest.'
-  },
-  'compound-interest': {
-    title: 'Compound Interest',
-    subtopics: 'Annual/Half-yearly/Quarterly CI, CI-SI Difference, Equal Installments, Population, Depreciation',
-    hint: 'Multilevel equal installment schemes compounded at varying frequencies, multi-year rate variation with compounded growth and periodic withdrawals, and complex CI vs SI comparison equations.'
+  'interest-installments': {
+    title: 'SI, CI & Installments',
+    subtopics: 'Simple Interest, Compound Interest, Compounding Frequencies (Annual/Half-yearly/Quarterly), CI-SI Difference, Equal Installments, EMIs, Population Growth, Depreciation',
+    hint: 'Multi-part split investments with time duration constraints, complex equal installment repayment equations with interest accruals, step-up rates of interest, compounding at varying frequencies, and multi-year compounded growth.'
   },
   'time-work': {
     title: 'Time & Work',
     subtopics: 'Work Rates, Efficiency, Pipes & Cisterns, Alternate-Day Work, Work & Wages',
     hint: 'Complex alternate-day rotations with varying individual efficiencies, wages divided among teams with shifting members, and multi-pipe systems with varying inflow/outflow rates and timed valve operations.'
   },
-  'time-distance': {
-    title: 'Time, Speed & Distance',
-    subtopics: 'Basic TSD, Average Speed, Relative Speed, Meeting Points, Circular Track',
-    hint: 'Circular track races with 3+ competitors finding exact meeting points and intervals, relative speed problems with delay offsets and variable accelerations, and multi-leg speed-time optimization.'
+  'boat-streams-trains': {
+    title: 'Boat, Streams & Trains',
+    subtopics: 'Relative Speed, Average Speed, Upstream & Downstream Speed, Stream Speed, Train crossing Platform/Bridge/Tunnel, Trains passing moving objects, Circular Track Meeting Points',
+    hint: 'Three-train overtaking relative motion with delay offsets and variable accelerations, upstream/downstream boat races with engine failure mid-journey, relative crossing speeds on crossing tracks, and circular track meeting calculations with 3+ competitors.'
   },
-  'boats-streams': {
-    title: 'Boats & Streams',
-    subtopics: 'Upstream Speed, Downstream Speed, Still Water Speed, Stream Speed, Round Trips',
-    hint: 'Multi-lap downstream/upstream races with varying currents, motorboat engine failure mid-journey with speed drop, and speed ratios under non-linear current changes.'
+  'data-interpretation': {
+    title: 'Data Interpretation',
+    subtopics: 'Tables, Bar Graph, Pie Chart, Line Graph, Caselets, Comparative Analysis',
+    hint: 'Reading complex ASCII data tables and comparative charts, computing growth rates, percentages, averages, ratios, caselet paragraph data organization, and multi-source data interpretation.'
   },
-  'trains': {
-    title: 'Trains',
-    subtopics: 'Crossing Pole/Platform/Tunnel, Two Trains Same/Opposite Direction, Overtaking',
-    hint: 'Three-train overtaking systems with variable head-starts, relative crossing speeds in non-parallel crossing tracks, and platform/tunnel transitions with variable acceleration.'
+  'perm-comb-prob': {
+    title: 'Permutations, Combinations & Probability',
+    subtopics: 'Permutations, Combinations, Circular Seating, Word Arrangements, Selection from Groups, Ball Drawing, Dice Rolling, Card Drawing, Conditional Probability, Bayes Theorem, Expected Value',
+    hint: 'Complex restricted word arrangements under multiple conditions, circular seating with specific adjacencies, Bayes Theorem with dependent variables, sequential probability trials without replacement, and expected value payoff structures.'
   },
-  'permutation-combination': {
-    title: 'Permutation & Combination',
-    subtopics: 'nPr, nCr, Circular Arrangement, Word Arrangement, Restricted Selection, Distribution',
-    hint: 'Complex restricted arrangements (letters, digits) under multiple conditions, distributing distinct items to groups with size constraints, circular table seating with specific adjacencies and non-adjacencies, and complex derangement permutations.'
+  'quadratic-equations': {
+    title: 'Quadratic Equations',
+    subtopics: 'Roots, Coefficients, Discriminant, Factoring, Common Root, Word Problems, Maxima/Minima',
+    hint: 'Quadratic equations with symmetric roots, discriminant sign constraints, common root analysis between two equations, and maximum/minimum value optimization of quadratic forms.'
   },
-  'probability': {
-    title: 'Probability',
-    subtopics: 'Basic Probability, Conditional Probability, Independent Events, Coins/Dice/Cards/Balls',
-    hint: 'Bayes\' Theorem with multiple dependent variables, probability of success in infinite sequential trials (games of chance), complex conditional selections without replacement, and expected value payoff structures.'
+  'inequalities': {
+    title: 'Inequalities',
+    subtopics: 'Linear Inequalities, Quadratic Inequalities, Modulus Inequalities, Absolute Values',
+    hint: 'Modulus inequalities under multiple absolute values, linear programming constraints, and quadratic inequality range validation using sign schemes.'
+  },
+  'logarithms': {
+    title: 'Logarithms',
+    subtopics: 'Log Properties, Change of Base, Log Equations, Exponential Growth',
+    hint: 'Logarithmic equations with variable bases, change of base transformations, number of digits in large exponents, and logarithm inequalities.'
   },
   'mensuration': {
     title: 'Mensuration',
-    subtopics: 'Area/Perimeter of 2D shapes, Volume & Surface Area of 3D solids, Shape Transformations',
+    subtopics: 'Area/Perimeter of 2D shapes, Volume & Surface Area of 3D solids, Shape Transformations, Recasting',
     hint: 'Recasting solids with a percentage metal loss, nested 3D geometries (largest sphere inside cone inside cylinder), and volume optimization of folded sheets with precise boundaries.'
   },
   'statistics': {

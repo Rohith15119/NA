@@ -12,7 +12,6 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/test/:topicId" element={<TestPage />} />
-        <Route path="/test/:topicId/:difficulty" element={<TestPage />} />
         <Route path="/results" element={<ResultsPage />} />
       </Routes>
     </BrowserRouter>

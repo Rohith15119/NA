@@ -111,7 +111,7 @@ export default function ResultsPage() {
     );
   }
 
-  const { questions, answers, topicId, difficulty, isOverall } = state;
+  const { questions, answers, topicId, isOverall } = state;
   const topic = isOverall ? null : TOPICS.find(t => t.id === topicId);
 
   const correct = questions.filter(q => answers[q.id] === q.answer).length;
@@ -133,7 +133,7 @@ export default function ResultsPage() {
     if (isOverall) {
       navigate('/test/overall');
     } else {
-      navigate(`/test/${topicId}/${difficulty}`);
+      navigate(`/test/${topicId}`);
     }
   };
 
@@ -149,7 +149,7 @@ export default function ResultsPage() {
           </div>
           <div className="score-grade" style={{ color: gradeInfo.color }}>{gradeInfo.label}</div>
           <div className="score-label-text">
-            {isOverall ? 'Overall Mock Test' : `${topic?.title} (${difficulty?.toUpperCase()})`} — Score: {score}%
+            {isOverall ? 'Overall Mock Test' : `${topic?.title} (🏆 TCS NQT LEVEL)`} — Score: {score}%
           </div>
           <div className="score-stats">
             <div className="score-stat">

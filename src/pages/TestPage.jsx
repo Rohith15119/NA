@@ -106,7 +106,8 @@ function renderQuestionText(text) {
 }
 
 export default function TestPage() {
-  const { topicId, difficulty } = useParams();
+  const { topicId } = useParams();
+  const difficulty = 'expert';
   const navigate   = useNavigate();
   const cancelRef  = useRef(false);
 
@@ -173,7 +174,7 @@ export default function TestPage() {
             // Fill remaining slots with static questions
             const staticAll = isOverall
               ? getOverallTestQuestions(total)
-              : getTopicTestQuestions(topicId, difficulty, total);
+              : getTopicTestQuestions(topicId, total);
             const staticSlice = staticAll.slice(batch1.length, total);
             if (!cancelRef.current && staticSlice.length > 0) {
               setQuestions(prev => {
@@ -195,7 +196,7 @@ export default function TestPage() {
         try {
           const staticQs = isOverall
             ? getOverallTestQuestions(total)
-            : getTopicTestQuestions(topicId, difficulty, total);
+            : getTopicTestQuestions(topicId, total);
           if (staticQs && staticQs.length > 0) {
             setQuestions(staticQs);
             setAiPowered(false);
@@ -219,7 +220,7 @@ export default function TestPage() {
   const current      = questions[currentIndex] || null;
   const answered     = Object.keys(answers).length;
   const pct          = Math.round(((currentIndex + 1) / Math.max(totalExpected, 1)) * 100);
-  const testDuration = isOverall ? 25 : (String(difficulty).toLowerCase() === 'expert' ? 15 : (String(difficulty).toLowerCase() === 'hard' ? 10 : 8));
+  const testDuration = isOverall ? 25 : 20;
 
   // ── Handlers ──────────────────────────────────────────────────────────────
   const handleAnswer = useCallback((optIdx) => {
@@ -233,15 +234,15 @@ export default function TestPage() {
     const score = questions.reduce(
       (acc, q) => acc + (answers[q.id] === q.answer ? 1 : 0), 0
     );
-    const key = isOverall ? 'overall' : `${topic?.id}_${difficulty}`;
+    const key = isOverall ? 'overall' : topic?.id;
     try {
       let prev = {};
       try { const r = localStorage.getItem('nqt_progress'); if (r) { const p = JSON.parse(r); if (p && typeof p === 'object') prev = p; } } catch {}
       prev[key] = { best: Math.max(score, prev[key]?.best || 0), total: questions.length, attempts: (prev[key]?.attempts || 0) + 1 };
       localStorage.setItem('nqt_progress', JSON.stringify(prev));
     } catch {}
-    navigate('/results', { state: { questions, answers, topicId, difficulty, isOverall } });
-  }, [submitted, questions, answers, navigate, topicId, difficulty, isOverall, topic]);
+    navigate('/results', { state: { questions, answers, topicId, isOverall } });
+  }, [submitted, questions, answers, navigate, topicId, isOverall, topic]);
 
   const handleTimerExpire = useCallback(() => handleSubmit(), [handleSubmit]);
 
@@ -326,10 +327,10 @@ export default function TestPage() {
         <div className="test-header-inner">
           <div className="test-info">
             <div className="test-topic">
-              {isOverall ? 'Overall Mock Test' : `${topic?.title} (${String(difficulty).toLowerCase() === 'expert' ? '🏆 TCS NQT LEVEL' : String(difficulty).toUpperCase()})`}
+              {isOverall ? 'Overall Mock Test' : `${topic?.title} (🏆 TCS NQT LEVEL)`}
             </div>
             <div className="test-name">
-              {isOverall ? '🎯 TCS NQT Mock Exam' : `📖 ${topic?.title} — ${String(difficulty).toLowerCase() === 'expert' ? '🏆 TCS NQT Level' : capFirst(difficulty)} Test`}
+              {isOverall ? '🎯 TCS NQT Mock Exam' : `📖 ${topic?.title} — 🏆 TCS NQT Level Test`}
               {aiPowered && <span className="ai-live-badge">🤖 AI</span>}
             </div>
           </div>
@@ -387,8 +388,8 @@ export default function TestPage() {
               {isOverall && current.topicTitle && (
                 <span className="q-topic-chip">📚 {current.topicTitle}</span>
               )}
-              <span className={`badge badge-${(current.difficulty || 'Hard').toLowerCase()}`} style={{ marginLeft: 'auto' }}>
-                {current.difficulty || 'Hard'}
+              <span className="badge badge-expert" style={{ marginLeft: 'auto' }}>
+                TCS NQT Level
               </span>
             </div>
 

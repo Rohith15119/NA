@@ -3946,16 +3946,15 @@ const EXPERT_POOL = {
 
 
 // ─── Generator Engine (routes by difficulty) ──────────────────────────────────
-export function generateQuestions(topicId, difficulty, count = 5) {
-  const raw  = (difficulty || 'easy').toLowerCase().trim();
-  const key  = raw === 'expert'
-    ? 'Expert'
-    : raw.charAt(0).toUpperCase() + raw.slice(1);
-
+export function generateQuestions(topicId, difficulty = 'expert', count = 15) {
   const getPool = (tid) => {
-    if (key === 'Expert' && EXPERT_POOL[tid]?.length) return EXPERT_POOL[tid];
-    if (key === 'Hard' && HARD_POOL[tid]?.length) return HARD_POOL[tid];
-    return GENERATORS[tid]?.[key] || [];
+    const list = [];
+    if (EXPERT_POOL[tid]) list.push(...EXPERT_POOL[tid]);
+    if (HARD_POOL[tid]) list.push(...HARD_POOL[tid]);
+    if (GENERATORS[tid]?.Hard) list.push(...GENERATORS[tid].Hard);
+    if (GENERATORS[tid]?.Medium) list.push(...GENERATORS[tid].Medium);
+    if (list.length === 0 && GENERATORS[tid]?.Easy) list.push(...GENERATORS[tid].Easy);
+    return list;
   };
 
   let genPool = [];
@@ -3971,12 +3970,10 @@ export function generateQuestions(topicId, difficulty, count = 5) {
 
   if (!genPool || genPool.length === 0) return [];
 
-
-  const result = [], usedIndices = new Set(), safety = count * 8;
+  const result = [], usedIndices = new Set(), safety = count * 15;
   let i = 0;
   while (result.length < count && i++ < safety) {
     try {
-      // If we have exhausted all unique templates, reset the tracker to allow minimum necessary repetition
       if (usedIndices.size >= genPool.length) {
         usedIndices.clear();
       }
@@ -3988,8 +3985,8 @@ export function generateQuestions(topicId, difficulty, count = 5) {
       if (!q?.question || q.question === 'skip') continue;
 
       usedIndices.add(idx);
-      q.id         = `${topicId}_${raw}_${result.length}_${getRandomInt(1000,9999)}`;
-      q.difficulty = key;
+      q.id         = `${topicId}_expert_${result.length}_${getRandomInt(1000,9999)}`;
+      q.difficulty = 'Expert';
       result.push(q);
     } catch { /* skip malformed template */ }
   }
@@ -3999,8 +3996,8 @@ export function generateQuestions(topicId, difficulty, count = 5) {
     try {
       const q = pickRandomArray(genPool)();
       if (!q?.question) break;
-      q.id         = `${topicId}_${raw}_${result.length}_${getRandomInt(1000,9999)}`;
-      q.difficulty = key;
+      q.id         = `${topicId}_expert_${result.length}_${getRandomInt(1000,9999)}`;
+      q.difficulty = 'Expert';
       result.push(q);
     } catch { break; }
   }

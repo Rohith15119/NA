@@ -30,19 +30,17 @@ function formatMathText(text) {
   const parts = [];
   let idx = 0;
   let keyCounter = 0;
-  const rx = /(?:\b(\d+)\s*\/\s*(\d+)\b)|(?:(log|Log|LOG)_(\d+)\(([^)]+)\))|(?:([a-zA-Z0-9αβπθ]+)\^(\d+))|(?:([a-zA-Z]+)_(\d+)(?!\())/g;
+  const rx = /(?:\b(\d{1,3})\s*\/\s*(\d{1,3})\b)|(?:(log|Log|LOG)_(\d+)\(([^)]+)\))|(?:([a-zA-Z0-9αβπθ\(\)]+)\^([a-zA-Z0-9\+\-\(\)]+))|(?:([a-zA-Z]+)_(\d+)(?!\())/g;
   let m;
 
   while ((m = rx.exec(s)) !== null) {
     if (m.index > idx) parts.push(s.substring(idx, m.index));
     if (m[1] !== undefined && m[2] !== undefined) {
       parts.push(
-        <span key={`frac-${keyCounter++}`} style={{
-          display: 'inline-flex', flexDirection: 'column', alignItems: 'center',
-          verticalAlign: 'middle', margin: '0 0.15em', lineHeight: 1.1, fontSize: '0.92em'
-        }}>
-          <span style={{ borderBottom: '1.5px solid currentColor', padding: '0 0.2em 0.08em' }}>{m[1]}</span>
-          <span style={{ padding: '0.08em 0.2em 0' }}>{m[2]}</span>
+        <span key={`frac-${keyCounter++}`} style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle', margin: '0 0.1em' }}>
+          <sup style={{ fontSize: '0.7em', verticalAlign: 'super', position: 'relative', top: '-0.15em' }}>{m[1]}</sup>
+          <span style={{ fontSize: '0.9em', margin: '0 -0.02em', opacity: 0.85 }}>/</span>
+          <sub style={{ fontSize: '0.7em', verticalAlign: 'sub', position: 'relative', bottom: '-0.15em' }}>{m[2]}</sub>
         </span>
       );
     } else if (m[3] !== undefined) {

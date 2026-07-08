@@ -16,11 +16,33 @@ function getGrade(pct) {
 
 function formatMathText(text) {
   if (typeof text !== 'string') return text;
+
+  // Pre-clean LaTeX math syntax
   let s = text
+    .replace(/\$\$/g, '')
+    .replace(/\$/g, '')
+    .replace(/\\\(|\\\)/g, '')
+    .replace(/\\\[|\\\]/g, '')
+    .replace(/\\frac\s*\{([^}]+)\}\s*\{([^}]+)\}/g, '$1/$2')
+    .replace(/\\frac\s*([^{}\s]+)\s*([^{}\s]+)/g, '$1/$2')
+    .replace(/\\times/g, ' × ')
+    .replace(/\\cdot/g, ' × ')
+    .replace(/\\le|\\leq/g, '≤')
+    .replace(/\\ge|\\geq/g, '≥')
+    .replace(/\\ne|\\neq/g, '≠')
+    .replace(/\\phi/g, 'φ')
+    .replace(/\\pi/g, 'π')
+    .replace(/\\theta/g, 'θ')
+    .replace(/\\log_\{([^}]+)\}/g, 'log_$1')
+    .replace(/\\log_([a-zA-Z0-9]+)/g, 'log_$1')
+    .replace(/\\/g, '');
+
+  // Standard Unicode symbol replacements
+  s = s
     .replace(/\balpha\b/g, 'α')
     .replace(/\bbeta\b/g, 'β')
     .replace(/\btheta\b/g, 'θ')
-    .replace(/\bsqrt/g, '√')
+    .replace(/\bsqrt\b/g, '√')
     .replace(/ \* /g, ' × ')
     .replace(/<=/g, '≤')
     .replace(/>=/g, '≥')

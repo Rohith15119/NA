@@ -274,7 +274,7 @@ export default function TestPage() {
   const current      = questions[currentIndex] || null;
   const answered     = Object.keys(answers).length;
   const pct          = Math.round(((currentIndex + 1) / Math.max(totalExpected, 1)) * 100);
-  const testDuration = isOverall ? 25 : 20;
+  const testDuration = totalExpected;
 
   // ── Handlers ──────────────────────────────────────────────────────────────
   const handleAnswer = useCallback((optIdx) => {

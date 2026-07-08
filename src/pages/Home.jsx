@@ -40,7 +40,7 @@ export default function Home() {
           <div className="hero-stats">
             <div className="stat-pill"><span className="icon">📚</span> {TOPICS.length} Topics</div>
             <div className="stat-pill"><span className="icon">❓</span> 320+ Questions</div>
-            <div className="stat-pill"><span className="icon">⏱️</span> 25 min Mock Test</div>
+            <div className="stat-pill"><span className="icon">⏱️</span> 20 min Mock Test</div>
             <div className="stat-pill"><span className="icon">🏆</span> TCS NQT Level Practice</div>
           </div>
         </div>
@@ -52,7 +52,7 @@ export default function Home() {
             <h2>Full Mock Test <span className="badge badge-expert" style={{ fontSize: '0.72rem', verticalAlign: 'middle', marginLeft: '0.4rem' }}>🏆 TCS NQT LEVEL</span></h2>
             <p>20 expert-level questions from all 16 topics — simulating the <strong>actual TCS NQT difficulty</strong> to push your limits</p>
             <div className="overall-tags">
-              <span className="overall-tag">⏱️ 25 minutes</span>
+              <span className="overall-tag">⏱️ 20 minutes</span>
               <span className="overall-tag">❓ 20 Questions</span>
               <span className="overall-tag">🏆 Expert Level Only</span>
               <span className="overall-tag">📊 Detailed Review</span>
@@ -99,7 +99,7 @@ export default function Home() {
                   </div>
                   <div className="tc-meta">
                     <span className="tc-meta-item">❓ 15 Questions</span>
-                    <span className="tc-meta-item">⏱️ 20 Minutes</span>
+                    <span className="tc-meta-item">⏱️ 15 Minutes</span>
                   </div>
                   {tp && typeof tp === 'object' && typeof tp.best === 'number' && typeof tp.total === 'number' && tp.total > 0 && (
                     <div className="tc-progress">

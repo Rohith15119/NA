@@ -2728,49 +2728,49 @@ const HARD_POOL = {
       const n = getRandomInt(4,10)*20 + getRandomInt(0,19);
       let z=0,p=5,parts=[];
       while(p<=n){const t=Math.floor(n/p);z+=t;parts.push(`⌊${n}/${p}⌋=${t}`);p*=5;}
-      return{question:`How many trailing zeros does ${n}! contain?`,options:makeOptions(z,2,8),answer:0,
+      return{question:`A database server performs an automated optimization job where it calculates the factorial value of the system priority index ${n} (i.e. ${n}!). During calculations, the system logs the product of all consecutive numbers. Find the number of trailing zeros that would appear at the end of the computed factorial value of ${n}.`,options:makeOptions(z,2,8),answer:0,
         explanation:`Count factors of 5: ${parts.join(' + ')} = ${z}.`,subtopic:'Trailing Zeros'};},
     () => { // Fermat's Little Theorem
       const primes=[7,11,13,17,19],mod=pickRandomArray(primes);
       const base=getRandomInt(2,mod-1),exp=getRandomInt(60,250);
       const rem=powerMod(base,exp,mod),period=mod-1,red=((exp%period)||period);
-      return{question:`Find the remainder when ${base}^${exp} is divided by ${mod}.`,options:makeOptions(rem,1,5),answer:0,
+      return{question:`A security key generation algorithm computes a secure remainder index by taking the base value ${base} and raising it to the power of ${exp}. To fit this validation key into a restricted network data packet, the server divides the result by a prime constant ${mod}. Calculate the remainder left over from this division.`,options:makeOptions(rem,1,5),answer:0,
         explanation:`Fermat's LT: ${base}^${period}≡1(mod ${mod}). ${exp} mod ${period}=${red}. Ans=${base}^${red} mod ${mod}=${rem}.`,subtopic:'Modular Arithmetic'};},
     () => { // Even factors
       const a=getRandomInt(2,4),b=getRandomInt(1,3),c=getRandomInt(1,2);
       const N=Math.pow(2,a)*Math.pow(3,b)*Math.pow(5,c);
       const total=(a+1)*(b+1)*(c+1),odd=(b+1)*(c+1),even=total-odd;
-      return{question:`How many even factors does ${N} have?`,options:makeOptions(even,2,8),answer:0,
+      return{question:`A manufacturing load balancer calculates structural configuration profiles using a weight rating N = ${N}. To minimize vibrational stresses, the engineer needs to count all even factors of N. How many even factors are associated with this weight rating N?`,options:makeOptions(even,2,8),answer:0,
         explanation:`${N}=2^${a}·3^${b}·5^${c}. Total=${total}. Odd=${odd}. Even=${total}-${odd}=${even}.`,subtopic:'Factors'};},
     () => { // Smallest leaving (d−1) from three divisors
       const d1=getRandomInt(4,6),d2=d1+getRandomInt(2,4),d3=d2+getRandomInt(2,4);
       const L=lcmThree(d1,d2,d3),n=L-1;
-      return{question:`Find the smallest number leaving remainders ${d1-1}, ${d2-1}, ${d3-1} when divided by ${d1}, ${d2}, ${d3}.`,
+      return{question:`A warehouse logistics system organizes packages using a specific batch count. The supervisor notices that when sorting the packages into bins of ${d1}, there are ${d1-1} left over. When sorted into bins of ${d2}, there are ${d2-1} left over, and when sorted into bins of ${d3}, there are ${d3-1} left over. If the total batch represents the smallest positive count satisfying these conditions, find the total number of packages.`,
         options:makeOptions(n,5,25),answer:0,
         explanation:`N+1 divisible by all three. N+1=LCM(${d1},${d2},${d3})=${L}. N=${n}.`,subtopic:'LCM & Remainders'};},
     () => { // HCF × LCM = product
       const h=getRandomInt(3,8),x=getRandomInt(2,5),y=getRandomInt(7,14);
       const a=h*x,b=h*y,L=lcm(a,b);
-      return{question:`HCF and LCM of two numbers are ${h} and ${L}. If one number is ${a}, find the other.`,
+      return{question:`Two synchronized backup servers generate numerical identifiers for database security logs. The HCF of their two identifiers is ${h}, and their LCM is ${L}. If one of the backup servers is assigned the identifier ${a}, calculate the identifier assigned to the other backup server.`,
         options:makeOptions(b,5,25),answer:0,
         explanation:`Product=HCF×LCM=${h}×${L}. Other=${h*L}÷${a}=${b}.`,subtopic:'HCF & LCM'};},
     () => { // Inclusion-exclusion
       const N=getRandomInt(10,15)*10,a=getRandomInt(3,5),b=getRandomInt(6,9);
       const L=lcm(a,b),cA=Math.floor(N/a),cB=Math.floor(N/b),cBoth=Math.floor(N/L);
       const ans=N-cA-cB+cBoth;
-      return{question:`How many integers from 1 to ${N} are divisible by neither ${a} nor ${b}?`,
+      return{question:`An IP network scanner checks routing tables for active subnets. The scanner evaluates sequence ranges from 1 to ${N} inclusive. A systems engineer needs to find the exact count of routing keys in this range that are divisible by neither ${a} nor ${b}. How many such routing keys exist?`,
         options:makeOptions(ans,5,20),answer:0,
         explanation:`${N}−${cA}−${cB}+${cBoth}=${ans} (Inclusion-Exclusion).`,subtopic:'Inclusion-Exclusion'};},
     () => { // Highest power of prime in n!
       const n=getRandomInt(20,50),p=pickRandomArray([2,3,5]);
       let pw=0,pk=p,steps=[];
       while(pk<=n){const t=Math.floor(n/pk);pw+=t;steps.push(`⌊${n}/${pk}⌋=${t}`);pk*=p;}
-      return{question:`Highest power of ${p} dividing ${n}!?`,options:makeOptions(pw,2,8),answer:0,
+      return{question:`A compiler optimizes memory allocation by analyzing factorial expansions. The compiler needs to find the highest power of the prime number ${p} that can divide the factorial value of the index ${n} (i.e. ${n}!) without leaving a remainder. What is the value of this highest exponential power?`,options:makeOptions(pw,2,8),answer:0,
         explanation:`Legendre: ${steps.join('+')}=${pw}.`,subtopic:'Factorials & Primes'};},
     () => { // 4-digit multiples of LCM
       const a=getRandomInt(4,7),b=getRandomInt(8,13),L=lcm(a,b);
       const count=Math.floor(9999/L)-Math.floor(999/L);
-      return{question:`How many 4-digit numbers are divisible by both ${a} and ${b}?`,
+      return{question:`A bank security system generates four-digit login codes ranging from 1000 to 9999 inclusive. To prevent unauthorized access, the system only validates codes that are perfectly divisible by both ${a} and ${b}. Find the total number of valid login codes available for the bank portal.`,
         options:makeOptions(count,3,12),answer:0,
         explanation:`Divisible by LCM(${a},${b})=${L}. ⌊9999/${L}⌋−⌊999/${L}⌋=${count}.`,subtopic:'Divisibility'};},
   ],
@@ -2778,36 +2778,36 @@ const HARD_POOL = {
     () => { // Repeated replacement
       const total=getRandomInt(5,10)*10,rem=getRandomInt(2,4)*10,n=getRandomInt(2,3);
       const ml=Math.round(total*Math.pow((total-rem)/total,n)),w=total-ml,g=gcd(ml,w);
-      return{question:`A ${total}L vessel has pure milk. ${rem}L is removed and replaced with water — done ${n} times. Milk:Water ratio?`,
+      return{question:`A chemical storage tank contains ${total} liters of pure sanitizer liquid. A technician extracts ${rem} liters of the liquid and replaces it with water. The exact procedure of removing ${rem} liters of the mixture and replacing it with water is repeated a total of ${n} times. Find the final ratio of pure sanitizer to water in the tank.`,
         options:[`${ml/g}:${w/g}`,`${ml/g+1}:${w/g}`,`${ml/g}:${w/g+1}`,`${ml/g-1}:${w/g+1}`],answer:0,
         explanation:`Milk=${total}×((${total-rem})/${total})^${n}≈${ml}. Ratio=${ml/g}:${w/g}.`,subtopic:'Mixture Replacement'};},
     () => { // Compound ratio A:B:C
       const a=getRandomInt(2,4),b=getRandomInt(3,6),c=getRandomInt(2,5),d=getRandomInt(4,7);
       const L=lcm(b,c),A=a*(L/b),B=L,C=d*(L/c),g=gcd(gcd(A,B),C);
-      return{question:`A:B=${a}:${b} and B:C=${c}:${d}. Find A:C.`,
+      return{question:`In a multi-threaded cloud cluster, the data processing rate ratio of Node A to Node B is ${a}:${b}, and the rate ratio of Node B to Node C is ${c}:${d}. Find the simplified throughput ratio of Node A to Node C.`,
         options:[`${A/g}:${C/g}`,`${a}:${d}`,`${A/g+1}:${C/g}`,`${A/g}:${C/g+1}`],answer:0,
         explanation:`LCM(${b},${c})=${L}. A:B:C=${A/g}:${B/g}:${C/g}. A:C=${A/g}:${C/g}.`,subtopic:'Compound Ratio'};},
     () => { // Partnership
       const p1=getRandomInt(3,8)*1000,t1=getRandomInt(6,12),p2=getRandomInt(4,9)*1000,t2=getRandomInt(4,10),profit=getRandomInt(5,15)*1000;
       const wA=p1*t1,wB=p2*t2,g2=gcd(wA,wB),shareB=Math.round(wB/(wA+wB)*profit);
-      return{question:`A invested ₹${p1} for ${t1} months, B invested ₹${p2} for ${t2} months. Total profit ₹${profit}. B's share?`,
+      return{question:`Two entrepreneurs, Partner A and Partner B, start a digital consulting business. Partner A invests Rs. ${p1} for ${t1} months, and Partner B invests Rs. ${p2} for ${t2} months. If the business makes a total profit of Rs. ${profit} at the end of the fiscal year, calculate Partner B's share of the profit based on their investment-month ratio.`,
         options:makeOptions(shareB,500,2000),answer:0,
         explanation:`Ratio=${wA/g2}:${wB/g2}. B's share=${wB/g2}/${(wA+wB)/g2}×${profit}=₹${shareB}.`,subtopic:'Partnership'};},
     () => { // Alligation
       const p1=getRandomInt(20,50),p2=getRandomInt(60,100),pm=getRandomInt(p1+5,p2-5);
       const r1=p2-pm,r2=pm-p1,g=gcd(r1,r2);
-      return{question:`Mix ₹${p1}/kg with ₹${p2}/kg to get ₹${pm}/kg blend. Required ratio?`,
+      return{question:`A wholesale merchant blends two varieties of tea leaves. The cheaper variety costs Rs. ${p1}/kg, and the premium variety costs Rs. ${p2}/kg. In what ratio must he mix the two varieties so that the resulting composite blend is valued at exactly Rs. ${pm}/kg?`,
         options:[`${r1/g}:${r2/g}`,`${r2/g}:${r1/g}`,`${r1/g+1}:${r2/g}`,`${p1}:${p2}`],answer:0,
         explanation:`Alligation:(${p2}−${pm}):(${pm}−${p1})=${r1}:${r2}=${r1/g}:${r2/g}.`,subtopic:'Alligation'};},
     () => { // Mixture combination
       const v1=getRandomInt(3,7)*10,c1=getRandomInt(20,45),v2=getRandomInt(3,7)*10,c2=getRandomInt(55,80);
       const mt=Math.round((v1*c1+v2*c2)/100),tot=v1+v2,g=gcd(mt,tot-mt);
-      return{question:`${v1}L vessel (${c1}% milk) + ${v2}L vessel (${c2}% milk) mixed. Milk:Water ratio?`,
+      return{question:`A dairy company mixes the contents of two supply containers. The first container has ${v1} liters of milk solution with a purity of ${c1}%, and the second container has ${v2} liters with a purity of ${c2}%. What will be the final ratio of pure milk to water in the resulting mixture?`,
         options:[`${mt/g}:${(tot-mt)/g}`,`${mt/g+1}:${(tot-mt)/g}`,`${mt/g}:${(tot-mt)/g+1}`,`${c1}:${c2}`],answer:0,
         explanation:`Milk=${mt}L,Water=${tot-mt}L. Ratio=${mt/g}:${(tot-mt)/g}.`,subtopic:'Mixture'};},
     () => { // Inverse proportion
       const m1=getRandomInt(10,20),d1=getRandomInt(12,20),d2=getRandomInt(8,18),m2=Math.round(m1*d1/d2);
-      return{question:`${m1} men build a wall in ${d1} days. How many men to finish it in ${d2} days?`,
+      return{question:`A civil engineering project employs ${m1} laborers to construct a secure retaining wall, which takes them ${d1} days to complete. If the project supervisor needs to complete the construction of the same retaining wall in exactly ${d2} days, how many laborers must be employed?`,
         options:makeOptions(m2,2,8),answer:0,
         explanation:`Total=${m1}×${d1}=${m1*d1} man-days. Men=${m1*d1}÷${d2}=${m2}.`,subtopic:'Inverse Proportion'};},
   ],
@@ -2815,37 +2815,37 @@ const HARD_POOL = {
     () => { // Batting average drops
       const avg=getRandomInt(40,65),inn=getRandomInt(15,30),score=getRandomInt(2,avg-20);
       const newAvg=Math.round(((avg*inn+score)/(inn+1))*10)/10,drop=Math.round((avg-newAvg)*10)/10;
-      return{question:`Batsman's average after ${inn} innings is ${avg}. He scores ${score} next. Average fall?`,
+      return{question:`During a cricket league, a leading batsman holds an average score of ${avg} runs across ${inn} innings. In his next innings, he scores a low value of ${score} runs due to an early dismissal. Calculate the subsequent drop in his overall average batting score.`,
         options:makeOptions(drop,1,5),answer:0,
         explanation:`New avg=(${avg*inn}+${score})/${inn+1}=${newAvg}. Drop=${avg}−${newAvg}=${drop}.`,subtopic:'Averages'};},
     () => { // Replacement in group
       const n=getRandomInt(8,20),avg=getRandomInt(30,60),oldM=getRandomInt(10,30),newAvg=avg+getRandomInt(2,6);
       const newM=oldM+n*(newAvg-avg);
-      return{question:`${n} people avg age ${avg}. Person aged ${oldM} replaced → avg rises to ${newAvg}. New person's age?`,
+      return{question:`A research team consists of ${n} engineers whose average age is ${avg} years. An engineer aged ${oldM} years retires and is replaced by a new specialist. Consequently, the average age of the research team rises to ${newAvg} years. What is the age of the newly recruited specialist?`,
         options:makeOptions(newM,3,12),answer:0,
         explanation:`Increase=${n}×(${newAvg}−${avg})=${n*(newAvg-avg)}. New person=${oldM}+${n*(newAvg-avg)}=${newM}.`,subtopic:'Average — Replacement'};},
     () => { // Combined average
       const n1=getRandomInt(10,20),m1=getRandomInt(40,60),n2=getRandomInt(15,25),m2=getRandomInt(65,85);
       const combined=Math.round((n1*m1+n2*m2)/(n1+n2));
-      return{question:`Group A: ${n1} members, avg ${m1}. Group B: ${n2} members, avg ${m2}. Combined avg?`,
+      return{question:`A tech academy evaluates two separate training cohorts. Cohort A has ${n1} participants who score an average of ${m1} points in a coding test. Cohort B has ${n2} participants who achieve an average of ${m2} points. Calculate the combined average performance score of all participants across both cohorts.`,
         options:makeOptions(combined,2,8),answer:0,
         explanation:`(${n1}×${m1}+${n2}×${m2})/${n1+n2}=${n1*m1+n2*m2}/${n1+n2}=${combined}.`,subtopic:'Weighted Average'};},
     () => { // Score needed to hit target avg
       const avg=getRandomInt(55,75),inn=getRandomInt(10,20),target=avg+getRandomInt(3,8);
       const needed=target*(inn+1)-avg*inn;
-      return{question:`Cricketer's avg after ${inn} innings: ${avg}. Score needed next to reach avg ${target}?`,
+      return{question:`A batsman maintains an average score of ${avg} runs across ${inn} completed innings. The coaching staff sets a goal for him to raise his overall average to exactly ${target} runs after his next innings. How many runs must he score in his upcoming innings to meet this target average?`,
         options:makeOptions(needed,10,30),answer:0,
         explanation:`Needed=${target}×${inn+1}−${avg}×${inn}=${target*(inn+1)}−${avg*inn}=${needed}.`,subtopic:'Target Average'};},
     () => { // Corrected average
       const n=getRandomInt(20,40),avg=getRandomInt(40,70),wrong=getRandomInt(20,avg-10),correct=wrong+getRandomInt(15,40);
       const newAvg=Math.round(((avg*n-wrong+correct)/n)*100)/100;
-      return{question:`Average of ${n} numbers is ${avg}. Number ${wrong} was misread; actual is ${correct}. Correct average?`,
+      return{question:`A QA analyst calculates the average rating of ${n} software modules to be ${avg} points. During audit validation, it is discovered that the performance score of one module was misrecorded as ${wrong} points, whereas its actual correct score was ${correct} points. Calculate the corrected average rating of the modules after adjusting for this error (rounded to the nearest integer).`,
         options:makeOptions(Math.round(newAvg),1,4),answer:0,
         explanation:`Correct sum=${avg*n}−${wrong}+${correct}=${avg*n-wrong+correct}. Avg=${newAvg}.`,subtopic:'Corrected Average'};},
     () => { // Weighted average of marks
       const n1=getRandomInt(3,6),p1=getRandomInt(55,70),n2=getRandomInt(4,8),p2=getRandomInt(75,90);
       const wa=Math.round((n1*p1+n2*p2)/(n1+n2));
-      return{question:`${n1} students averaged ${p1}% and ${n2} students averaged ${p2}%. Overall average?`,
+      return{question:`A technical university conducts a certification test for two separate groups of software engineers. The first group of ${n1} engineers achieves an average score of ${p1}% in the exam, while the second group of ${n2} engineers scores an average of ${p2}%. What is the combined average score (rounded to the nearest integer) achieved by all candidates across both groups?`,
         options:makeOptions(wa,2,6),answer:0,
         explanation:`(${n1}×${p1}+${n2}×${p2})/${n1+n2}=${wa}%.`,subtopic:'Weighted Average'};},
   ],
@@ -2898,57 +2898,57 @@ const HARD_POOL = {
     () => { // Net successive change
       const p1=getRandomInt(10,30),p2=getRandomInt(10,25);
       const actual=Math.round((100+p1)*(100-p2)/100-100);
-      return{question:`A number is increased by ${p1}% then decreased by ${p2}%. Net % change?`,
+      return{question:`A retail store raises the price of a high-end graphics card by ${p1}% due to global component shortages. A month later, during a festive season sale, they apply a discount of ${p2}% on the newly increased price. What is the net percentage change in the price of the graphics card compared to its original price?`,
         options:[`${actual>=0?'+':''}${actual}%`,`${p1-p2}%`,`${Math.round((p1+p2)/2)}%`,`${actual+2}%`],answer:0,
         explanation:`(1+${p1}/100)(1−${p2}/100)−1=${actual}%.`,subtopic:'Successive Percentages'};},
     () => { // Income-expenditure-savings
       const incIncrease=getRandomInt(15,30),expIncrease=getRandomInt(20,40),savPct=getRandomInt(20,40);
       const expPct=100-savPct,newInc=100*(1+incIncrease/100),newExp=expPct*(1+expIncrease/100);
       const newSav=newInc-newExp,savChange=Math.round(((newSav-savPct)/savPct)*100);
-      return{question:`Income increases ${incIncrease}%, expenditure increases ${expIncrease}%. Savings are ${savPct}% of income. % change in savings?`,
+      return{question:`A software developer allocates her monthly earnings such that her savings represent exactly ${savPct}% of her total income. In the next fiscal year, her monthly income increases by ${incIncrease}%, while her monthly expenditures rise by ${expIncrease}%. Calculate the percentage change in her monthly savings after these adjustments.`,
         options:[`${savChange}%`,`${incIncrease-expIncrease}%`,`${savChange-5}%`,`${savChange+5}%`],answer:0,
         explanation:`New sav=${newSav.toFixed(1)}, old=${savPct}. Change≈${savChange}%.`,subtopic:'Income-Expenditure'};},
     () => { // Population growth
       const pop=getRandomInt(50,200)*1000,rate=getRandomInt(5,15),years=3;
       const final=Math.round(pop*Math.pow(1+rate/100,years));
-      return{question:`Population ${pop.toLocaleString('en-IN')} grows at ${rate}%/year. After ${years} years?`,
+      return{question:`A municipality logs the population of a tech hub to be ${pop.toLocaleString('en-IN')}. Due to rapid industrial growth and migration, the population grows at a steady rate of ${rate}% per year. What will be the estimated population of the tech hub after a period of exactly ${years} years?`,
         options:makeOptions(final,5000,50000),answer:0,
         explanation:`${pop}×(1.${rate<10?'0'+rate:rate})^3≈${final}.`,subtopic:'Population Growth'};},
     () => { // Reverse percentage
       const pct=getRandomInt(15,40),finalVal=getRandomInt(5,15)*100;
       const original=Math.round(finalVal/(1+pct/100));
-      return{question:`After ${pct}% increase, value becomes ${finalVal}. Original value?`,
+      return{question:`A manufacturing facility increases its daily production capacity of microchips by ${pct}% to meet high market demand, reaching a new output rate of ${finalVal} units per day. What was the original daily production capacity of the facility before this capacity expansion?`,
         options:makeOptions(original,20,80),answer:0,
         explanation:`Original=${finalVal}÷(1+${pct}/100)=${finalVal}×100/${100+pct}=${original}.`,subtopic:'Reverse Percentage'};},
     () => { // Shopkeeper markup + discount
       const markup=getRandomInt(25,50),discount=getRandomInt(10,25);
       const profit=Math.round(((100+markup)*(100-discount)/100-100)*10)/10;
-      return{question:`Goods marked ${markup}% above CP, sold at ${discount}% discount. Net profit/loss %?`,
+      return{question:`An electronics retailer sets the marked price of a smart television at ${markup}% above its manufacturing cost price. To attract customers during a promotional event, they offer a discount of ${discount}% on the marked price. What is the net profit or loss percentage achieved by the retailer on the transaction?`,
         options:[`${profit>0?'Profit':'Loss'} ${Math.abs(profit)}%`,`${markup-discount}%`,`${profit>0?'Profit':'Loss'} ${(Math.abs(profit)+2)}%`,`${markup-discount-2}%`],
         answer:0,explanation:`(${100+markup})×(${100-discount})/100−100=${profit}%.`,subtopic:'Marked Price & Discount'};},
     () => { // Election margin
       const totalVotes=getRandomInt(3,8)*10000,winnerPct=getRandomInt(55,70);
       const winnerV=Math.round(totalVotes*winnerPct/100),margin=winnerV-(totalVotes-winnerV);
       const marginPct=winnerPct-(100-winnerPct);
-      return{question:`Winner got ${winnerPct}% votes in election and won by ${margin} votes. Total votes polled?`,
+      return{question:`During an employee union election, the winning candidate receives ${winnerPct}% of the total valid votes polled. She defeats her opponent by a margin of exactly ${margin} votes. Find the total number of valid votes polled in the union election.`,
         options:makeOptions(totalVotes,2000,10000),answer:0,
         explanation:`Margin%=${marginPct}%. ${marginPct}%=${margin}. Total=${margin*100/marginPct}=${totalVotes}.`,subtopic:'Election Problems'};},
   ],
   'profit-loss': [
     () => { // n at price of m
       const n=getRandomInt(8,15),m=getRandomInt(n+1,n+8),profit=Math.round(((m-n)/n)*100);
-      return{question:`Shopkeeper sells ${n} articles at CP of ${m} articles. Profit %?`,
+      return{question:`An online merchandise store sells ${n} custom-designed hoodies at a selling price that is exactly equal to the cost price of ${m} hoodies. What is the net profit percentage earned by the merchandise store on this sales volume?`,
         options:makeOptions(profit,3,10),answer:0,
         explanation:`Profit%=(${m}−${n})/${n}×100=${profit}%.`,subtopic:'Articles Profit'};},
     () => { // Dishonest weights
       const actual=getRandomInt(800,950);
       const truePct=Math.round(((1000-actual)/actual)*100);
-      return{question:`Shopkeeper sells at CP but uses ${actual}g instead of 1kg. True profit%?`,
+      return{question:`A local grocery vendor claims to sell rice at its cost price, advertising zero profit margins. However, the regulatory compliance authority discovers that the vendor uses a faulty weighing scale that measures ${actual} grams instead of 1 kilogram. Calculate the true profit percentage earned by the vendor due to this fraudulent scale.`,
         options:makeOptions(truePct,3,10),answer:0,
         explanation:`Profit%=(${1000-actual}/${actual})×100=${truePct}%.`,subtopic:'Dishonest Weights'};},
     () => { // Same SP: X% profit and X% loss
       const x=getRandomInt(10,25),loss=Math.round(x*x/100*10)/10;
-      return{question:`Two articles each sold at same SP — one at ${x}% profit, one at ${x}% loss. Net result?`,
+      return{question:`A manufacturer sells two pieces of industrial machinery at the exact same selling price. On the first transaction, the manufacturer earns a profit of ${x}%, while on the second transaction, he incurs a loss of ${x}%. What is the net financial result of the combined transactions?`,
         options:[`Loss ${loss}%`,`Profit ${x}%`,`No profit/loss`,`Loss ${(loss+2).toFixed(1)}%`],answer:0,
         explanation:`Net loss=(x²/100)%=(${x}²/100)=${loss}%. Always a loss.`,subtopic:'Same SP Trade'};},
     () => { // A→B→C chain

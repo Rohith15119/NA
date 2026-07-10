@@ -2749,7 +2749,9 @@ const HARD_POOL = {
         options:makeOptions(n,5,25),answer:0,
         explanation:`N+1 divisible by all three. N+1=LCM(${d1},${d2},${d3})=${L}. N=${n}.`,subtopic:'LCM & Remainders'};},
     () => { // HCF × LCM = product
-      const h=getRandomInt(3,8),x=getRandomInt(2,5),y=getRandomInt(7,14);
+      const h=getRandomInt(3,8),x=getRandomInt(2,5);
+      let y=getRandomInt(7,14);
+      while(gcd(x,y)!==1) { y=getRandomInt(7,14); }
       const a=h*x,b=h*y,L=lcm(a,b);
       return{question:`Two synchronized backup servers generate numerical identifiers for database security logs. The HCF of their two identifiers is ${h}, and their LCM is ${L}. If one of the backup servers is assigned the identifier ${a}, calculate the identifier assigned to the other backup server.`,
         options:makeOptions(b,5,25),answer:0,

@@ -216,6 +216,17 @@ body {
 .badge-expert { background: rgba(217, 119, 6, 0.18); border: 1px solid rgba(245, 158, 11, 0.4); color: #fbbf24; }
 .badge-completed { background: rgba(16, 185, 129, 0.16); border: 1px solid rgba(16, 185, 129, 0.45); color: #34d399; }
 .badge-pending { background: rgba(59, 130, 246, 0.16); border: 1px solid rgba(59, 130, 246, 0.45); color: #60a5fa; }
+
+/* ── Difficulty badges (Easy / Medium / Hard) ───────────────────────────── */
+.diff-badge {
+  display: inline-flex; align-items: center; gap: 0.22rem;
+  font-size: 0.64rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
+  padding: 0.15rem 0.52rem; border-radius: 999px;
+}
+.diff-easy   { background: rgba(16,185,129,0.14); border: 1px solid rgba(52,211,153,0.35); color: #34d399; }
+.diff-medium { background: rgba(245,158,11,0.14); border: 1px solid rgba(251,191,36,0.35); color: #fbbf24; }
+.diff-hard   { background: rgba(239,68,68,0.14);  border: 1px solid rgba(248,113,113,0.35); color: #f87171; }
+.diff-expert { background: rgba(168,85,247,0.14); border: 1px solid rgba(196,141,252,0.35); color: #c084fc; }
 .tc-title { font-size: 0.96rem; font-weight: 700; margin-bottom: 0.25rem; letter-spacing: -0.01em; }
 .tc-desc { font-size: 0.75rem; color: var(--text-2); margin-bottom: 0.8rem; line-height: 1.5; }
 .tc-tags { display: flex; gap: 0.28rem; flex-wrap: wrap; margin-bottom: 0.75rem; }

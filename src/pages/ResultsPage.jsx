@@ -432,13 +432,23 @@ export default function ResultsPage() {
                 <div key={q.id} className={itemCls}>
                   <div className="review-top">
                     <span className="review-ic">{icon}</span>
-                    <div>
+                    <div style={{ flex: 1 }}>
                       <div className="review-q">
                         <strong>Q{i + 1}.</strong> {renderQuestionText(q.question)}
                       </div>
-                      {isOverall && q.topicTitle && (
-                        <span className="q-topic-chip" style={{ marginTop: '0.35rem', display: 'inline-flex' }}>📚 {q.topicTitle}</span>
-                      )}
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginTop: '0.4rem', alignItems: 'center' }}>
+                        {isOverall && q.topicTitle && (
+                          <span className="q-topic-chip" style={{ display: 'inline-flex' }}>📚 {q.topicTitle}</span>
+                        )}
+                        {q.subtopic && (
+                          <span className="q-sub" style={{ display: 'inline-flex' }}>{q.subtopic}</span>
+                        )}
+                        {q.difficulty && (
+                          <span className={`diff-badge diff-${(q.difficulty || 'Medium').toLowerCase()}`} style={{ display: 'inline-flex' }}>
+                            {q.difficulty === 'Easy' ? '🟢' : q.difficulty === 'Hard' ? '🔴' : '🟡'} {q.difficulty}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
 

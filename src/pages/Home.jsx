@@ -216,86 +216,95 @@ export default function Home() {
           </div>
         )}
 
-        {/* Topics Grid */}
-        <div className="section-head">
-          <div>
-            <div className="section-title">📖 Topic-Wise Practice</div>
-            <div className="section-sub">Select any topic to start practicing high-quality TCS NQT exam-level questions</div>
-          </div>
-        </div>
-        <div className="topics-grid">
-          {TOPICS.map((topic, i) => {
-            const tp = progress[topic.id] || progress[`${topic.id}_expert`];
-            return (
-              <div
-                key={topic.id}
-                className="topic-card"
-                style={{
-                  '--card-g': topic.gradient,
-                  '--card-glow': topic.color + '33',
-                  animationDelay: `${i * 0.03}s`
-                }}
-                onClick={() => navigate(`/test/${topic.id}`)}
-              >
-                <div className="tc-inner">
-                  <div className="tc-top">
-                    <div className="tc-icon">{topic.icon}</div>
-                    <span className="badge badge-expert">🏆 TCS NQT Level</span>
+        {/* Topics Grid — grouped by section */}
+        {['Quantitative Aptitude', 'Logical Reasoning'].map(section => {
+          const sectionTopics = TOPICS.filter(t => t.section === section);
+          const sectionIcon = section === 'Quantitative Aptitude' ? '🔢' : '🧠';
+          return (
+            <div key={section}>
+              <div className="section-head" style={{ marginTop: '2.2rem' }}>
+                <div>
+                  <div className="section-title">{sectionIcon} {section}</div>
+                  <div className="section-sub">
+                    {section === 'Quantitative Aptitude'
+                      ? `${sectionTopics.length} topics — all models, variations & difficulty tiers for TCS NQT 2026`
+                      : `${sectionTopics.length} topics — series, seating, coding, clocks, relations & directions`}
                   </div>
-                  <div className="tc-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span>{topic.title}</span>
-                    <div
-                      onClick={(e) => toggleCompleted(e, topic.id)}
-                      style={{
-                        width: '20px',
-                        height: '20px',
-                        borderRadius: '50%',
-                        border: completedTopics[topic.id] ? '2px solid #10b981' : '2px solid rgba(255,255,255,0.25)',
-                        background: completedTopics[topic.id] ? '#10b981' : 'transparent',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease-in-out',
-                        marginLeft: '0.5rem',
-                        flexShrink: 0
-                      }}
-                      title={completedTopics[topic.id] ? "Mark as Pending" : "Mark as Completed"}
-                    >
-                      {completedTopics[topic.id] && (
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                      )}
-                    </div>
-                  </div>
-                  <div className="tc-desc">{topic.description}</div>
-                  <div className="tc-tags">
-                    {topic.subtopics.slice(0, 3).map(s => (
-                      <span key={s} className="tc-tag">{s}</span>
-                    ))}
-                    {topic.subtopics.length > 3 && <span className="tc-tag">+{topic.subtopics.length - 3}</span>}
-                  </div>
-                  <div className="tc-meta">
-                    <span className="tc-meta-item">❓ 15 Questions</span>
-                    <span className="tc-meta-item">⏱️ 15 Minutes</span>
-                  </div>
-                  {tp && typeof tp === 'object' && typeof tp.best === 'number' && typeof tp.total === 'number' && tp.total > 0 && (
-                    <div className="tc-progress">
-                      <div className="tc-prog-label">
-                        <span>Best Score</span>
-                        <span style={{ color: '#a5b4fc', fontWeight: 600 }}>{tp.best}/{tp.total}</span>
-                      </div>
-                      <div className="tc-prog-track">
-                        <div className="tc-prog-fill" style={{ width: `${(tp.best / tp.total) * 100}%`, background: topic.gradient }} />
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
-            );
-          })}
-        </div>
+              <div className="topics-grid">
+                {sectionTopics.map((topic, i) => {
+                  const tp = progress[topic.id] || progress[`${topic.id}_expert`];
+                  return (
+                    <div
+                      key={topic.id}
+                      className="topic-card"
+                      style={{
+                        '--card-g': topic.gradient,
+                        '--card-glow': topic.color + '33',
+                        animationDelay: `${i * 0.03}s`
+                      }}
+                      onClick={() => navigate(`/test/${topic.id}`)}
+                    >
+                      <div className="tc-inner">
+                        <div className="tc-top">
+                          <div className="tc-icon">{topic.icon}</div>
+                          <span className={`diff-badge diff-${(topic.difficulty || 'Medium').toLowerCase()}`}>
+                            {topic.difficulty === 'Easy' ? '🟢' : topic.difficulty === 'Hard' ? '🔴' : '🟡'} {topic.difficulty}
+                          </span>
+                        </div>
+                        <div className="tc-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <span>{topic.title}</span>
+                          <div
+                            onClick={(e) => toggleCompleted(e, topic.id)}
+                            style={{
+                              width: '20px', height: '20px', borderRadius: '50%',
+                              border: completedTopics[topic.id] ? '2px solid #10b981' : '2px solid rgba(255,255,255,0.25)',
+                              background: completedTopics[topic.id] ? '#10b981' : 'transparent',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              cursor: 'pointer', transition: 'all 0.15s ease-in-out',
+                              marginLeft: '0.5rem', flexShrink: 0
+                            }}
+                            title={completedTopics[topic.id] ? 'Mark as Pending' : 'Mark as Completed'}
+                          >
+                            {completedTopics[topic.id] && (
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+                        <div className="tc-desc">{topic.description}</div>
+                        <div className="tc-tags">
+                          {topic.subtopics.slice(0, 3).map(s => (
+                            <span key={s} className="tc-tag">{s}</span>
+                          ))}
+                          {topic.subtopics.length > 3 && <span className="tc-tag">+{topic.subtopics.length - 3} models</span>}
+                        </div>
+                        <div className="tc-meta">
+                          <span className="tc-meta-item">❓ {topic.testSize} Q</span>
+                          <span className="tc-meta-item">⏱️ {topic.duration} min</span>
+                          <span className="tc-meta-item">📊 {topic.examWeight}</span>
+                        </div>
+                        {tp && typeof tp === 'object' && typeof tp.best === 'number' && typeof tp.total === 'number' && tp.total > 0 && (
+                          <div className="tc-progress">
+                            <div className="tc-prog-label">
+                              <span>Best Score</span>
+                              <span style={{ color: '#a5b4fc', fontWeight: 600 }}>{tp.best}/{tp.total}</span>
+                            </div>
+                            <div className="tc-prog-track">
+                              <div className="tc-prog-fill" style={{ width: `${(tp.best / tp.total) * 100}%`, background: topic.gradient }} />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

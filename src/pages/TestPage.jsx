@@ -672,6 +672,11 @@ export default function TestPage() {
               {isOverall && current.topicTitle && (
                 <span className="q-topic-chip">📚 {current.topicTitle}</span>
               )}
+              {current.difficulty && (
+                <span className={`diff-badge diff-${(current.difficulty || 'Medium').toLowerCase()}`}>
+                  {current.difficulty === 'Easy' ? '🟢' : current.difficulty === 'Hard' ? '🔴' : '🟡'} {current.difficulty}
+                </span>
+              )}
               <span className="badge badge-expert" style={{ marginLeft: 'auto' }}>
                 TCS NQT Level
               </span>

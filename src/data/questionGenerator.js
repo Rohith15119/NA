@@ -3504,13 +3504,30 @@ const HARD_POOL = {
 const EXPERT_POOL = {
   'number-system': [
     () => { // CRT-style: simultaneous congruences
-      const d1=getRandomInt(3,5),d2=d1+getRandomInt(2,4),d3=d2+getRandomInt(2,3);
-      const r1=getRandomInt(1,d1-1),r2=getRandomInt(1,d2-1),r3=getRandomInt(1,d3-1);
-      const L=lcmThree(d1,d2,d3);
-      let N=1;while(N<1000){if(N%d1===r1&&N%d2===r2&&N%d3===r3)break;N++;}
-      return{question:`A local logistics company is sorting package shipments. When the warehouse supervisor attempts to organize the total package count into bins of ${d1}, there are ${r1} packages left over. When sorted into bins of ${d2}, there are ${r2} left over, and when sorted into bins of ${d3}, there are ${r3} left over. If the total stock represents the smallest positive number satisfying these conditions, find the total package count in the warehouse.`,
-        options:makeOptions(N,5,30),answer:0,
-        explanation:`Using the Chinese Remainder Theorem: package count mod ${d1} = ${r1}, mod ${d2} = ${r2}, and mod ${d3} = ${r3}. The unique solution modulo LCM(${d1},${d2},${d3}) is ${N}.`,subtopic:'CRT'};},
+      let d1 = getRandomInt(3, 5);
+      let d2 = d1 + getRandomInt(2, 4);
+      while (gcd(d1, d2) !== 1) { d2++; }
+      let d3 = d2 + getRandomInt(2, 3);
+      while (gcd(d1, d3) !== 1 || gcd(d2, d3) !== 1) { d3++; }
+
+      const r1 = getRandomInt(1, d1 - 1);
+      const r2 = getRandomInt(1, d2 - 1);
+      const r3 = getRandomInt(1, d3 - 1);
+      const L = lcmThree(d1, d2, d3);
+      
+      let N = 1;
+      while (N <= L) {
+        if (N % d1 === r1 && N % d2 === r2 && N % d3 === r3) break;
+        N++;
+      }
+      return {
+        question: `A local logistics company is sorting package shipments. When the warehouse supervisor attempts to organize the total package count into bins of ${d1}, there are ${r1} packages left over. When sorted into bins of ${d2}, there are ${r2} left over, and when sorted into bins of ${d3}, there are ${r3} left over. If the total stock represents the smallest positive number satisfying these conditions, find the total package count in the warehouse.`,
+        options: makeOptions(N, 5, 30),
+        answer: 0,
+        explanation: `Using the Chinese Remainder Theorem: package count mod ${d1} = ${r1}, mod ${d2} = ${r2}, and mod ${d3} = ${r3}. The unique solution modulo LCM(${d1},${d2},${d3}) is ${N}.`,
+        subtopic: 'CRT'
+      };
+    },
     () => { // Last 2 digits (mod 100) using pattern
       const bases=[3,7,13,17,19,23,27,29,33,37];
       const base=pickRandomArray(bases),exp=getRandomInt(50,200);

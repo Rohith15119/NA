@@ -106,29 +106,35 @@ export default function Home() {
                 <div className="tc-inner">
                   <div className="tc-top">
                     <div className="tc-icon">{topic.icon}</div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.35rem' }}>
-                      <span className="badge badge-expert" style={{ border: 'none' }}>🏆 TCS NQT Level</span>
-                      <button
-                        className={`badge ${completedTopics[topic.id] ? 'badge-completed' : 'badge-pending'}`}
-                        onClick={(e) => toggleCompleted(e, topic.id)}
-                        style={{
-                          cursor: 'pointer',
-                          padding: '0.22rem 0.55rem',
-                          borderRadius: '999px',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.2rem',
-                          fontSize: '0.62rem',
-                          fontWeight: 700,
-                          transition: 'all 0.15s ease-in-out',
-                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                        }}
-                      >
-                        {completedTopics[topic.id] ? '✅ Completed' : '⏳ Pending'}
-                      </button>
+                    <span className="badge badge-expert">🏆 TCS NQT Level</span>
+                  </div>
+                  <div className="tc-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span>{topic.title}</span>
+                    <div
+                      onClick={(e) => toggleCompleted(e, topic.id)}
+                      style={{
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '50%',
+                        border: completedTopics[topic.id] ? '2px solid #10b981' : '2px solid rgba(255,255,255,0.25)',
+                        background: completedTopics[topic.id] ? '#10b981' : 'transparent',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease-in-out',
+                        marginLeft: '0.5rem',
+                        flexShrink: 0
+                      }}
+                      title={completedTopics[topic.id] ? "Mark as Pending" : "Mark as Completed"}
+                    >
+                      {completedTopics[topic.id] && (
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      )}
                     </div>
                   </div>
-                  <div className="tc-title">{topic.title}</div>
                   <div className="tc-desc">{topic.description}</div>
                   <div className="tc-tags">
                     {topic.subtopics.slice(0, 3).map(s => (

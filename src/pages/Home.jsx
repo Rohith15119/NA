@@ -42,6 +42,22 @@ export default function Home() {
     });
   };
 
+  const [attempts, setAttempts] = useState(() => {
+    try {
+      const saved = localStorage.getItem('nqt_attempts');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  const clearAttempts = () => {
+    if (window.confirm("Are you sure you want to clear all attempt history? This cannot be undone.")) {
+      localStorage.removeItem('nqt_attempts');
+      setAttempts([]);
+    }
+  };
+
   return (
     <div className="page">
       <div className="app-bg" />
@@ -81,6 +97,118 @@ export default function Home() {
             Start Mock Test →
           </button>
         </div>
+
+        {/* Attempt History Section */}
+        {attempts.length > 0 && (
+          <div style={{ marginBottom: '2.5rem' }}>
+            <div className="section-head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <div>
+                <div className="section-title">📊 Attempt History</div>
+                <div className="section-sub">Review your past performance, answers, and step-by-step solutions</div>
+              </div>
+              <button 
+                onClick={clearAttempts}
+                style={{
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                  color: '#ef4444',
+                  padding: '0.35rem 0.8rem',
+                  borderRadius: '6px',
+                  fontSize: '0.75rem',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                Clear History
+              </button>
+            </div>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.85rem',
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              borderRadius: '12px',
+              padding: '1.25rem'
+            }}>
+              {attempts.slice(0, 5).map((attempt) => {
+                const dateStr = new Date(attempt.timestamp).toLocaleString('en-IN', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: true
+                });
+                const isPass = (attempt.score / attempt.total) >= 0.6;
+                
+                return (
+                  <div 
+                    key={attempt.id} 
+                    style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'space-between', 
+                      padding: '0.75rem 1rem', 
+                      background: 'rgba(255, 255, 255, 0.02)', 
+                      border: '1px solid rgba(255,255,255,0.04)', 
+                      borderRadius: '8px',
+                      flexWrap: 'wrap',
+                      gap: '1rem'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                      <div style={{ 
+                        width: '36px', 
+                        height: '36px', 
+                        borderRadius: '8px', 
+                        background: attempt.isOverall ? 'linear-gradient(135deg, #f43f5e, #ec4899)' : 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.1rem'
+                      }}>
+                        {attempt.isOverall ? '🎯' : '📝'}
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-1)' }}>{attempt.topicTitle}</div>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--text-3)', marginTop: '0.15rem' }}>{dateStr}</div>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ 
+                          fontSize: '0.95rem', 
+                          fontWeight: 700, 
+                          color: isPass ? '#34d399' : '#f87171' 
+                        }}>
+                          {attempt.score} / {attempt.total}
+                        </div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--text-3)', marginTop: '0.1rem' }}>
+                          {Math.round((attempt.score / attempt.total) * 100)}% Accuracy
+                        </div>
+                      </div>
+                      <button 
+                        className="btn btn-secondary" 
+                        onClick={() => navigate(`/results?attemptId=${attempt.id}`)}
+                        style={{ padding: '0.4rem 0.85rem', fontSize: '0.75rem', fontWeight: 600 }}
+                      >
+                        Review Attempt →
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+              {attempts.length > 5 && (
+                <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-3)', marginTop: '0.2rem' }}>
+                  Showing last 5 attempts out of {attempts.length} total.
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Topics Grid */}
         <div className="section-head">

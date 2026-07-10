@@ -453,13 +453,45 @@ export default function TestPage() {
       (acc, q) => acc + (answers[q.id] === q.answer ? 1 : 0), 0
     );
     const key = isOverall ? 'overall' : topic?.id;
+    const attemptId = `attempt_${Date.now()}`;
+
     try {
       let prev = {};
       try { const r = localStorage.getItem('nqt_progress'); if (r) { const p = JSON.parse(r); if (p && typeof p === 'object') prev = p; } } catch {}
       prev[key] = { best: Math.max(score, prev[key]?.best || 0), total: questions.length, attempts: (prev[key]?.attempts || 0) + 1 };
       localStorage.setItem('nqt_progress', JSON.stringify(prev));
     } catch {}
-    navigate('/results', { state: { questions, answers, topicId, isOverall } });
+
+    try {
+      let attempts = [];
+      try {
+        const r = localStorage.getItem('nqt_attempts');
+        if (r) {
+          const parsed = JSON.parse(r);
+          if (Array.isArray(parsed)) attempts = parsed;
+        }
+      } catch {}
+      
+      const newAttempt = {
+        id: attemptId,
+        timestamp: Date.now(),
+        topicId: isOverall ? 'overall' : topicId,
+        topicTitle: isOverall ? 'Full Mock Test' : (topic?.title || 'Topic Test'),
+        isOverall,
+        score,
+        total: questions.length,
+        questions,
+        answers
+      };
+      
+      attempts.unshift(newAttempt);
+      if (attempts.length > 30) attempts = attempts.slice(0, 30);
+      localStorage.setItem('nqt_attempts', JSON.stringify(attempts));
+    } catch (e) {
+      console.error('Failed to save attempt history:', e);
+    }
+
+    navigate(`/results?attemptId=${attemptId}`, { state: { questions, answers, topicId, isOverall, attemptId } });
   }, [submitted, questions, answers, navigate, topicId, isOverall, topic]);
 
   const handleTimerExpire = useCallback(() => handleSubmit(), [handleSubmit]);

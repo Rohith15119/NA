@@ -279,7 +279,31 @@ function renderQuestionText(text) {
 export default function ResultsPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const state = location.state;
+  
+  let state = location.state;
+  const queryParams = new URLSearchParams(location.search);
+  const attemptId = queryParams.get('attemptId') || state?.attemptId;
+
+  if (!state && attemptId) {
+    try {
+      const r = localStorage.getItem('nqt_attempts');
+      if (r) {
+        const attempts = JSON.parse(r);
+        const found = attempts.find(a => a.id === attemptId);
+        if (found) {
+          state = {
+            questions: found.questions,
+            answers: found.answers,
+            topicId: found.topicId,
+            isOverall: found.isOverall,
+            attemptId: found.id
+          };
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load attempt from localStorage:', e);
+    }
+  }
 
   if (!state) {
     return (

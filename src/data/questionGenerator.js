@@ -3361,6 +3361,67 @@ const HARD_POOL = {
         options:[`Mode=${mode}, Range=${range}`,`Mode=${data[1]}, Range=${range-2}`,`Mode=${mode}, Range=${range+1}`,`Mode=${data[2]}, Range=${range}`],
         answer:0,explanation:`Mode=${mode} (appears twice). Range=Max−Min=${Math.max(...data)}−${Math.min(...data)}=${range}.`,subtopic:'Mode & Range'};},
   ],
+  'simplification': [
+    () => { // Surds comparison
+      const a = getRandomInt(2, 4), b = a + 1;
+      const valA = Math.pow(a, 1/b), valB = Math.pow(b, 1/a);
+      const isAGreater = valA > valB;
+      return {
+        question: `Consider two numerical expressions: A = ${a}^(1/${b}) and B = ${b}^(1/${a}). Compare their values and determine which expression is greater.`,
+        options: [`B is greater`, `A is greater`, `Both are equal`, `Cannot be determined`],
+        answer: isAGreater ? 1 : 0,
+        explanation: `Comparing ${a}^(1/${b}) and ${b}^(1/${a}). Raise both to the power of ${a*b}: A^${a*b} = ${a}^${a} = ${Math.pow(a, a)}, B^${a*b} = ${b}^${b} = ${Math.pow(b, b)}. Since ${Math.pow(b, b)} > ${Math.pow(a, a)}, B is greater.`,
+        subtopic: 'Surds & Indices'
+      };
+    },
+    () => { // Indices equation solving
+      const set = pickRandomArray([
+        { eq: "2^(2x - 1) * 4^(x + 3) = 8^(2x - 1)", ans: 4, exp: "2^(2x-1) * 2^(2x+6) = 2^(6x-3) => 4x + 5 = 6x - 3 => 2x = 8 => x = 4" },
+        { eq: "2^(3x + 1) * 4^(x + 2) = 8^(2x + 1)", ans: 2, exp: "2^(3x+1) * 2^(2x+4) = 2^(6x+3) => 5x + 5 = 6x + 3 => x = 2" },
+        { eq: "3^(2x + 1) * 9^(x + 1) = 27^(x + 2)", ans: 3, exp: "3^(2x+1) * 3^(2x+2) = 3^(3x+6) => 4x + 3 = 3x + 6 => x = 3" }
+      ]);
+      return {
+        question: `An algebraic optimization algorithm simplifies the indices equation: ${set.eq}. Find the value of x that satisfies this equation.`,
+        options: makeOptions(set.ans, 1, 4),
+        answer: 0,
+        explanation: `Convert all bases to 2 or 3: ${set.exp}.`,
+        subtopic: 'Indices'
+      };
+    },
+    () => { // BODMAS fraction expression
+      const set = pickRandomArray([
+        { q: "(1/3 + 3/4 * 4/9) / (5/6 - 2/3)", ans: "4", exp: "1/3 + 1/3 = 2/3. 5/6 - 4/6 = 1/6. (2/3) / (1/6) = 4." },
+        { q: "(2/5 + 1/2 * 4/5) / (7/10 - 2/5)", ans: "8/3", exp: "2/5 + 2/5 = 4/5. 7/10 - 4/10 = 3/10. (4/5) / (3/10) = (4/5) * (10/3) = 8/3." }
+      ]);
+      return {
+        question: `Calculate the exact value of the mathematical expression: ${set.q}.`,
+        options: [set.ans, "5/3", "7/4", "9/2"],
+        answer: 0,
+        explanation: `Simplify numerator and denominator separately: ${set.exp}.`,
+        subtopic: 'BODMAS'
+      };
+    },
+    () => { // Approximation
+      let a1, b1, c1, ans;
+      let exact = false;
+      while (!exact) {
+        a1 = getRandomInt(10, 20);
+        b1 = getRandomInt(4, 9);
+        c1 = getRandomInt(3, 7);
+        if (((a1 + 1) * b1) % c1 === 0) {
+          ans = ((a1 + 1) * b1) / c1;
+          exact = true;
+        }
+      }
+      return {
+        question: `An approximation algorithm simplifies the product of float measurements: Value = (${a1}.98 × ${b1}.02) ÷ ${c1}.95. Calculate the approximate integer value of this expression.`,
+        options: makeOptions(ans, 1, 4),
+        answer: 0,
+        explanation: `Approximate each float to the nearest integer: (${a1 + 1} × ${b1}) ÷ ${c1} = ${ans}.`,
+        subtopic: 'Approximation'
+      };
+    }
+  ],
   'data-interpretation': [
     () => {
       const val1 = getRandomInt(80, 120), val2 = getRandomInt(90, 130), val3 = getRandomInt(100, 140);

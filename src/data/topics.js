@@ -5,14 +5,27 @@ export const TOPICS = [
     id: 'number-system',
     title: 'Number System',
     icon: '🔢',
-    description: 'Divisibility rules, LCM, HCF, Simplification',
-    subtopics: ['LCM', 'HCF', 'Divisibility', 'Simplification', 'Remainders'],
+    description: 'Divisibility rules, LCM, HCF, Remainders, factors',
+    subtopics: ['LCM', 'HCF', 'Divisibility', 'Remainders', 'Factors'],
     testSize: 10,
     duration: 15,
     color: '#6366f1',
     gradient: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
     difficulty: 'Medium',
-    examWeight: '20 Q/A'
+    examWeight: '2-3 Q/A'
+  },
+  {
+    id: 'simplification',
+    title: 'Simplification & Approximation',
+    icon: '🧮',
+    description: 'BODMAS, fractions, decimals, surds, indices & approximations',
+    subtopics: ['BODMAS', 'Surds & Indices', 'Fractions & Decimals', 'Approximation'],
+    testSize: 10,
+    duration: 15,
+    color: '#0ea5e9',
+    gradient: 'linear-gradient(135deg, #0ea5e9, #2563eb)',
+    difficulty: 'Medium',
+    examWeight: '2-3 Q/A'
   },
   {
     id: 'ratio-proportion',

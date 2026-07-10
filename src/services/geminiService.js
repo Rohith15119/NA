@@ -9,8 +9,13 @@ const API_URL        = `https://generativelanguage.googleapis.com/v1beta/models/
 export const TOPIC_DETAILS = {
   'number-system': {
     title: 'Number System',
-    subtopics: 'LCM, HCF, Divisibility Rules, Remainders, Unit Digit Cyclicity, Trailing Zeros, Number of Factors, Simplification, Progressions (AP/GP)',
+    subtopics: 'LCM, HCF, Divisibility Rules, Remainders, Unit Digit Cyclicity, Trailing Zeros, Number of Factors, Progressions (AP/GP)',
     hint: 'Complex system of congruence equations, advanced Euler totient counts φ(N), Fermat Littles modulo composite variables, complex divisors and factorization count tricks, base system conversion logic, and Arithmetic/Geometric Progressions (AP/GP) under time pressure.'
+  },
+  'simplification': {
+    title: 'Simplification & Approximation',
+    subtopics: 'BODMAS, Nested Fractions, Decimals, Surds & Indices, Approximation, Surds Comparison',
+    hint: 'Tricky nested fractional BODMAS computations, comparisons of complex surds raising to common powers, exponential indices equations, and double-step float approximations under tight time constraints.'
   },
   'ratio-proportion': {
     title: 'Ratio & Proportion',

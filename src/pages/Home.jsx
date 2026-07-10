@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TOPICS } from '../data/topics';
 
@@ -22,6 +23,24 @@ function useTopicProgress() {
 export default function Home() {
   const navigate = useNavigate();
   const progress = useTopicProgress();
+
+  const [completedTopics, setCompletedTopics] = useState(() => {
+    try {
+      const saved = localStorage.getItem('nqt_completed_topics');
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      return {};
+    }
+  });
+
+  const toggleCompleted = (e, topicId) => {
+    e.stopPropagation();
+    setCompletedTopics(prev => {
+      const updated = { ...prev, [topicId]: !prev[topicId] };
+      localStorage.setItem('nqt_completed_topics', JSON.stringify(updated));
+      return updated;
+    });
+  };
 
   return (
     <div className="page">
@@ -87,7 +106,27 @@ export default function Home() {
                 <div className="tc-inner">
                   <div className="tc-top">
                     <div className="tc-icon">{topic.icon}</div>
-                    <span className="badge badge-expert">🏆 TCS NQT Level</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.35rem' }}>
+                      <span className="badge badge-expert" style={{ border: 'none' }}>🏆 TCS NQT Level</span>
+                      <button
+                        className={`badge ${completedTopics[topic.id] ? 'badge-completed' : 'badge-pending'}`}
+                        onClick={(e) => toggleCompleted(e, topic.id)}
+                        style={{
+                          cursor: 'pointer',
+                          padding: '0.22rem 0.55rem',
+                          borderRadius: '999px',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.2rem',
+                          fontSize: '0.62rem',
+                          fontWeight: 700,
+                          transition: 'all 0.15s ease-in-out',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                        }}
+                      >
+                        {completedTopics[topic.id] ? '✅ Completed' : '⏳ Pending'}
+                      </button>
+                    </div>
                   </div>
                   <div className="tc-title">{topic.title}</div>
                   <div className="tc-desc">{topic.description}</div>

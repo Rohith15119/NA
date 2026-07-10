@@ -202,8 +202,14 @@ export default function Home() {
                 );
               })}
               {attempts.length > 5 && (
-                <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-3)', marginTop: '0.2rem' }}>
-                  Showing last 5 attempts out of {attempts.length} total.
+                <div style={{ textAlign: 'center', marginTop: '0.85rem' }}>
+                  <button 
+                    className="btn btn-secondary" 
+                    onClick={() => navigate('/history')}
+                    style={{ padding: '0.45rem 1.3rem', fontSize: '0.78rem', fontWeight: 600 }}
+                  >
+                    View All {attempts.length} Attempts →
+                  </button>
                 </div>
               )}
             </div>

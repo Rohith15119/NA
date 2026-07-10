@@ -12,6 +12,7 @@ export default function Navbar() {
       </Link>
       <div className="navbar-actions">
         <Link to="/" className="nav-btn">🏠 Home</Link>
+        <Link to="/history" className="nav-btn">📊 History</Link>
         <Link to="/test/overall" className="nav-btn primary">⚡ Mock Test</Link>
       </div>
     </header>

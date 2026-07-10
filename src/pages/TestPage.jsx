@@ -287,6 +287,25 @@ function renderQuestionText(text) {
   return rendered;
 }
 
+function validateAIQuestions(arr) {
+  if (!Array.isArray(arr)) return [];
+  return arr.filter(q => {
+    if (!q || typeof q.question !== 'string' || !q.question.trim()) return false;
+    if (!Array.isArray(q.options) || q.options.length < 4) return false;
+    
+    const uniq = new Set(q.options.map(o => String(o).trim().toLowerCase()));
+    if (uniq.size < 4) return false;
+
+    for (let opt of q.options) {
+      const s = String(opt).toLowerCase().trim();
+      if (!s || s.includes('nan') || s.includes('null') || s.includes('undefined')) return false;
+    }
+
+    if (typeof q.answer !== 'number' || q.answer < 0 || q.answer >= q.options.length) return false;
+    return true;
+  });
+}
+
 export default function TestPage() {
   const { topicId } = useParams();
   const difficulty = 'expert';
@@ -324,9 +343,11 @@ export default function TestPage() {
 
       // ── BATCH 1: load quickly so user can start immediately ──────────────
       try {
-        const batch1 = isOverall
+        const rawBatch1 = isOverall
           ? await generateAIOverallQuestions(initSize, [])
           : await generateAIQuestions(topicId, difficulty, initSize, [], 0);
+        
+        const batch1 = validateAIQuestions(rawBatch1);
 
         if (cancelRef.current) return;
 
@@ -341,14 +362,27 @@ export default function TestPage() {
           const usedTexts   = batch1.map(q => q.question);
 
           try {
-            const batch2 = isOverall
+            const rawBatch2 = isOverall
               ? await generateAIOverallQuestions(remaining, usedTexts)
               : await generateAIQuestions(topicId, difficulty, remaining, usedTexts, batch1.length);
+            
+            const batch2 = validateAIQuestions(rawBatch2);
 
-            if (!cancelRef.current && batch2 && batch2.length > 0) {
+            if (!cancelRef.current) {
               setQuestions(prev => {
                 const ids = new Set(prev.map(q => q.id));
-                return [...prev, ...batch2.filter(q => !ids.has(q.id))];
+                const filteredBatch2 = batch2.filter(q => !ids.has(q.id));
+                const combined = [...prev, ...filteredBatch2];
+                
+                if (combined.length < total) {
+                  const staticAll = isOverall
+                    ? getOverallTestQuestions(total)
+                    : getTopicTestQuestions(topicId, total);
+                  const needed = total - combined.length;
+                  const staticSlice = staticAll.filter(q => !ids.has(q.id) && !filteredBatch2.some(b => b.question === q.question)).slice(0, needed);
+                  return [...combined, ...staticSlice];
+                }
+                return combined.slice(0, total);
               });
             }
           } catch (e2) {

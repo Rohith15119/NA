@@ -3970,7 +3970,7 @@ export function generateQuestions(topicId, difficulty = 'expert', count = 15) {
 
   if (!genPool || genPool.length === 0) return [];
 
-  const result = [], usedIndices = new Set(), safety = count * 15;
+  const result = [], usedIndices = new Set(), safety = count * 20;
   let i = 0;
   while (result.length < count && i++ < safety) {
     try {
@@ -3984,6 +3984,24 @@ export function generateQuestions(topicId, difficulty = 'expert', count = 15) {
       const q = genPool[idx]();
       if (!q?.question || q.question === 'skip') continue;
 
+      // ─── Options and Answers Validation ───
+      if (!Array.isArray(q.options) || q.options.length < 4) continue;
+      const uniq = new Set(q.options.map(o => String(o).trim().toLowerCase()));
+      if (uniq.size < 4) continue;
+      
+      let hasInvalidOpt = false;
+      for (let opt of q.options) {
+        const s = String(opt).toLowerCase().trim();
+        if (!s || s.includes('nan') || s.includes('null') || s.includes('undefined')) {
+          hasInvalidOpt = true;
+          break;
+        }
+      }
+      if (hasInvalidOpt) continue;
+
+      if (typeof q.answer !== 'number' || q.answer < 0 || q.answer >= q.options.length) continue;
+      // ──────────────────────────────────────
+
       usedIndices.add(idx);
       q.id         = `${topicId}_expert_${result.length}_${getRandomInt(1000,9999)}`;
       q.difficulty = 'Expert';
@@ -3992,10 +4010,30 @@ export function generateQuestions(topicId, difficulty = 'expert', count = 15) {
   }
 
   // Fallback safety fill if templates fail or are insufficient
-  while (result.length < count) {
+  let safety2 = 0;
+  while (result.length < count && safety2++ < 50) {
     try {
       const q = pickRandomArray(genPool)();
       if (!q?.question) break;
+
+      // ─── Options and Answers Validation ───
+      if (!Array.isArray(q.options) || q.options.length < 4) continue;
+      const uniq = new Set(q.options.map(o => String(o).trim().toLowerCase()));
+      if (uniq.size < 4) continue;
+      
+      let hasInvalidOpt = false;
+      for (let opt of q.options) {
+        const s = String(opt).toLowerCase().trim();
+        if (!s || s.includes('nan') || s.includes('null') || s.includes('undefined')) {
+          hasInvalidOpt = true;
+          break;
+        }
+      }
+      if (hasInvalidOpt) continue;
+
+      if (typeof q.answer !== 'number' || q.answer < 0 || q.answer >= q.options.length) continue;
+      // ──────────────────────────────────────
+      
       q.id         = `${topicId}_expert_${result.length}_${getRandomInt(1000,9999)}`;
       q.difficulty = 'Expert';
       result.push(q);

@@ -3268,11 +3268,21 @@ const HARD_POOL = {
   ],
   'mensuration': [
     () => { // Sphere→cones
-      const sr=getRandomInt(6,12),cr=getRandomInt(2,4),ch=getRandomInt(4,8);
-      const num=Math.round((4*sr*sr*sr)/(cr*cr*ch));
-      return{question:`Sphere radius ${sr}cm melted into cones (r=${cr}cm, h=${ch}cm). How many?`,
+      let sr, cr, ch, num;
+      let exact = false;
+      while (!exact) {
+        sr = getRandomInt(6,12);
+        cr = getRandomInt(2,4);
+        ch = getRandomInt(4,8);
+        const val = (4*sr*sr*sr)/(cr*cr*ch);
+        if (Number.isInteger(val)) {
+          num = val;
+          exact = true;
+        }
+      }
+      return{question:`A solid metal sphere of radius ${sr}cm is melted and recast into identical solid cones, each of radius ${cr}cm and height ${ch}cm. How many such cones can be formed without any wastage of metal?`,
         options:makeOptions(num,5,20),answer:0,
-        explanation:`Cones=4r_s³/(r_c²×h)=4×${sr}³/(${cr}²×${ch})=${num}.`,subtopic:'Volume Conservation'};},
+        explanation:`Cones = Sphere Volume / Cone Volume = (4/3 * pi * r_s³) / (1/3 * pi * r_c² * h) = 4 * ${sr}³ / (${cr}² * ${ch}) = ${num}.`,subtopic:'Volume Conservation'};},
     () => { // Path around rectangle
       const l=getRandomInt(20,50),w=getRandomInt(10,30),pw=getRandomInt(2,5);
       const area=(l+2*pw)*(w+2*pw)-l*w;
@@ -3297,19 +3307,28 @@ const HARD_POOL = {
         explanation:`√(${l}²+${w}²+${h}²)=√${l*l+w*w+h*h}≈${diag}cm.`,subtopic:'Cuboid Diagonal'};},
     () => { // Cylinder TSA:Volume ratio
       const r=getRandomInt(4,8),h=getRandomInt(6,14),g=gcd(r*h,2*(r+h));
-      return{question:`Cylinder r=${r}cm, h=${h}cm. Volume(cm³) : Total Surface Area(cm²)?`,
-        options:[`${r*h}:${2*(r+h)}`,`${r}:${2*(r+h)/r}`,`${r*h+1}:${2*(r+h)}`,`${r*h}:${2*(r+h)+2}`],answer:0,
-        explanation:`V=πr²h, TSA=2πr(r+h). Ratio=rh:2(r+h)=${r*h}:${2*(r+h)}.`,subtopic:'Cylinder'};},
+      const val1=(r*h)/g, val2=(2*(r+h))/g;
+      return{question:`A cylinder has a radius of ${r}cm and a height of ${h}cm. Calculate the ratio of its volume (in cm³) to its total surface area (in cm²), in its simplest simplified form.`,
+        options:[`${val1}:${val2}`,`${val1+1}:${val2}`,`${val1}:${val2+1}`,`${val1+2}:${val2}`],answer:0,
+        explanation:`Volume = pi * r² * h, TSA = 2 * pi * r * (r + h). Ratio = r * h : 2 * (r + h) = ${r*h} : ${2*(r+h)} = ${val1}:${val2}.`,subtopic:'Cylinder'};},
   ],
   'statistics': [
     () => { // Standard deviation
-      const data=Array.from({length:5},()=>getRandomInt(10,30));
-      const mean=Math.round(data.reduce((a,b)=>a+b,0)/5);
+      let data, sum, mean;
+      let exact = false;
+      while (!exact) {
+        data = Array.from({length:5},()=>getRandomInt(10,30));
+        sum = data.reduce((a,b)=>a+b,0);
+        if (sum % 5 === 0) {
+          mean = sum / 5;
+          exact = true;
+        }
+      }
       const variance=Math.round(data.map(x=>(x-mean)**2).reduce((a,b)=>a+b,0)/5);
       const sd=Math.round(Math.sqrt(variance)*10)/10;
-      return{question:`Find SD of: ${data.join(', ')}`,
+      return{question:`A quality control team records the execution times (in milliseconds) of 5 database operations: ${data.join(', ')}. Find the standard deviation of this dataset (rounded to the nearest decimal place).`,
         options:[`${sd}`,`${(sd+1).toFixed(1)}`,`${(sd-1).toFixed(1)}`,`${variance}`],answer:0,
-        explanation:`Mean=${mean}. Variance=${variance}. SD=√${variance}≈${sd}.`,subtopic:'Standard Deviation'};},
+        explanation:`Mean = ${mean}. Variance = Sum((x - Mean)²)/5 = ${variance}. Standard Deviation = √Variance ≈ ${sd}.`,subtopic:'Standard Deviation'};},
     () => { // Combined mean
       const n1=getRandomInt(10,20),m1=getRandomInt(40,60),n2=getRandomInt(15,25),m2=getRandomInt(65,85);
       const combined=Math.round((n1*m1+n2*m2)/(n1+n2));

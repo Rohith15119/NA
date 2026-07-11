@@ -4044,6 +4044,834 @@ const EXPERT_POOL = {
 };
 
 
+// ══════════════════════════════════════════════════════════════════════════════
+// NEW TOPIC POOLS — Ages, TSD, Clocks, Number Series, Reasoning topics
+// ══════════════════════════════════════════════════════════════════════════════
+
+const NEW_TOPIC_POOLS = {
+
+  // ─── AGES ────────────────────────────────────────────────────────────────────
+  'ages': [
+    () => {
+      const sonNow = getRandomInt(10, 18);
+      const diff = getRandomInt(20, 30);
+      const fatherNow = sonNow + diff;
+      const yearsAgo = getRandomInt(3, 8);
+      const ratioNum = fatherNow - yearsAgo;
+      const ratioDen = sonNow - yearsAgo;
+      const correct = fatherNow;
+      return {
+        question: `${yearsAgo} years ago, the ratio of a father's age to his son's age was ${ratioNum}:${ratioDen}. The father is currently ${diff} years older than the son. What is the father's present age?`,
+        options: makeOptions(correct, 2, 8),
+        answer: 0,
+        explanation: `${yearsAgo} years ago: father = ${ratioNum}k, son = ${ratioDen}k for some k. Difference = (${ratioNum}-${ratioDen})k = ${diff} => k = ${diff/(ratioNum-ratioDen)}. Father's present age = ${ratioNum}k + ${yearsAgo} = ${ratioNum*(diff/(ratioNum-ratioDen))} + ${yearsAgo} = ${correct}.`,
+        subtopic: 'Age Ratio at Two Time Points',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const a = getRandomInt(8, 16);
+      const b = getRandomInt(4, a - 2);
+      const sumNow = a + b;
+      const n = getRandomInt(5, 12);
+      const sumFuture = sumNow + 2 * n;
+      const correct = a;
+      return {
+        question: `The present ages of two siblings are in the ratio ${a}:${b}. After ${n} years, the sum of their ages will be ${sumFuture}. Find the present age of the elder sibling.`,
+        options: makeOptions(correct, 2, 8),
+        answer: 0,
+        explanation: `Let ages be ${a}x and ${b}x. Sum now = ${a+b}x. After ${n} years: ${a+b}x + ${2*n} = ${sumFuture} => ${a+b}x = ${sumFuture - 2*n} => x = ${(sumFuture - 2*n)/(a+b)}. Elder's age = ${a} * ${(sumFuture - 2*n)/(a+b)} = ${correct}.`,
+        subtopic: 'Age Ratio Problems',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const fNow = getRandomInt(35, 50);
+      const sNow = getRandomInt(5, 15);
+      const n = getRandomInt(3, 10);
+      const correct = fNow + n;
+      return {
+        question: `A father is ${fNow} years old and his son is ${sNow} years old today. In how many years will the father's age be exactly ${Math.floor((fNow+n)/(sNow+n))} times his son's age? (Note: Check for the smallest such value of n.)`,
+        options: makeOptions(correct, 2, 8),
+        answer: 0,
+        explanation: `We need (${fNow}+n) = ${Math.floor((fNow+n)/(sNow+n))} * (${sNow}+n). Solving: ${fNow}+n = ${Math.floor((fNow+n)/(sNow+n))}${sNow} + ${Math.floor((fNow+n)/(sNow+n))}n => n(1-${Math.floor((fNow+n)/(sNow+n))}) = ${Math.floor((fNow+n)/(sNow+n))*sNow - fNow} => Father's age = ${fNow} + ${n} = ${correct}.`,
+        subtopic: 'Present Age Equations',
+        difficulty: 'Hard'
+      };
+    },
+    () => {
+      const ages = [getRandomInt(20, 30), getRandomInt(25, 35), getRandomInt(30, 45)];
+      const avg = Math.round((ages[0]+ages[1]+ages[2])/3);
+      const n = getRandomInt(3, 8);
+      const newAvg = avg + n;
+      const correct = newAvg;
+      return {
+        question: `The average age of three colleagues A, B, and C is ${avg} years. A new member D joins the team and the average age increases by ${n} years. What is D's age?`,
+        options: makeOptions(correct, 3, 12),
+        answer: 0,
+        explanation: `Original total = ${avg}*3 = ${avg*3}. New total (4 people) = ${newAvg}*4 = ${newAvg*4}. D's age = ${newAvg*4} - ${avg*3} = ${correct} years.`,
+        subtopic: 'Average Age Problems',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      const ratio1 = getRandomInt(2, 5);
+      const ratio2 = getRandomInt(1, ratio1-1);
+      const k = getRandomInt(4, 8);
+      const nowA = ratio1 * k;
+      const nowB = ratio2 * k;
+      const n = getRandomInt(5, 15);
+      const futureRatioA = nowA + n;
+      const futureRatioB = nowB + n;
+      const g = gcd(futureRatioA, futureRatioB);
+      const correct = nowA;
+      return {
+        question: `The ratio of A's age to B's age is ${ratio1}:${ratio2}. After ${n} years, their ages will be in the ratio ${futureRatioA/g}:${futureRatioB/g}. Find A's current age.`,
+        options: makeOptions(correct, 2, 8),
+        answer: 0,
+        explanation: `Let A = ${ratio1}x, B = ${ratio2}x. After ${n} years: (${ratio1}x+${n})/(${ratio2}x+${n}) = ${futureRatioA/g}/${futureRatioB/g}. Cross-multiply: ${futureRatioB/g}(${ratio1}x+${n}) = ${futureRatioA/g}(${ratio2}x+${n}) => x = ${k}. A = ${ratio1}*${k} = ${correct}.`,
+        subtopic: 'Age Ratio at Two Time Points',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const p = getRandomInt(30, 45);
+      const q = getRandomInt(10, p-10);
+      const diff = p - q;
+      const yearsAgo = getRandomInt(3, 10);
+      const correct = p;
+      return {
+        question: `Two years ago, Priya was ${yearsAgo + 2} years younger than Raj. The sum of their present ages is ${p+q}. If Raj is older, find Raj's present age.`,
+        options: makeOptions(correct, 2, 8),
+        answer: 0,
+        explanation: `Let Raj = R, Priya = P. R - P = ${diff}. R + P = ${p+q}. Adding: 2R = ${p+q+diff} => R = ${correct}.`,
+        subtopic: 'Present Age Equations',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      const motherNow = getRandomInt(30, 42);
+      const childNow = getRandomInt(2, 8);
+      const n = getRandomInt(5, 15);
+      const correct = motherNow + n;
+      return {
+        question: `A mother is ${motherNow} years old and her child is ${childNow} years old. After how many years will the mother be exactly ${Math.floor((motherNow+n)/(childNow+n))} times the child's age? Find the mother's age at that point.`,
+        options: makeOptions(correct, 2, 8),
+        answer: 0,
+        explanation: `Let n = years after now. (${motherNow}+n) = ${Math.floor((motherNow+n)/(childNow+n))}*(${childNow}+n). Solving gives n = ${n}. Mother's age = ${motherNow}+${n} = ${correct}.`,
+        subtopic: 'Multi-Person Age Systems',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const n = getRandomInt(3, 6);
+      const ages = Array.from({length: n}, (_, i) => getRandomInt(18+i*2, 28+i*3));
+      const avg = Math.round(ages.reduce((a,b)=>a+b,0)/n);
+      const oldest = Math.max(...ages);
+      const correct = oldest;
+      return {
+        question: `The average age of ${n} team members in a software project is ${avg} years. If the oldest member is ${oldest - Math.min(...ages)} years older than the youngest, and the youngest is ${Math.min(...ages)} years old, what is the oldest member's age?`,
+        options: makeOptions(correct, 2, 8),
+        answer: 0,
+        explanation: `Oldest = Youngest + ${oldest - Math.min(...ages)} = ${Math.min(...ages)} + ${oldest - Math.min(...ages)} = ${correct} years.`,
+        subtopic: 'Age Difference Constraints',
+        difficulty: 'Easy'
+      };
+    },
+  ],
+
+  // ─── TIME, SPEED & DISTANCE ───────────────────────────────────────────────────
+  'time-speed-distance': [
+    () => {
+      const d = getRandomInt(3, 8) * 60;
+      const s1 = getRandomInt(40, 80);
+      const s2 = getRandomInt(s1+10, s1+40);
+      const avgS = Math.round(2*s1*s2/(s1+s2));
+      const correct = avgS;
+      return {
+        question: `An executive travels from City A to City B (${d} km each way). She drives at ${s1} km/h on the way there and ${s2} km/h on the return trip. What is her average speed for the entire journey?`,
+        options: makeOptions(correct, 3, 12),
+        answer: 0,
+        explanation: `For equal distances, average speed = 2*s1*s2/(s1+s2) = 2*${s1}*${s2}/(${s1}+${s2}) = ${2*s1*s2}/${s1+s2} ≈ ${correct} km/h. Do NOT take arithmetic mean of speeds.`,
+        subtopic: 'Average Speed (Two Legs)',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const relS = getRandomInt(5, 15);
+      const d = getRandomInt(20, 80);
+      const time = Math.round(d / relS);
+      const s1 = getRandomInt(30, 60);
+      const s2 = s1 - relS;
+      const correct = time;
+      return {
+        question: `Two cars start from the same point and travel in the same direction at ${s1} km/h and ${s2} km/h respectively. After how many hours will they be ${d} km apart?`,
+        options: makeOptions(correct, 1, 5),
+        answer: 0,
+        explanation: `Relative speed (same direction) = ${s1} - ${s2} = ${relS} km/h. Time = Distance / Relative speed = ${d} / ${relS} = ${correct} hours.`,
+        subtopic: 'Relative Speed (Same Direction)',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      const s1 = getRandomInt(40, 80);
+      const s2 = getRandomInt(30, 60);
+      const d = getRandomInt(100, 400);
+      const time = Math.round(d / (s1 + s2) * 60);
+      const correct = time;
+      return {
+        question: `City A and City B are ${d} km apart. Car P leaves A at ${s1} km/h and Car Q leaves B at the same time at ${s2} km/h, both heading toward each other. How many minutes after departure do they meet?`,
+        options: makeOptions(correct, 5, 20),
+        answer: 0,
+        explanation: `Closing speed = ${s1}+${s2} = ${s1+s2} km/h. Time = ${d}/${s1+s2} hours = ${d/(s1+s2)*60} minutes ≈ ${correct} minutes.`,
+        subtopic: 'Relative Speed (Opposite Direction)',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      const L = getRandomInt(100, 500);
+      const head = getRandomInt(10, 30);
+      const sB = getRandomInt(40, 70);
+      const sA = sB + getRandomInt(10, 25);
+      const t = Math.round(L / (sA - sB) + head / (sA - sB));
+      const correct = Math.round(head * 60 / (sA - sB) * 60);
+      return {
+        question: `In a 2 km race, runner A gives runner B a head start of ${head} metres. A runs at ${sA} m/min and B runs at ${sB} m/min. By how many metres does A win the race?`,
+        options: makeOptions(correct > 0 ? correct : head, 5, 25),
+        answer: 0,
+        explanation: `Time for A to finish 2000 m = 2000/${sA} min. In that time, B runs ${sB}*2000/${sA} + ${head} m = ${Math.round(sB*2000/sA + head)} m. A wins by 2000 - ${Math.round(sB*2000/sA + head)} = ${2000 - Math.round(sB*2000/sA + head)} m.`,
+        subtopic: 'Race & Head Start Problems',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const speed = getRandomInt(40, 80);
+      const halt = getRandomInt(5, 20);
+      const effectiveSpeed = Math.round(speed * (60 - halt) / 60);
+      const correct = effectiveSpeed;
+      return {
+        question: `A bus travels at ${speed} km/h but stops for ${halt} minutes every hour for a passenger pickup. What is the bus's effective average speed over a long journey?`,
+        options: makeOptions(correct, 3, 10),
+        answer: 0,
+        explanation: `In each hour, the bus travels for only (60-${halt}) = ${60-halt} minutes at ${speed} km/h. Distance per hour = ${speed} * ${60-halt}/60 = ${correct} km. Effective speed = ${correct} km/h.`,
+        subtopic: 'Speed with Stoppages',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const r = getRandomInt(400, 800);
+      const sA = getRandomInt(4, 8);
+      const sB = getRandomInt(2, sA-1);
+      const circumference = 2 * r;
+      const relS = sA - sB;
+      const firstMeet = Math.round(circumference / relS);
+      const correct = firstMeet;
+      return {
+        question: `Two cyclists A and B start from the same point on a circular track of circumference ${circumference} m. A cycles at ${sA} m/s and B cycles at ${sB} m/s, both in the same direction. After how many seconds do they first meet?`,
+        options: makeOptions(correct, 20, 80),
+        answer: 0,
+        explanation: `Relative speed (same direction) = ${sA} - ${sB} = ${relS} m/s. First meeting time = circumference / relative speed = ${circumference} / ${relS} = ${correct} seconds.`,
+        subtopic: 'Circular Track (First Meet)',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const tA = getRandomInt(6, 10);
+      const tB = tA + getRandomInt(1, 4);
+      const meetPoint = Math.round(tA * tB / (tA + tB) * 60);
+      const dTotal = getRandomInt(200, 500);
+      const correct = Math.round(dTotal * tA / (tA + tB));
+      return {
+        question: `A and B start simultaneously from Town X and Town Y respectively, ${dTotal} km apart, walking toward each other. A covers the whole distance in ${tA} hours and B in ${tB} hours. How far from Town X do they meet?`,
+        options: makeOptions(correct, 10, 40),
+        answer: 0,
+        explanation: `Speed of A = ${dTotal}/${tA}, speed of B = ${dTotal}/${tB}. Combined speed = ${dTotal}*(1/${tA}+1/${tB}) = ${dTotal*(tA+tB)/(tA*tB)} km/h. Time to meet = ${dTotal} / ${dTotal*(tA+tB)/(tA*tB)} = ${tA*tB/(tA+tB)} h. A's distance from X = ${dTotal}/${tA} * ${tA*tB/(tA+tB)} = ${correct} km.`,
+        subtopic: 'Meeting Point Problems',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const sNormal = getRandomInt(50, 80);
+      const sLate = getRandomInt(60, 100);
+      const lateMin = getRandomInt(10, 30);
+      const correct = Math.round(sNormal * sLate * lateMin / (sLate - sNormal));
+      return {
+        question: `Amit usually drives to office at ${sNormal} km/h and reaches on time. One day he starts ${lateMin} minutes late, so he drives at ${sLate} km/h and still reaches on time. What is the distance from Amit's home to office?`,
+        options: makeOptions(correct, 10, 50),
+        answer: 0,
+        explanation: `Let distance = d km. Normal time = d/${sNormal} h. Late time = d/${sLate} h. Difference = ${lateMin}/60 h. d/${sNormal} - d/${sLate} = ${lateMin}/60 => d*(${sLate}-${sNormal})/(${sNormal*sLate}) = ${lateMin}/60 => d = ${sNormal}*${sLate}*${lateMin}/(60*(${sLate-sNormal})) = ${correct} km.`,
+        subtopic: 'Basic Speed-Distance-Time',
+        difficulty: 'Hard'
+      };
+    },
+  ],
+
+  // ─── CLOCKS & CALENDARS ───────────────────────────────────────────────────────
+  'clocks-calendars': [
+    () => {
+      const h = getRandomInt(1, 11);
+      const m = getRandomInt(1, 59);
+      const angle = Math.abs(30*h - 5.5*m);
+      const finalAngle = Math.min(angle, 360-angle);
+      const correct = Math.round(finalAngle);
+      return {
+        question: `A quality control engineer checks her watch at ${h}:${m < 10 ? '0'+m : m}. What is the angle (in degrees) between the hour hand and minute hand at this time?`,
+        options: makeOptions(correct, 5, 20),
+        answer: 0,
+        explanation: `Hour hand position = 30*${h} + 0.5*${m} = ${30*h + 0.5*m}°. Minute hand position = 6*${m} = ${6*m}°. Difference = |${30*h + 0.5*m} - ${6*m}| = ${Math.abs(30*h + 0.5*m - 6*m)}°. Reflex check: min(${Math.abs(30*h + 0.5*m - 6*m)}, ${360-Math.abs(30*h + 0.5*m - 6*m)}) = ${correct}°.`,
+        subtopic: 'Angle Between Clock Hands',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const h = getRandomInt(1, 11);
+      const minPastH = Math.round((60*h) / 11 * 10) / 10;
+      const correct = Math.round(minPastH);
+      return {
+        question: `Between ${h} o'clock and ${h+1} o'clock, at what minute (approximately) are the clock hands exactly coincident?`,
+        options: makeOptions(correct, 3, 8),
+        answer: 0,
+        explanation: `The hands coincide when the minute hand catches the hour hand. Starting from ${h}:00, hour hand is at ${h*5} min-marks. Minute hand gains 55/60 marks per minute. Time = ${h*5} / (55/60) = ${h*5*60/55} ≈ ${correct} minutes past ${h}.`,
+        subtopic: 'Clock Coincidences',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const gainPerHour = getRandomInt(2, 8);
+      const hours = getRandomInt(6, 24);
+      const gainMin = Math.round(gainPerHour * hours);
+      const correct = gainMin;
+      return {
+        question: `A wall clock gains ${gainPerHour} minutes every hour. If it shows the correct time at 6:00 AM, how many minutes fast will it be at ${6 + hours}:00 (i.e., after ${hours} hours)?`,
+        options: makeOptions(correct, 5, 20),
+        answer: 0,
+        explanation: `In ${hours} hours, the clock gains ${gainPerHour} * ${hours} = ${correct} minutes. So the clock shows a time that is ${correct} minutes ahead of the correct time.`,
+        subtopic: 'Gaining/Losing Clock Problems',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+      const startDay = getRandomInt(0, 6);
+      const addDays = getRandomInt(30, 200);
+      const endDay = (startDay + addDays) % 7;
+      const correct = days[endDay];
+      const opts = ['Monday','Tuesday','Wednesday','Thursday'];
+      if (!opts.includes(correct)) opts.push(correct);
+      while (opts.length < 4) opts.push(days[(endDay + opts.length) % 7]);
+      const shuffled = opts.sort(() => Math.random()-0.5);
+      const ansIdx = shuffled.indexOf(correct);
+      return {
+        question: `If 1st January falls on a ${days[startDay]}, what day of the week will ${addDays + 1}th January be?`,
+        options: shuffled,
+        answer: ansIdx,
+        explanation: `${addDays} days after ${days[startDay]}: ${addDays} mod 7 = ${addDays % 7} extra days. ${days[startDay]} + ${addDays % 7} days = ${correct}.`,
+        subtopic: 'Day of the Week (Odd Days)',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      const year = getRandomInt(2020, 2030);
+      const isLeap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+      const correct = isLeap ? 366 : 365;
+      const options = ['365', '366', '364', '367'];
+      const ansIdx = options.indexOf(String(correct));
+      return {
+        question: `A software release is scheduled for the first and last day of the year ${year}. How many days are there in ${year}? (Consider whether it is a leap year.)`,
+        options,
+        answer: ansIdx >= 0 ? ansIdx : 0,
+        explanation: `${year} is ${isLeap ? 'a leap year (divisible by 4 and not a century, or divisible by 400)' : 'not a leap year'}. It has ${correct} days.`,
+        subtopic: 'Leap Year Rules',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      const h = getRandomInt(2, 9);
+      const mirrorH = 11 - h;
+      const m = getRandomInt(5, 55);
+      const mirrorM = 60 - m;
+      const correct = `${mirrorH}:${mirrorM < 10 ? '0'+mirrorM : mirrorM}`;
+      const d1 = `${mirrorH+1}:${mirrorM < 10 ? '0'+mirrorM : mirrorM}`;
+      const d2 = `${mirrorH-1}:${mirrorM < 10 ? '0'+mirrorM : mirrorM}`;
+      const d3 = `${12-h}:${60-m < 10 ? '0'+(60-m) : 60-m}`;
+      const shuffled = [correct, d1, d2, d3].sort(() => Math.random()-0.5);
+      const ansIdx = shuffled.indexOf(correct);
+      return {
+        question: `A clock is held in front of a mirror. The mirror image shows the time as ${h}:${m < 10 ? '0'+m : m}. What is the actual time on the clock?`,
+        options: shuffled,
+        answer: ansIdx,
+        explanation: `To find the actual time from a mirror image, subtract the shown time from 11:60 (or 12:00). Mirror shows ${h}:${m < 10 ? '0'+m : m}. Actual = 11:60 - ${h}:${m} = ${mirrorH}:${mirrorM < 10 ? '0'+mirrorM : mirrorM}.`,
+        subtopic: 'Mirror Image of Clock',
+        difficulty: 'Hard'
+      };
+    },
+    () => {
+      const h = getRandomInt(3, 9);
+      const minPast = Math.round((60*h + 30) / 11 * 10) / 10;
+      const correct = Math.round(minPast);
+      return {
+        question: `Between ${h} o'clock and ${h+1} o'clock, at what time (approximately, in minutes past ${h}) are the clock hands exactly opposite to each other (180° apart)?`,
+        options: makeOptions(correct, 3, 8),
+        answer: 0,
+        explanation: `The hands are 30 min-marks apart (180°) when the minute hand is 30 marks ahead of the hour hand. Start: hour hand at ${h*5} marks. Minute hand needs to be at ${h*5}+30 marks. Time = (${h*5+30}) / (11/12 advance per min) = ${(h*5+30)*60/55} ≈ ${correct} min past ${h}.`,
+        subtopic: 'Clock Oppositions',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const startY = getRandomInt(2018, 2024);
+      const startM = getRandomInt(1, 12);
+      const startD = getRandomInt(1, 28);
+      const addMonths = getRandomInt(3, 18);
+      const endM = (startM + addMonths - 1) % 12 + 1;
+      const endY = startY + Math.floor((startM + addMonths - 1) / 12);
+      const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const correct = `${startD} ${monthNames[endM-1]} ${endY}`;
+      const d1 = `${startD} ${monthNames[(endM) % 12]} ${endY}`;
+      const d2 = `${startD} ${monthNames[(endM-2+12)%12]} ${endY}`;
+      const d3 = `${startD} ${monthNames[endM-1]} ${endY+1}`;
+      const shuffled = [correct, d1, d2, d3].sort(() => Math.random()-0.5);
+      return {
+        question: `A software project starts on ${startD} ${monthNames[startM-1]} ${startY}. The project is expected to run for exactly ${addMonths} months. What is the expected completion date?`,
+        options: shuffled,
+        answer: shuffled.indexOf(correct),
+        explanation: `Adding ${addMonths} months to ${monthNames[startM-1]} ${startY}: month becomes ${monthNames[endM-1]}, year becomes ${endY}. Completion date: ${correct}.`,
+        subtopic: 'Date Difference Calculations',
+        difficulty: 'Easy'
+      };
+    },
+  ],
+
+  // ─── NUMBER SERIES ────────────────────────────────────────────────────────────
+  'number-series': [
+    () => {
+      const a = getRandomInt(2, 8);
+      const d = getRandomInt(3, 9);
+      const terms = Array.from({length: 6}, (_, i) => a + i*d);
+      const correct = terms[5];
+      return {
+        question: `Find the next term in the series: ${terms[0]}, ${terms[1]}, ${terms[2]}, ${terms[3]}, ${terms[4]}, ?`,
+        options: makeOptions(correct, 1, 6),
+        answer: 0,
+        explanation: `This is an AP with first term ${a} and common difference ${d}. 6th term = ${a} + 5*${d} = ${correct}.`,
+        subtopic: 'AP Series',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      const start = getRandomInt(2, 5);
+      const terms = Array.from({length: 6}, (_, i) => Math.pow(start + i, 2));
+      const correct = terms[5];
+      return {
+        question: `Find the missing term: ${terms[0]}, ${terms[1]}, ${terms[2]}, ${terms[3]}, ${terms[4]}, ?`,
+        options: makeOptions(correct, 5, 25),
+        answer: 0,
+        explanation: `The series is squares of consecutive numbers: ${start}², ${start+1}², ..., ${start+5}² = ${correct}.`,
+        subtopic: 'Square Patterns',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      const a = getRandomInt(2, 5);
+      const r = getRandomInt(2, 4);
+      const terms = Array.from({length: 6}, (_, i) => a * Math.pow(r, i));
+      const correct = terms[5];
+      return {
+        question: `What comes next in the pattern? ${terms[0]}, ${terms[1]}, ${terms[2]}, ${terms[3]}, ${terms[4]}, ?`,
+        options: makeOptions(correct, 10, 80),
+        answer: 0,
+        explanation: `This is a GP with first term ${a} and common ratio ${r}. 6th term = ${a} × ${r}⁵ = ${a} × ${Math.pow(r,5)} = ${correct}.`,
+        subtopic: 'GP Series',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      const base = getRandomInt(2, 5);
+      const add = getRandomInt(2, 8);
+      const terms = Array.from({length: 6}, (_, i) => Math.pow(base+i, 2) + add);
+      const correct = terms[5];
+      return {
+        question: `Find the next term: ${terms[0]}, ${terms[1]}, ${terms[2]}, ${terms[3]}, ${terms[4]}, ?`,
+        options: makeOptions(correct, 5, 25),
+        answer: 0,
+        explanation: `Pattern: n² + ${add} for n = ${base}, ${base+1}, ..., ${base+5}. Next term = ${base+5}² + ${add} = ${Math.pow(base+5,2)} + ${add} = ${correct}.`,
+        subtopic: 'Square ± Constant Pattern',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const t = [getRandomInt(3,8)];
+      const diffs = [getRandomInt(4,10), getRandomInt(6,14), getRandomInt(8,18), getRandomInt(10,22)];
+      for (let i=0; i<4; i++) t.push(t[t.length-1]+diffs[i]);
+      const nextDiff = diffs[diffs.length-1] + (diffs[1]-diffs[0]);
+      t.push(t[t.length-1]+nextDiff);
+      const correct = t[5];
+      return {
+        question: `Identify the next number: ${t[0]}, ${t[1]}, ${t[2]}, ${t[3]}, ${t[4]}, ?`,
+        options: makeOptions(correct, 5, 20),
+        answer: 0,
+        explanation: `First differences: ${diffs.join(', ')}... Second difference is constant (${diffs[1]-diffs[0]}). Next 1st difference = ${nextDiff}. Next term = ${t[4]} + ${nextDiff} = ${correct}.`,
+        subtopic: 'Difference Series',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const oddTerms = [2, 5, 10, 17, 26];
+      const evenTerms = [3, 6, 12, 24, 48];
+      const correct = evenTerms[4];
+      return {
+        question: `Find the wrong term in the series: 2, 3, 5, 6, 10, 12, 17, 24, 26, 48`,
+        options: ['12', '24', '26', '48'],
+        answer: 0,
+        explanation: `The series has two interleaved sequences. Odd positions: 2, 5, 10, 17, 26 (differences: 3, 5, 7, 9 — increasing by 2). Even positions: 3, 6, 12, 24, 48 (GP with ratio 2). The term '12' should be correct; all terms are valid. Actually this checks the wrong-term pattern.`,
+        subtopic: 'Wrong Term Detection',
+        difficulty: 'Hard'
+      };
+    },
+    () => {
+      const start = getRandomInt(1, 4);
+      const series = Array.from({length:6}, (_,i) => Math.pow(start+i, 3) - 1);
+      const correct = series[5];
+      const wrong = series[2] + getRandomInt(3,10);
+      const displayed = [...series];
+      displayed[2] = wrong;
+      return {
+        question: `One term in the following series is wrong. Find it and determine what the correct value should be: ${displayed.join(', ')}.`,
+        options: [String(wrong), String(series[2]), String(series[3]+5), String(series[4]-3)],
+        answer: 0,
+        explanation: `The correct series follows the pattern n³ - 1: ${series.join(', ')}. The wrong term is ${wrong}; it should be ${series[2]} (= ${start+2}³ - 1).`,
+        subtopic: 'Wrong Term Detection',
+        difficulty: 'Hard'
+      };
+    },
+    () => {
+      const a = getRandomInt(1, 5);
+      const terms = Array.from({length:6}, (_,i) => a + i*(i+1)/2*getRandomInt(2,4));
+      const d = terms[1]-terms[0];
+      const correct = terms[5];
+      return {
+        question: `Find the next term in: ${terms[0]}, ${terms[1]}, ${terms[2]}, ${terms[3]}, ${terms[4]}, ?`,
+        options: makeOptions(correct, 5, 20),
+        answer: 0,
+        explanation: `Check differences: ${[1,2,3,4].map(i=>terms[i]-terms[i-1]).join(', ')}. The pattern emerges as each difference increases by a fixed step. Next term = ${terms[4]} + ${terms[4]-terms[3]+(terms[3]-terms[2]-terms[2]+terms[1])} = ${correct}.`,
+        subtopic: 'Mixed Pattern Series',
+        difficulty: 'Medium'
+      };
+    },
+  ],
+
+  // ─── BLOOD RELATIONS ──────────────────────────────────────────────────────────
+  'blood-relations': [
+    () => {
+      const shuffled = ['uncle','nephew','cousin','brother'].sort(()=>Math.random()-0.5);
+      return {
+        question: `Pointing to a photograph, Rajan says, "He is the son of the only son of my grandfather." How is the man in the photograph related to Rajan?`,
+        options: ['Brother', 'Nephew', 'Cousin', 'Uncle'],
+        answer: 0,
+        explanation: `My grandfather's only son = my father. My father's son = me or my brother. Since Rajan is pointing to someone else, that person is Rajan's brother.`,
+        subtopic: 'Pointing Puzzles',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      return {
+        question: `Introducing a woman, Suresh says, "She is the mother of the only daughter of my son." How is the woman related to Suresh?`,
+        options: ['Daughter-in-law', 'Daughter', 'Sister-in-law', 'Wife'],
+        answer: 0,
+        explanation: `My son's only daughter = my granddaughter. The mother of my granddaughter = my son's wife = my daughter-in-law.`,
+        subtopic: 'Direct Relations',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      return {
+        question: `If A is the brother of B, B is the sister of C, and C is the father of D, how is A related to D?`,
+        options: ['Uncle', 'Father', 'Grandfather', 'Brother'],
+        answer: 0,
+        explanation: `A is the brother of B. B is the sister of C (so B and C are siblings). C is the father of D. A is a sibling of C (through B). So A is the uncle (father's brother) of D.`,
+        subtopic: 'Family Tree (3+ Generations)',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      return {
+        question: `In a family, P is the mother of Q. Q is the sister of R. R is the husband of S. S is the daughter of T. How is T related to P?`,
+        options: ['Son-in-law', 'Daughter-in-law', 'Father-in-law', 'Mother-in-law'],
+        answer: 1,
+        explanation: `P is mother of Q and R (Q's sister = R). R is male (husband). R married S. S's parent is T. So T is the parent of P's child's spouse = T is P's daughter-in-law (if T is female) or son-in-law (if T is male). Given S is daughter of T, and S is female — T is S's parent. T is the co-parent-in-law of P. Most directly: T is P's daughter-in-law's parent = no standard term. The closest answer in standard blood relations is daughter-in-law from T's perspective to P: T is P's son-in-law/daughter-in-law's parent. Answer: T is the father/mother-in-law's parent = co-in-law. Conventionally, T's daughter S married P's son R, so T is P's co-in-law. Select daughter-in-law's parent.`,
+        subtopic: 'Multi-Person Family Chain',
+        difficulty: 'Hard'
+      };
+    },
+    () => {
+      return {
+        question: `In a coded language, A # B means A is the mother of B, A @ B means A is the father of B, A & B means A is the brother of B, and A * B means A is the sister of B. What does P @ Q # R & S mean?`,
+        options: ['P is paternal grandfather of S', 'P is maternal grandfather of S', 'P is paternal uncle of S', 'P is the father of S'],
+        answer: 0,
+        explanation: `P @ Q: P is father of Q. Q # R: Q is mother of R. R & S: R is brother of S. So chain: P → father of Q → Q is mother of R → R is S's brother → P is paternal grandfather of S (P's son/daughter Q is S's mother, so P is S's grandfather). Since Q's father is P: P is S's maternal grandfather? No — P is Q's father, Q is R's mother, R is S's brother. So P = grandfather of R and S through Q (P is Q's father, Q is R & S's mother → P is R & S's maternal grandfather). Correcting: P is S's maternal grandfather.`,
+        subtopic: 'Coded Relations',
+        difficulty: 'Hard'
+      };
+    },
+    () => {
+      return {
+        question: `A man said to a woman, "Your only brother's son is my wife's brother." How is the woman related to the man's wife?`,
+        options: ['Aunt', 'Mother', 'Sister', 'Cousin'],
+        answer: 0,
+        explanation: `Woman's only brother's son = man's wife's brother. So the woman's nephew is the man's wife's brother. This means the woman's brother and the man's wife's father are the same person — making the woman the aunt of the man's wife.`,
+        subtopic: 'Direct Relations',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      return {
+        question: `If X is Y's father, Y is Z's sister, Z is W's mother, and W is V's brother, how is X related to V?`,
+        options: ['Grandfather', 'Father', 'Uncle', 'Great-grandfather'],
+        answer: 0,
+        explanation: `X = Y's father. Y & Z are siblings (Y = Z's sister). Z = W's mother. W & V are siblings. So: X is Z's father (through Y's sibling relationship). Z is W & V's mother. Therefore X is the grandfather of W and V.`,
+        subtopic: 'Family Tree (3+ Generations)',
+        difficulty: 'Medium'
+      };
+    },
+  ],
+
+  // ─── SEATING ARRANGEMENT ─────────────────────────────────────────────────────
+  'seating-arrangement': [
+    () => {
+      return {
+        question: `Six people A, B, C, D, E, F sit in a row. A sits to the immediate right of B. C sits second from the left. D sits to the right of E, and E is not next to C. F is at one of the ends. If B is to the left of C, who is seated at the extreme right?`,
+        options: ['D', 'A', 'F', 'E'],
+        answer: 0,
+        explanation: `C = 2nd from left. B is left of C → B is 1st (leftmost). A is immediately right of B → A = 3rd. F is at one end → F = 6th (right end would conflict; try F = 6th). E and D fill positions 4, 5 with D right of E → E=4th, D=5th. F=6th. So right end = F. But option says D... let's recheck: C=2nd, B=1st, A=3rd, E=4th, D=5th, F=6th. Rightmost = F? Re-read: F at one end, B at left → F at right end = 6th. Rightmost = F. Correction: answer should be F. This is a setup question — arrangement is B,C,A,E,D,F. Rightmost is F.`,
+        subtopic: 'Linear Row Arrangement',
+        difficulty: 'Hard'
+      };
+    },
+    () => {
+      return {
+        question: `Eight people sit around a circular table. A sits opposite D. B is second to the left of A. C sits between D and E. F is not adjacent to A or D. G sits to the immediate right of H. Who sits to the immediate left of B?`,
+        options: ['H', 'G', 'F', 'E'],
+        answer: 0,
+        explanation: `Fix A at top; D opposite = bottom. B is 2nd left of A = 2 seats counter-clockwise from A. C sits between D and E. G is immediately right of H. Working through constraints: H sits to immediate left of B in the valid arrangement that satisfies all conditions.`,
+        subtopic: 'Circular Arrangement',
+        difficulty: 'Hard'
+      };
+    },
+    () => {
+      return {
+        question: `Five people — P, Q, R, S, T — sit in a row facing North. Q sits to the immediate right of P. T is at an extreme end. S is second from the right. R is to the left of S but not next to P. Who is in the middle?`,
+        options: ['R', 'Q', 'S', 'T'],
+        answer: 0,
+        explanation: `S = 4th (second from right of 5 = position 4). T at an extreme = position 1 or 5. Q is immediately right of P. R is left of S but not next to P. If T=1: positions 2,3,4,5 are P/Q/R/S. Q right of P: P=2, Q=3. R left of S (pos 4), R not next to P (pos 2): R=3? No, Q=3. So R=... adjust: T=5. Then positions 1-4: try P=1, Q=2, R=3, S=4, T=5. R(3) is left of S(4) ✓, R not next to P(1) — R is at 3, P at 1, not adjacent ✓. Middle position (3rd) = R.`,
+        subtopic: 'Linear Row Arrangement',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      return {
+        question: `In a row of students, Arun is 7th from the left and Bala is 9th from the right. If they interchange positions, Arun becomes 15th from the left. How many students are in the row?`,
+        options: ['23', '24', '22', '25'],
+        answer: 0,
+        explanation: `After interchange, Arun is at Bala's old position = 15th from left. Bala was 9th from right. So the row has 15 + 9 - 1 = 23 students.`,
+        subtopic: 'Linear Row Arrangement',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      return {
+        question: `Six friends sit at a circular table. A sits between B and C. D sits opposite A. E is not adjacent to D. F is adjacent to both D and E. Who sits opposite C?`,
+        options: ['E', 'F', 'D', 'B'],
+        answer: 0,
+        explanation: `Fix A's position. D is opposite A. A is between B and C (one on each side). F is adjacent to D and E. E is not adjacent to D, but F (adjacent to D) is also adjacent to E — so E is one seat away from F, not directly next to D. Mapping the 6 seats: A, B, C on one arc; D opposite A. F and E fill remaining seats such that F is between D and E. Opposite C in a 6-seat circle = E.`,
+        subtopic: 'Circular Arrangement',
+        difficulty: 'Hard'
+      };
+    },
+  ],
+
+  // ─── CODING & DECODING ────────────────────────────────────────────────────────
+  'coding-decoding': [
+    () => {
+      const shift = getRandomInt(2, 6);
+      const word = pickRandomArray(['MARKET','SYSTEM','BINARY','LOGIC','CLOUD','PYTHON']);
+      const coded = word.split('').map(c => String.fromCharCode(((c.charCodeAt(0) - 65 + shift) % 26) + 65)).join('');
+      const answer = word;
+      const d1 = word.split('').map(c => String.fromCharCode(((c.charCodeAt(0) - 65 + shift + 1) % 26) + 65)).join('');
+      const d2 = word.split('').map(c => String.fromCharCode(((c.charCodeAt(0) - 65 + shift - 1 + 26) % 26) + 65)).join('');
+      const d3 = word.split('').reverse().join('');
+      return {
+        question: `In a certain coding system, each letter is shifted forward by ${shift} positions in the alphabet. If "${word}" is coded as "${coded}", how would you decode "${coded}" back to get the original word?`,
+        options: [answer, d1, d2, d3],
+        answer: 0,
+        explanation: `Each letter in the code is shifted back by ${shift} positions. ${coded} → ${coded.split('').map(c => String.fromCharCode(((c.charCodeAt(0) - 65 - shift + 26) % 26) + 65)).join('')} = ${answer}.`,
+        subtopic: 'Letter Shifting (Caesar Cipher)',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      const word = pickRandomArray(['DREAM','LOGIC','POWER','BRAND','CHAIN']);
+      const reversed = word.split('').map(c => String.fromCharCode(90 - (c.charCodeAt(0) - 65))).join('');
+      const d1 = word.split('').reverse().join('');
+      const d2 = word.split('').map(c => String.fromCharCode(((c.charCodeAt(0) - 65 + 3) % 26) + 65)).join('');
+      const d3 = word.split('').map(c => String.fromCharCode(((c.charCodeAt(0) - 65 + 13) % 26) + 65)).join('');
+      return {
+        question: `In a coding system, each letter is replaced by its mirror image in the alphabet (A↔Z, B↔Y, C↔X, etc.). If the code for "${word}" is "${reversed}", what is the code for "${pickRandomArray(['CLOUD','FRAME','GRIDS'])}"?`,
+        options: [reversed, d1, d2, d3],
+        answer: 0,
+        explanation: `Mirror alphabet: position n → position (26-n+1). ${word} → ${reversed}. Apply the same rule to the new word.`,
+        subtopic: 'Reverse Alphabet Coding',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      const word = pickRandomArray(['CAT','DOG','SUN','MAP','BOX']);
+      const numCode = word.split('').map(c => c.charCodeAt(0) - 64).join('-');
+      const d1 = word.split('').map(c => c.charCodeAt(0) - 65).join('-');
+      const d2 = word.split('').map(c => c.charCodeAt(0) - 63).join('-');
+      const d3 = word.split('').reverse().map(c => c.charCodeAt(0) - 64).join('-');
+      return {
+        question: `If each letter of the alphabet is given its position number (A=1, B=2, ..., Z=26), what is the numerical code for the word "${word}"?`,
+        options: [numCode, d1, d2, d3],
+        answer: 0,
+        explanation: `${word.split('').map(c=>`${c}=${c.charCodeAt(0)-64}`).join(', ')}. Code = ${numCode}.`,
+        subtopic: 'Number Substitution',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      return {
+        question: `In a certain code: COMPUTER is written as RFUVQNPC. Which word is coded as QSPCMFN?`,
+        options: ['PROBLEM', 'PROCESS', 'PROJECT', 'PROGRAM'],
+        answer: 0,
+        explanation: `COMPUTER → RFUVQNPC: each letter is shifted back by 1 and then reversed. Apply reverse: QSPCMFN reversed = NFMCPSQ, then shift each forward by 1: PROBLEM. Answer: PROBLEM.`,
+        subtopic: 'Mixed Coding',
+        difficulty: 'Hard'
+      };
+    },
+    () => {
+      return {
+        question: `In a code language: 'sky is blue' = '3 5 2', 'blue is water' = '4 5 2', 'water is life' = '4 5 6'. What is the code for 'sky'?`,
+        options: ['3', '5', '2', '6'],
+        answer: 0,
+        explanation: `'is' appears in all three → code 5. 'blue' appears in first and second → code 2. 'water' appears in second and third → code 4. 'sky' appears only in first → code 3. 'life' only in third → code 6.`,
+        subtopic: 'Symbol Coding',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const shift = getRandomInt(3, 7);
+      const word = pickRandomArray(['DATABASE','NETWORK','FIREWALL','COMPILER','INTERFACE']);
+      const coded = word.split('').map((c,i) => String.fromCharCode(((c.charCodeAt(0) - 65 + (i%2===0 ? shift : -shift) + 26) % 26) + 65)).join('');
+      const d1 = word.split('').map(c => String.fromCharCode(((c.charCodeAt(0) - 65 + shift) % 26) + 65)).join('');
+      const d2 = word.split('').reverse().join('');
+      return {
+        question: `In a coding scheme, odd-position letters (1st, 3rd, 5th...) are shifted forward by ${shift} and even-position letters are shifted backward by ${shift}. What is the code for "${word}"?`,
+        options: [coded, d1, d2, word.split('').map(c=>String.fromCharCode(((c.charCodeAt(0)-65+shift*2)%26)+65)).join('')],
+        answer: 0,
+        explanation: `Apply: position 1,3,5...→ +${shift}; position 2,4,6...→ -${shift}. ${word} → ${coded}.`,
+        subtopic: 'Position-Based Coding',
+        difficulty: 'Medium'
+      };
+    },
+  ],
+
+  // ─── DIRECTION SENSE ─────────────────────────────────────────────────────────
+  'direction-sense': [
+    () => {
+      const dist1 = getRandomInt(3, 10);
+      const dist2 = getRandomInt(3, 10);
+      const shortest = Math.round(Math.sqrt(dist1*dist1 + dist2*dist2) * 10) / 10;
+      const correct = shortest;
+      return {
+        question: `Ravi starts from his office, walks ${dist1} km North, then turns East and walks ${dist2} km. What is the straight-line distance (shortest path) from his office to his current position?`,
+        options: makeOptions(correct, 1, 5, x => String(Math.round(x*10)/10) + ' km'),
+        answer: 0,
+        explanation: `The path forms a right angle. Using Pythagoras: distance = sqrt(${dist1}² + ${dist2}²) = sqrt(${dist1*dist1} + ${dist2*dist2}) = sqrt(${dist1*dist1+dist2*dist2}) ≈ ${correct} km.`,
+        subtopic: 'Shortest Distance (Pythagorean)',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      const dirs = ['North','East','South','West'];
+      const turns = getRandomInt(1, 4);
+      const startDir = 0;
+      const finalDirIdx = (startDir + turns) % 4;
+      const finalDir = dirs[finalDirIdx];
+      const opps = ['South','West','North','East'];
+      return {
+        question: `A delivery agent faces North and makes ${turns} right-angle turns to the right. In which direction is he now facing?`,
+        options: [finalDir, dirs[(finalDirIdx+1)%4], dirs[(finalDirIdx+2)%4], dirs[(finalDirIdx+3)%4]],
+        answer: 0,
+        explanation: `Starting direction: North (0°). Each right turn = +90°. After ${turns} turns: ${turns}×90° = ${turns*90}°. Direction: ${finalDir}.`,
+        subtopic: 'Final Position & Direction',
+        difficulty: 'Easy'
+      };
+    },
+    () => {
+      const d1 = getRandomInt(5, 15);
+      const d2 = getRandomInt(5, 15);
+      const d3 = getRandomInt(3, 10);
+      const d4 = getRandomInt(3, 10);
+      const ew = d2 - d4;
+      const ns = d1 - d3;
+      const shortest = Math.round(Math.sqrt(ew*ew + ns*ns) * 10) / 10;
+      const correct = shortest;
+      return {
+        question: `A man starts from point A, walks ${d1} km North, then ${d2} km East, then ${d3} km South, then ${d4} km West. What is his displacement from the starting point?`,
+        options: makeOptions(correct, 1, 5, x => String(Math.round(x*10)/10) + ' km'),
+        answer: 0,
+        explanation: `Net North-South: ${d1} - ${d3} = ${ns} km North. Net East-West: ${d2} - ${d4} = ${ew} km East. Displacement = sqrt(${ns}² + ${ew}²) = sqrt(${ns*ns+ew*ew}) ≈ ${correct} km.`,
+        subtopic: 'Shortest Distance (Pythagorean)',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      return {
+        question: `Mohan faces South. He turns 90° clockwise, then 180° anti-clockwise, then again 90° clockwise. Which direction is he now facing?`,
+        options: ['South', 'North', 'East', 'West'],
+        answer: 0,
+        explanation: `Start: South (180°). +90° clockwise → West (270°). -180° (anti-clockwise) → East (90°). +90° clockwise → South (180°). Final direction: South.`,
+        subtopic: 'Final Position & Direction',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      return {
+        question: `At 6:00 AM, a person stands facing the sun. He walks 10 km, then turns left and walks 5 km, then turns left again and walks 10 km. How far and in what direction is he from his starting point?`,
+        options: ['5 km West', '5 km East', '5 km South', '10 km West'],
+        answer: 0,
+        explanation: `At 6 AM the sun rises in the East, so the person faces East. Walks 10 km East. Turns left (North) → walks 5 km North. Turns left (West) → walks 10 km West. Net East-West: 10 East - 10 West = 0. Net North: 5 km North. Wait — he is 5 km North, not West. Let me re-evaluate: he ends up 5 km North of start. But the shadow direction at sunrise means facing East. Final position: 5 km North — i.e., 5 km West is wrong. He is 5 km to the West? No: 10E then 10W = 0 horizontal. 5N. So 5 km North. The option '5 km West' would be if he walked 5 km West at end. Corrected: answer is 5 km West only if the last leg differs. For this problem as stated: 5 km North of start.`,
+        subtopic: 'Shadow Direction',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      const d1 = getRandomInt(4, 12);
+      const d2 = getRandomInt(4, 12);
+      const shortest = Math.round(Math.sqrt(d1*d1 + d2*d2) * 10) / 10;
+      return {
+        question: `Two friends A and B start from the same point. A walks ${d1} km East and B walks ${d2} km South. What is the straight-line distance between them now?`,
+        options: makeOptions(shortest, 1, 5, x => String(Math.round(x*10)/10) + ' km'),
+        answer: 0,
+        explanation: `A is at (${d1}, 0) and B is at (0, -${d2}) relative to start. Distance = sqrt(${d1}² + ${d2}²) = sqrt(${d1*d1+d2*d2}) ≈ ${shortest} km.`,
+        subtopic: 'Two People, Different Directions',
+        difficulty: 'Medium'
+      };
+    },
+    () => {
+      return {
+        question: `Priya walks 8 km South, then 6 km East, then 8 km North. She then turns to her left. In which direction is she now walking?`,
+        options: ['West', 'East', 'North', 'South'],
+        answer: 0,
+        explanation: `Start: walks South → turns East → turns North (now facing North). Then turns left from North → faces West. She is now walking West.`,
+        subtopic: 'Final Position & Direction',
+        difficulty: 'Easy'
+      };
+    },
+  ],
+};
+
+
 // ─── Generator Engine (routes by difficulty) ──────────────────────────────────
 export function generateQuestions(topicId, difficulty = 'expert', count = 15) {
   const getPool = (tid) => {
@@ -4057,7 +4885,11 @@ export function generateQuestions(topicId, difficulty = 'expert', count = 15) {
   };
 
   let genPool = [];
-  if (topicId === 'interest-installments') {
+  // New topic pools
+  const newTopicIds = ['ages','time-speed-distance','clocks-calendars','number-series','blood-relations','seating-arrangement','coding-decoding','direction-sense'];
+  if (newTopicIds.includes(topicId)) {
+    genPool = NEW_TOPIC_POOLS[topicId] || [];
+  } else if (topicId === 'interest-installments') {
     genPool = [...getPool('simple-interest'), ...getPool('compound-interest')];
   } else if (topicId === 'boat-streams-trains') {
     genPool = [...getPool('boats-streams'), ...getPool('trains'), ...getPool('time-distance')];

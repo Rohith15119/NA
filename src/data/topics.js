@@ -47,6 +47,20 @@ export const TOPICS = [
     section: 'Quantitative Aptitude'
   },
   {
+    id: 'partnership',
+    title: 'Partnership',
+    icon: '🤝',
+    description: 'Investments, profit sharing, simple & compound partnerships, working vs sleeping partners',
+    subtopics: ['Simple Partnership', 'Compound Partnership', 'Unequal Investments', 'Variable Time Periods', 'Working & Sleeping Partners', 'Manager Salaries from Profit'],
+    testSize: 15,
+    duration: 15,
+    color: '#8b5cf6',
+    gradient: 'linear-gradient(135deg, #8b5cf6, #6d28d9)',
+    difficulty: 'Easy',
+    examWeight: '1-2 Q/A',
+    section: 'Quantitative Aptitude'
+  },
+  {
     id: 'ages',
     title: 'Problems on Ages',
     icon: '👤',

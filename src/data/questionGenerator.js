@@ -1,4 +1,4 @@
-﻿// Helper functions for math
+// Helper functions for math
 export function gcd(a, b) {
   return b ? gcd(b, a % b) : a;
 }
@@ -4044,12 +4044,175 @@ const EXPERT_POOL = {
 };
 
 
-// ══════════════════════════════════════════════════════════════════════════════
-// NEW TOPIC POOLS — Fully verified: every template derives parameters FROM the
-// answer so the question is always mathematically correct. Guards skip bad cases.
-// ══════════════════════════════════════════════════════════════════════════════
-
 const NEW_TOPIC_POOLS = {
+
+  // ─── PARTNERSHIP ──────────────────────────────────────────────────────────
+  'partnership': [
+    // T1: Simple partnership (2 partners) — find one partner's share
+    () => {
+      const mul = getRandomInt(100, 500);
+      const capA = 3 * mul;
+      const capB = 5 * mul;
+      const totalProfit = 8 * mul * getRandomInt(2, 6);
+      const shareA = Math.round(totalProfit * 3 / 8);
+      const correct = shareA;
+      return {
+        question: `A and B start a business investing Rs. ${capA} and Rs. ${capB} respectively. If the total profit at the end of the year is Rs. ${totalProfit}, find the profit share of A.`,
+        options: makeOptions(correct, 50, 200, x => 'Rs. ' + x),
+        answer: 0,
+        explanation: `Since time periods are equal, profit is shared in the ratio of their investments. Ratio of capitals = A : B = ${capA} : ${capB} = 3 : 5. A's share = 3/8 × ${totalProfit} = Rs. ${correct}.`,
+        subtopic: 'Simple partnership: profits shared in ratio of capitals for equal time',
+        difficulty: 'Easy'
+      };
+    },
+    // T2: Simple partnership (3 partners) — find total profit given one's share
+    () => {
+      const k = getRandomInt(10, 30);
+      const capA = 200 * k;
+      const capB = 300 * k;
+      const capC = 500 * k;
+      const sumCap = capA + capB + capC;
+      // Ratio = 2 : 3 : 5
+      const totalProfit = 1000 * getRandomInt(3, 8);
+      const shareC = Math.round(totalProfit * 5 / 10);
+      const correct = totalProfit;
+      return {
+        question: `Three partners A, B, and C invest Rs. ${capA}, Rs. ${capB}, and Rs. ${capC} respectively in a startup. If C's share of the annual profit is Rs. ${shareC}, find the total profit earned by the startup.`,
+        options: makeOptions(correct, 500, 2000, x => 'Rs. ' + x),
+        answer: 0,
+        explanation: `Investment ratio A : B : C = ${capA} : ${capB} : ${capC} = 2 : 3 : 5. C's share = 5/10 of total profit. Total profit = C's share × 2 = ${shareC} × 2 = Rs. ${correct}.`,
+        subtopic: 'Find one partner\'s share of profit given total profit and capital ratio',
+        difficulty: 'Easy'
+      };
+    },
+    // T3: Compound partnership — unequal capital & unequal time
+    () => {
+      const capA = 12000;
+      const capB = 16000;
+      const timeA = getRandomInt(8, 12);
+      const timeB = getRandomInt(4, 7);
+      const pA = capA * timeA;
+      const pB = capB * timeB;
+      const g = gcd(pA, pB);
+      const ratioA = pA / g;
+      const ratioB = pB / g;
+      const totalProfit = (ratioA + ratioB) * getRandomInt(100, 300);
+      const shareB = Math.round(totalProfit * ratioB / (ratioA + ratioB));
+      const correct = shareB;
+      return {
+        question: `A and B enter into a partnership. A invests Rs. ${capA} for ${timeA} months and B invests Rs. ${capB} for ${timeB} months. If the total annual profit is Rs. ${totalProfit}, what is B's profit share?`,
+        options: makeOptions(correct, 100, 500, x => 'Rs. ' + x),
+        answer: 0,
+        explanation: `Profit share ratio = (CapA × TimeA) : (CapB × TimeB) = (${capA} × ${timeA}) : (${capB} × ${timeB}) = ${pA} : ${pB} = ${ratioA} : ${ratioB}. B's share = ${ratioB}/${ratioA + ratioB} × ${totalProfit} = Rs. ${correct}.`,
+        subtopic: 'Compound partnership: unequal capitals for unequal time periods (profit ratio = C1*T1 : C2*T2)',
+        difficulty: 'Medium'
+      };
+    },
+    // T4: Three partners compound investment — find total profit
+    () => {
+      const capA = 10000;
+      const capB = 15000;
+      const capC = 20000;
+      const timeA = 6;
+      const timeB = 8;
+      const timeC = 12;
+      const pA = capA * timeA;
+      const pB = capB * timeB;
+      const pC = capC * timeC;
+      // Ratio: 60 : 120 : 240 => 1 : 2 : 4
+      const shareA = 1000 * getRandomInt(2, 6);
+      const correct = shareA * 7;
+      return {
+        question: `A, B, and C start a joint venture. A invests Rs. ${capA} for ${timeA} months, B invests Rs. ${capB} for ${timeB} months, and C invests Rs. ${capC} for a year. If A's share of the annual profit is Rs. ${shareA}, what is the total profit?`,
+        options: makeOptions(correct, 1000, 5000, x => 'Rs. ' + x),
+        answer: 0,
+        explanation: `Profit ratio A : B : C = (10k × 6) : (15k × 8) : (20k × 12) = 60 : 120 : 240 = 1 : 2 : 4. Total parts = 1 + 2 + 4 = 7. Since A's share (1 part) = Rs. ${shareA}, total profit (7 parts) = 7 × ${shareA} = Rs. ${correct}.`,
+        subtopic: 'Three-partner compound investment: find total profit given one partner\'s share',
+        difficulty: 'Medium'
+      };
+    },
+    // T5: Active partner gets salary percentage
+    () => {
+      const capA = 20000;
+      const capB = 30000;
+      // Ratio A : B = 2 : 3
+      const salPct = 20;
+      const totalProfit = 5000 * getRandomInt(4, 10);
+      const salaryA = totalProfit * salPct / 100;
+      const remainingProfit = totalProfit - salaryA;
+      const shareA_from_cap = remainingProfit * 2 / 5;
+      const totalShareA = salaryA + shareA_from_cap;
+      const correct = totalShareA;
+      return {
+        question: `In a partnership, A invests Rs. ${capA} and B invests Rs. ${capB}. A is a working partner and receives ${salPct}% of the total profit as a monthly salary. The remaining profit is distributed in the ratio of their investments. If the total annual profit is Rs. ${totalProfit}, find the total share of A.`,
+        options: makeOptions(correct, 500, 2500, x => 'Rs. ' + x),
+        answer: 0,
+        explanation: `Salary to A = ${salPct}% of ${totalProfit} = Rs. ${salaryA}. Remaining profit = Rs. ${remainingProfit}. Ratio of investments = 2 : 3. A's share of remaining profit = 2/5 × ${remainingProfit} = Rs. ${shareA_from_cap}. Total share of A = ${salaryA} + ${shareA_from_cap} = Rs. ${correct}.`,
+        subtopic: 'Active/Working partner gets x% of profit as salary, remainder divided in capital ratio',
+        difficulty: 'Medium'
+      };
+    },
+    // T6: Investment ratio & time ratio given — find ratio of profit shares
+    () => {
+      const invNum = 3;
+      const invDen = 4;
+      const timeNum = 8;
+      const timeDen = 9;
+      // Profit ratio = (3*8) : (4*9) = 24 : 36 = 2 : 3
+      return {
+        question: `Two business partners A and B invest capitals in the ratio ${invNum}:${invDen}. The periods for which they invest their money are in the ratio ${timeNum}:${timeDen}. What is the ratio of their profit shares at the end of the term?`,
+        options: ['2:3', '3:2', '4:5', '9:8'],
+        answer: 0,
+        explanation: `Profit share ratio = (Capital ratio) × (Time ratio) = (${invNum}/${invDen}) × (${timeNum}/${timeDen}) = 24/36 = 2/3. Thus, the ratio of their profit shares is 2:3.`,
+        subtopic: 'Investment ratio and time ratio given — find the ratio of profit shares',
+        difficulty: 'Medium'
+      };
+    },
+    // T7: Partner joins midway
+    () => {
+      const capA = 30000;
+      const capB = 45000;
+      const joinDelay = getRandomInt(3, 6);
+      const timeA = 12;
+      const timeB = 12 - joinDelay;
+      const pA = capA * timeA;
+      const pB = capB * timeB;
+      const g = gcd(pA, pB);
+      const ratioA = pA / g;
+      const ratioB = pB / g;
+      const totalProfit = (ratioA + ratioB) * getRandomInt(300, 800);
+      const shareB = Math.round(totalProfit * ratioB / (ratioA + ratioB));
+      const correct = shareB;
+      return {
+        question: `A starts a franchise with Rs. ${capA}. After ${joinDelay} months, B joins him as a partner with Rs. ${capB}. If the startup earns Rs. ${totalProfit} in total profit at the end of one year, what is B's share of the profit?`,
+        options: makeOptions(correct, 300, 1500, x => 'Rs. ' + x),
+        answer: 0,
+        explanation: `Time period for A = 12 months. Time period for B = 12 − ${joinDelay} = ${timeB} months. Profit ratio A : B = (${capA} × 12) : (${capB} × ${timeB}) = ${pA} : ${pB} = ${ratioA} : ${ratioB}. B's share = ${ratioB}/${ratioA+ratioB} × ${totalProfit} = Rs. ${correct}.`,
+        subtopic: 'Partner joins midway after x months, total annual profit given — find joiner\'s share',
+        difficulty: 'Hard'
+      };
+    },
+    // T8: Multi-stage investment changes
+    () => {
+      const initialCap = 10000;
+      const changeMonths = 6;
+      const capAdded = 5000;
+      // A's equivalent capital = 10000*6 + 15000*6 = 150000
+      // B's equivalent capital = 15000 * 12 = 180000
+      // Ratio A : B = 150 : 180 = 5 : 6
+      const totalProfit = 11000 * getRandomInt(2, 5);
+      const shareA = Math.round(totalProfit * 5 / 11);
+      const correct = shareA;
+      return {
+        question: `A and B enter into a partnership with Rs. ${initialCap} and Rs. 15000 respectively. After ${changeMonths} months, A invests an additional Rs. ${capAdded}. If the total profit at the end of the year is Rs. ${totalProfit}, find the profit share of A.`,
+        options: makeOptions(correct, 500, 2000, x => 'Rs. ' + x),
+        answer: 0,
+        explanation: `A's equivalent capital for 12 months = (${initialCap} × 6) + ((${initialCap} + ${capAdded}) × 6) = 60,000 + 90,000 = Rs. 1,50,000. B's equivalent capital = 15,000 × 12 = Rs. 1,80,000. Profit sharing ratio A : B = 1,50,000 : 1,80,000 = 5 : 6. A's profit share = 5/11 × ${totalProfit} = Rs. ${correct}.`,
+        subtopic: 'Multi-stage investment: partners withdraw/add capitals at different months of the year',
+        difficulty: 'Hard'
+      };
+    }
+  ],
 
   // ─── AGES ─────────────────────────────────────────────────────────────────
   // RULE: always derive random params FROM n/ages so answer is guaranteed correct.
@@ -4967,7 +5130,7 @@ export function generateQuestions(topicId, difficulty = 'expert', count = 15) {
 
   let genPool = [];
   // New topic pools
-  const newTopicIds = ['ages','time-speed-distance','clocks-calendars','number-series','blood-relations','seating-arrangement','coding-decoding','direction-sense'];
+  const newTopicIds = ['partnership','ages','time-speed-distance','clocks-calendars','number-series','blood-relations','seating-arrangement','coding-decoding','direction-sense'];
   if (newTopicIds.includes(topicId)) {
     genPool = NEW_TOPIC_POOLS[topicId] || [];
   } else if (topicId === 'interest-installments') {

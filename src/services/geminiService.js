@@ -65,6 +65,22 @@ export const TOPIC_DETAILS = {
     ]
   },
 
+  'partnership': {
+    title: 'Partnership',
+    subtopics: 'Simple & Compound Partnerships, Investment-Time Profit Ratio, Unequal Capital Investments, Variable Holding Periods, Working & Sleeping Partner Arrangements, Salary Deductions from Gross Profits, Ratio Share Distribution',
+    models: [
+      '[EASY] Simple partnership: profits shared in ratio of capitals for equal time',
+      '[EASY] Find one partner\'s share of profit given total profit and capital ratio',
+      '[MEDIUM] Compound partnership: unequal capitals for unequal time periods (profit ratio = C1*T1 : C2*T2)',
+      '[MEDIUM] Three-partner compound investment: find total profit given one partner\'s share',
+      '[MEDIUM] Active/Working partner gets x% of profit as salary, remainder divided in capital ratio',
+      '[MEDIUM] Investment ratio and time ratio given — find the ratio of profit shares',
+      '[HARD] Active partner salary plus interest on capital, remainder divided in ratio of investments',
+      '[HARD] Partner joins midway after x months, total annual profit given — find joiner\'s share',
+      '[HARD] Multi-stage investment: partners withdraw/add capitals at different months of the year'
+    ]
+  },
+
   'ages': {
     title: 'Problems on Ages',
     subtopics: 'Present Age Equations, Age Ratio at Two Time Points, Average Age, Age Difference, Multi-Person Systems, Father-Son-Grandfather chains',

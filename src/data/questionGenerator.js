@@ -5119,13 +5119,28 @@ const NEW_TOPIC_POOLS = {
 // ─── Generator Engine (routes by difficulty) ──────────────────────────────────
 export function generateQuestions(topicId, difficulty = 'expert', count = 15) {
   const getPool = (tid) => {
-    const list = [];
-    if (EXPERT_POOL[tid]) list.push(...EXPERT_POOL[tid]);
-    if (HARD_POOL[tid]) list.push(...HARD_POOL[tid]);
-    if (GENERATORS[tid]?.Hard) list.push(...GENERATORS[tid].Hard);
-    if (GENERATORS[tid]?.Medium) list.push(...GENERATORS[tid].Medium);
-    if (list.length === 0 && GENERATORS[tid]?.Easy) list.push(...GENERATORS[tid].Easy);
-    return list;
+    // 1. Gather strictly Hard and Expert templates first
+    const premiumList = [];
+    if (EXPERT_POOL[tid]) premiumList.push(...EXPERT_POOL[tid]);
+    if (HARD_POOL[tid]) premiumList.push(...HARD_POOL[tid]);
+    if (GENERATORS[tid]?.Hard) premiumList.push(...GENERATORS[tid].Hard);
+
+    if (premiumList.length >= count) {
+      return premiumList;
+    }
+
+    // 2. Add Medium templates if premium pool is not enough to fill the test
+    const mediumList = [...premiumList];
+    if (GENERATORS[tid]?.Medium) mediumList.push(...GENERATORS[tid].Medium);
+
+    if (mediumList.length >= count) {
+      return mediumList;
+    }
+
+    // 3. Fallback to Easy templates only as a last resort
+    const fullList = [...mediumList];
+    if (GENERATORS[tid]?.Easy) fullList.push(...GENERATORS[tid].Easy);
+    return fullList;
   };
 
   let genPool = [];

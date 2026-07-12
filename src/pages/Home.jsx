@@ -69,7 +69,7 @@ export default function Home() {
           </div>
           <h1>Master Numerical Ability<br />for TCS NQT</h1>
           <p>
-            Practice 16 topics with expert-curated questions. Every topic is calibrated
+            Practice {TOPICS.length} topics with expert-curated questions. Every topic is calibrated
             to the actual TCS NQT Level to build complete exam proficiency.
           </p>
           <div className="hero-stats">
@@ -85,7 +85,7 @@ export default function Home() {
           <div className="overall-icon">🎯</div>
           <div className="overall-text">
             <h2>Full Mock Test <span className="badge badge-expert" style={{ fontSize: '0.72rem', verticalAlign: 'middle', marginLeft: '0.4rem' }}>🏆 TCS NQT LEVEL</span></h2>
-            <p>20 expert-level questions from all 16 topics — simulating the <strong>actual TCS NQT difficulty</strong> to push your limits</p>
+            <p>20 expert-level questions from all {TOPICS.length} topics — simulating the <strong>actual TCS NQT difficulty</strong> to push your limits</p>
             <div className="overall-tags">
               <span className="overall-tag">⏱️ 20 minutes</span>
               <span className="overall-tag">❓ 20 Questions</span>

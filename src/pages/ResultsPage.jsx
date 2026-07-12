@@ -25,6 +25,15 @@ function formatMathText(text) {
     .replace(/\\\[|\\\]/g, '')
     .replace(/\\frac\s*\{([^}]+)\}\s*\{([^}]+)\}/g, '$1/$2')
     .replace(/\\frac\s*([^{}\s]+)\s*([^{}\s]+)/g, '$1/$2')
+    .replace(/\\sqrt\s*\[([^\]]+)\]\s*\{([^}]+)\}/g, '($2)^(1/$1)')
+    .replace(/\\sqrt\s*\{([^}]+)\}/g, (match, p1) => {
+      return p1.includes(' ') || p1.includes('+') || p1.includes('-') || p1.includes('*') || p1.includes('/') ? `√(${p1})` : `√${p1}`;
+    })
+    .replace(/\\sqrt\s*([a-zA-Z0-9]+)/g, '√$1')
+    .replace(/\^\{([^}]+)\}/g, (match, p1) => {
+      return p1.includes(' ') || p1.includes('+') || p1.includes('-') || p1.includes('*') || p1.includes('/') ? `^(${p1})` : `^${p1}`;
+    })
+    .replace(/_\{([^}]+)\}/g, '_$1')
     .replace(/\\times/g, ' × ')
     .replace(/\\cdot/g, ' × ')
     .replace(/\\le|\\leq/g, '≤')
@@ -52,12 +61,16 @@ function formatMathText(text) {
   const parts = [];
   let idx = 0;
   let keyCounter = 0;
-  const rx = /(?:\b(\d{1,3})\s*\/\s*(\d{1,3})\b)|(?:(log|Log|LOG)_(\d+)\(([^)]+)\))|(?:([a-zA-Z0-9αβπθ\(\)]+)\^([a-zA-Z0-9\+\-\(\)]+))|(?:([a-zA-Z]+)_(\d+)(?!\())/g;
+
+  // Combined regex: fractions (\d{1,3}/\d{1,3}), subscripts (base_sub), superscripts (base^sup), log_base(...)
+  const rx = /(?:\b(\d{1,3})\s*\/\s*(\d{1,3})\b)|(?:(log|Log|LOG)_(\d+)\(([^)]+)\))|(?:([a-zA-Z0-9αβπθ\(\)]+)\^([a-zA-Z0-9\+\-\(\)]+))|(?:([a-zA-Z]+)_([a-zA-Z0-9\+\-\(\)]+)(?!\())/g;
   let m;
 
   while ((m = rx.exec(s)) !== null) {
     if (m.index > idx) parts.push(s.substring(idx, m.index));
+
     if (m[1] !== undefined && m[2] !== undefined) {
+      // Fraction: num/den
       parts.push(
         <span key={`frac-${keyCounter++}`} style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle', margin: '0 0.1em' }}>
           <sup style={{ fontSize: '0.7em', verticalAlign: 'super', position: 'relative', top: '-0.15em' }}>{m[1]}</sup>
@@ -66,26 +79,31 @@ function formatMathText(text) {
         </span>
       );
     } else if (m[3] !== undefined) {
+      // log_base(arg)
       parts.push(
         <span key={`log-${keyCounter++}`}>
           log<sub style={{ fontSize: '0.75em', verticalAlign: 'sub' }}>{m[4]}</sub>({m[5]})
         </span>
       );
     } else if (m[6] !== undefined) {
+      // base^exp
       parts.push(
         <span key={`sup-${keyCounter++}`}>
           {m[6]}<sup style={{ fontSize: '0.75em', verticalAlign: 'super' }}>{m[7]}</sup>
         </span>
       );
     } else if (m[8] !== undefined) {
+      // base_sub (e.g. P_1, a_n, a_(n-1))
       parts.push(
         <span key={`sub-${keyCounter++}`}>
           {m[8]}<sub style={{ fontSize: '0.75em', verticalAlign: 'sub' }}>{m[9]}</sub>
         </span>
       );
     }
+
     idx = rx.lastIndex;
   }
+
   if (idx < s.length) parts.push(s.substring(idx));
   return parts.length > 0 ? parts : s;
 }

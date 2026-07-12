@@ -360,11 +360,12 @@ export default function TestPage() {
           // ── BATCH 2: load remaining in background ──────────────────────
           const remaining   = total - batch1.length;
           const usedTexts   = batch1.map(q => q.question);
+          const usedModels  = batch1.map(q => q.subtopic).filter(Boolean);
 
           try {
             const rawBatch2 = isOverall
               ? await generateAIOverallQuestions(remaining, usedTexts)
-              : await generateAIQuestions(topicId, difficulty, remaining, usedTexts, batch1.length);
+              : await generateAIQuestions(topicId, difficulty, remaining, usedTexts, batch1.length, usedModels);
             
             const batch2 = validateAIQuestions(rawBatch2);
 

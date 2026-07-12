@@ -409,36 +409,41 @@ export const TOPIC_DETAILS = {
 
 // ─── Prompt Builders ──────────────────────────────────────────────────────────
 
-function buildTopicPrompt(topicId, count, excludeTexts = []) {
+function cleanModelName(modelStr) {
+  return modelStr.replace(/^\[(?:EASY|MEDIUM|HARD)\]\s*/i, '').trim();
+}
+
+function buildTopicPrompt(topicId, count, excludeTexts = [], targetModels = []) {
   const info = TOPIC_DETAILS[topicId];
   if (!info) throw new Error(`No topic info for: ${topicId}`);
 
-  const modelList = (info.models || []).join('\n  ');
+  const targetListStr = targetModels.map((m, idx) => `${idx + 1}. ${m}`).join('\n  ');
 
   const exclusion = excludeTexts.length
-    ? `\nDO NOT repeat these question structures already used:\n${excludeTexts.map((t, i) => `${i + 1}. "${t.slice(0, 100)}"`).join('\n')}\n`
+    ? `\nDO NOT repeat these question scenarios already used:\n${excludeTexts.map((t, i) => `${i + 1}. "${t.slice(0, 100)}"`).join('\n')}\n`
     : '';
 
-  return `You are a world-class TCS NQT exam question setter specializing in "${info.title}".
+  return `You are a premier TCS NQT exam setter specializing in "${info.title}".
+Your job is to draft challenging, high-scoring questions that require deep analytical skills.
 
-TASK: Generate exactly ${count} unique, high-quality MCQs on "${info.title}" for TCS NQT 2026 preparation.
+TASK: Generate exactly ${count} unique, high-difficulty MCQs on "${info.title}" for TCS NQT 2026 preparation.
 
-SUBTOPICS TO COVER: ${info.subtopics}
-
-ALL QUESTION MODELS FOR THIS TOPIC (rotate across these — do NOT repeat the same model twice):
-  ${modelList}
+MANDATORY MODELS TO GENERATE (You MUST generate exactly one question for each of the following specified models/patterns. Do not group them, do not skip any):
+  ${targetListStr}
 ${exclusion}
 
-━━━ DIFFICULTY DISTRIBUTION (mandatory) ━━━
-- Distribute the ${count} questions as: ~30% Easy, ~50% Medium, ~20% Hard
-- Tag EVERY question with its exact difficulty: "Easy", "Medium", or "Hard"
-- Tag EVERY question with its exact model name from the list above (without the [EASY]/[MEDIUM]/[HARD] prefix)
+━━━ DIFFICULTY & STRUCTURE (CRITICAL) ━━━
+- The questions MUST be at the real TCS NQT exam level (tricky, multi-step, requires genuine conceptual understanding).
+- Even "Easy" or "Medium" labeled models must be framed in a challenging way (e.g., using multi-stage processes, tricky phrasing, or complex numbers/relations).
+- AVOID simple, direct, one-step questions. Every question must require at least 2-3 logical or calculation steps.
+- Tag each question's "difficulty" field as "Easy", "Medium", or "Hard" corresponding to its model's tier.
+- Tag each question's "subtopic" field with the exact model name from the list above (without the [EASY]/[MEDIUM]/[HARD] prefix).
 
-━━━ QUESTION QUALITY RULES ━━━
-1. Every question must be a DIFFERENT model — never two consecutive questions from the same model
-2. Questions must be scenario-based word problems (3–5 lines). Use real-world contexts: IT company, logistics, finance, engineering, cricket, shopping. AVOID dry one-line arithmetic.
+━━━ QUALITY RULES ━━━
+1. Every question must be a DIFFERENT model as specified above.
+2. Questions must be scenario-based word problems (3–5 lines). Use real-world contexts: IT companies, logistics, finance, engineering, cricket, shopping. AVOID dry one-line arithmetic.
 3. Include variation types across questions:
-   - DIRECT: given known values, find the unknown
+   - DIRECT: given known values, find the unknown (but with a multi-step twist)
    - REVERSE: given the result, work backwards to find the input
    - MULTI-STEP: two concepts combined (e.g. Time & Work + Ratio)
    - ELIMINATION: identify which option is NOT possible
@@ -455,39 +460,37 @@ OUTPUT FORMAT: Return ONLY a raw JSON array. No markdown, no prose, no code fenc
     "options": ["<A>", "<B>", "<C>", "<D>"],
     "answer": <0|1|2|3>,
     "explanation": "Step 1: ... Step 2: ... Therefore, answer = ...",
-    "subtopic": "<exact model name from the list above>",
+    "subtopic": "<exact model name from the list above without the [EASY]/[MEDIUM]/[HARD] prefix>",
     "difficulty": "<Easy|Medium|Hard>"
   }
 ]`;
 }
 
 function buildOverallPrompt(count, excludeTexts = []) {
-  const topicList = Object.values(TOPIC_DETAILS)
-    .filter(t => ['Number System','Simplification & Approximation','Ratio & Proportion','Problems on Ages','Averages','Mixture & Alligation','Percentages','Profit, Loss & Discount','Simple & Compound Interest','Time & Work','Time, Speed & Distance','Boats, Streams & Trains','Data Interpretation','Permutations, Combinations & Probability','Quadratic Equations','Mensuration','Statistics'].includes(t.title))
-    .map(t => t.title);
+  const topicList = Object.values(TOPIC_DETAILS).map(t => t.title);
 
   const exclusion = excludeTexts.length
     ? `\nAvoid repeating: ${excludeTexts.slice(0, 10).map(t => `"${t.slice(0, 70)}"`).join(' | ')}`
     : '';
 
-  return `You are an expert TCS NQT Quantitative Ability exam setter.
-
+  return `You are a senior TCS NQT exam panel setter.
+  
 TASK: Generate exactly ${count} EXPERT-level MCQs for a TCS NQT Full Mock Test.
 
 MANDATORY: Distribute exactly 1–2 questions across EACH of these topics (cover as many as possible):
 ${topicList.map((t, i) => `${i + 1}. ${t}`).join('\n')}
 ${exclusion}
 
-━━━ DIFFICULTY DISTRIBUTION ━━━
-- ~25% Easy, ~50% Medium, ~25% Hard
-- Tag EVERY question: "Easy", "Medium", or "Hard"
-- Tag EVERY question with the exact topic name from the list above as "topicTitle"
-- Tag EVERY question with the specific model/sub-pattern as "subtopic"
+━━━ TCS NQT LEVEL DIFFICULTY REQUIREMENT ━━━
+- Questions must be highly challenging (representing the hardest TCS NQT questions, 3+ reasoning steps minimum).
+- Tag EVERY question: "Easy", "Medium", or "Hard" (even "Easy" tags must represent standard exam level, while "Hard" tags should represent the highest tier of TCS difficulty).
+- Tag EVERY question with the exact topic name from the list above as "topicTitle".
+- Tag EVERY question with the specific model/sub-pattern as "subtopic".
 
 ━━━ QUALITY RULES ━━━
-1. EXPERT level — multi-step, requires real insight, 3+ reasoning steps minimum
-2. Scenario-based word problems only (3–5 lines). Real contexts: tech company, cricket, logistics, banking.
-3. Rotate topics — never two consecutive questions on the same topic
+1. Multi-step, conceptual problems only.
+2. Scenario-based word problems only (3–5 lines). Real contexts: tech company, cricket, logistics, banking, automation.
+3. Rotate topics — never two consecutive questions on the same topic.
 4. Every calculation 100% verified. Plausible distractors (common mistake values).
 5. Include a variety of question types: direct, reverse-calculation, multi-concept, elimination.
 6. NO LaTeX. Plain text only: "3/5", "x^2", "sqrt(x)", "pi".
@@ -604,16 +607,61 @@ function normalizeOverallQuestions(rawArr) {
 // ─── Public API ───────────────────────────────────────────────────────────────
 
 /**
- * Generate topic-wise AI questions.
+ * Generate topic-wise AI questions with targeted model coverage and difficulty priority.
  * @param {string}   topicId      - e.g. 'number-system'
- * @param {string}   difficulty   - (legacy param, kept for compatibility)
+ * @param {string}   difficulty   - (legacy param)
  * @param {number}   count        - questions to generate
  * @param {string[]} excludeTexts - question texts already shown (prevent repeats)
- * @param {number}   startIdx     - ID offset (for pagination uniqueness)
+ * @param {number}   startIdx     - ID offset
+ * @param {string[]} excludeModels- model names already generated (prevent model repeats)
  */
-export async function generateAIQuestions(topicId, difficulty, count = 5, excludeTexts = [], startIdx = 0) {
-  const prompt    = buildTopicPrompt(topicId, count, excludeTexts);
-  const raw       = await callGemini(prompt);
+export async function generateAIQuestions(topicId, difficulty, count = 5, excludeTexts = [], startIdx = 0, excludeModels = []) {
+  const info = TOPIC_DETAILS[topicId];
+  if (!info) throw new Error(`No topic info for: ${topicId}`);
+
+  const allModels = info.models || [];
+  const cleanExcluded = new Set(excludeModels.map(m => cleanModelName(m).toLowerCase()));
+
+  // Categorize models by difficulty level
+  const categorized = allModels.map(m => {
+    const clean = cleanModelName(m);
+    const isHard = m.startsWith('[HARD]');
+    const isMedium = m.startsWith('[MEDIUM]');
+    return { raw: m, clean, level: isHard ? 'Hard' : (isMedium ? 'Medium' : 'Easy') };
+  });
+
+  // Filter out models that were already used in this test
+  let pool = categorized.filter(item => !cleanExcluded.has(item.clean.toLowerCase()));
+
+  // Fallback to all models if the pool gets exhausted
+  if (pool.length === 0) {
+    pool = [...categorized];
+  }
+
+  // Prioritize Hard and Medium models first to guarantee high difficulty
+  const hardPool = pool.filter(item => item.level === 'Hard');
+  const mediumPool = pool.filter(item => item.level === 'Medium');
+  const easyPool = pool.filter(item => item.level === 'Easy');
+
+  const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
+  shuffle(hardPool);
+  shuffle(mediumPool);
+  shuffle(easyPool);
+
+  let sortedPool = [...hardPool, ...mediumPool, ...easyPool];
+
+  // Select the requested number of models
+  const selected = [];
+  for (let i = 0; i < count; i++) {
+    if (sortedPool.length === 0) {
+      sortedPool = [...categorized].sort(() => Math.random() - 0.5);
+    }
+    selected.push(sortedPool.shift());
+  }
+
+  const targetModels = selected.map(item => item.raw);
+  const prompt = buildTopicPrompt(topicId, count, excludeTexts, targetModels);
+  const raw = await callGemini(prompt);
   const questions = normalizeTopicQuestions(raw, topicId, startIdx);
 
   if (questions.length === 0) throw new Error('AI returned 0 valid topic questions');
@@ -621,7 +669,7 @@ export async function generateAIQuestions(topicId, difficulty, count = 5, exclud
 }
 
 /**
- * Generate overall mock-test AI questions (mixed topics, difficulty-tiered).
+ * Generate overall mock-test AI questions.
  * @param {number}   count        - questions to generate
  * @param {string[]} excludeTexts - question texts already shown
  */
@@ -633,3 +681,4 @@ export async function generateAIOverallQuestions(count = 10, excludeTexts = []) 
   if (questions.length === 0) throw new Error('AI returned 0 valid overall questions');
   return questions.slice(0, count);
 }
+
